@@ -34,7 +34,7 @@ public:
 private:
 
 private:
-    int         m_iID;
+    int         m_iId;
     QString     m_strName;
     QString     m_strEMail;
     QString     m_strPhone1;

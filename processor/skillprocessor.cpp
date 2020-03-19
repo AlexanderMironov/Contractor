@@ -135,3 +135,7 @@ QString SkillProcessor::getSkillNameById(int id){
     //
     return str_ret;
 }
+
+const SkillStorage& SkillProcessor::getStorage() const{
+    return m_mapStorage;
+}

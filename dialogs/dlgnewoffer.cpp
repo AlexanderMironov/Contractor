@@ -15,6 +15,8 @@
 #include "processor/offerprocessor.h"
 #include "processor/statusprocessor.h"
 //
+#include "operations/offerscaner.h"
+//
 #include "dto/statusdto.h"
 #include "dto/attractivity.h"
 //
@@ -283,6 +285,7 @@ void  DlgNewOffer::createControlButtons(){
     //
     m_ButtonScan.setText("Scan offer");
     m_ButtonScan.setMinimumWidth(m_iMinButtonWidth);
+    connect(&m_ButtonScan, &QPushButton::released, this, &DlgNewOffer::onClickBtnScan);
 }
 
 /*
@@ -502,6 +505,26 @@ void DlgNewOffer::onClickBtnAcceptAgencyName(){
 
 void  DlgNewOffer::onClickBtnScan(){
     //todo: implement it
+    OfferScaner scaner;
+    scaner.parse(m_OfferEdit.toPlainText());
+    //
+    m_OfferEdit.setPlainText(scaner.getModifiedText());
+    m_EditSkills.setText(scaner.getSkills());
+    //
+    if (scaner.getAgentEmail().length() > 0){
+        //for prevent double saving operations
+        m_dtoAgent.setId(scaner.getAgentId());
+        m_dtoAgent.setAgencyId(scaner.getAgentId());
+        //for visualisation
+        m_EditAgentEmail.setText(scaner.getAgentEmail());
+        m_EditAgentName.setText(scaner.getAgentName());
+        m_EditAgentPhone1.setText(scaner.getAgentPhone1());
+        m_EditAgentPhone2.setText(scaner.getAgentPhone2());
+        //
+        m_EditAgencyName.setText(scaner.getAgencyName());
+    };
+    //
+    return;
 }
 
 void  DlgNewOffer::onClickBtnSaveOffer(){
@@ -572,6 +595,10 @@ void DlgNewOffer::saveOffer(){
 }
 
 void DlgNewOffer::saveAgentInfo(){
+    if (m_dtoAgent.getId() != VALUE_UNDEFINED){
+        return; //agent and agency already found by scaner
+    };
+    //
     int i_agency_id = AgencyProcessor::getInstance().add(m_EditAgencyName.text().trimmed());
     //
     m_dtoAgent.setName(m_EditAgentName.text());
@@ -582,4 +609,24 @@ void DlgNewOffer::saveAgentInfo(){
     //
     int id = AgentProcessor::getInstance().add(&m_dtoAgent);
     m_dtoAgent.setId(id);
+}
+
+void DlgNewOffer::closeEvent(QCloseEvent *event){
+    clearFields();
+    QDialog::closeEvent(event);
+}
+
+void DlgNewOffer::clearFields(){
+    const QString str_empty_txt = "";
+    m_OfferEdit.setPlainText(str_empty_txt);
+    m_EditOfferCore.setText(str_empty_txt);
+    m_EditCountry.setText(str_empty_txt);
+    m_EditTown.setText(str_empty_txt);
+    m_EditSkills.setText(str_empty_txt);
+    m_EditRate.setText(str_empty_txt);
+    m_EditAgentName.setText(str_empty_txt);
+    m_EditAgentEmail.setText(str_empty_txt);
+    m_EditAgentPhone1.setText(str_empty_txt);
+    m_EditAgentPhone2.setText(str_empty_txt);
+    m_EditAgencyName.setText(str_empty_txt);
 }

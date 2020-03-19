@@ -51,7 +51,8 @@ SOURCES += \
     processor/offerskillprocesor.cpp \
     dto/statusdto.cpp \
     processor/statusprocessor.cpp \
-    graficcontainers/offerstable.cpp
+    graficcontainers/offerstable.cpp \
+    operations/offerscaner.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -81,7 +82,8 @@ HEADERS += \
     dto/attractivity.h \
     dto/statusdto.h \
     processor/statusprocessor.h \
-    graficcontainers/offerstable.h
+    graficcontainers/offerstable.h \
+    operations/offerscaner.h
 
 FORMS += \
         mainwindow.ui

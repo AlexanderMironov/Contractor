@@ -165,3 +165,7 @@ AgentBaseDTO* AgentProcessor::getAgentByID(int i_id) const{
     //
     return ptr_ret;
 }
+
+const AgentStorage& AgentProcessor::getStorage() const{
+    return m_mapStorage;
+}

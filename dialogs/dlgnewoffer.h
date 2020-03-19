@@ -11,6 +11,7 @@
 #include <QPushButton>
 #include <QComboBox>
 #include <QAction>
+#include <QCloseEvent>
 //
 #include "dto/offerbasedto.h"
 #include "dto/agentbasedto.h"
@@ -46,6 +47,9 @@ private slots:
 signals:
     void        addedNewOffer();
 
+protected:
+    void closeEvent (QCloseEvent *event);
+
 private:
     void        setMenuAction();
     void        setDlgSizes();
@@ -60,6 +64,7 @@ private:
 
     void        saveAgentInfo();
     void        saveOffer();
+    void        clearFields();
 
 private:
     int             m_iMinButtonWidth;

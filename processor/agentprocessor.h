@@ -19,7 +19,7 @@ public:
     int                     add(AgentBaseDTO* ptr_agent_base_info_dto);
     bool                    init();
     AgentBaseDTO*           getAgentByID(int i_id) const;
-
+    const AgentStorage&     getStorage() const;
 private:
     explicit                AgentProcessor(QObject *parent = nullptr);
     int                     insertIntoDB(AgentBaseDTO* ptr_agent_base_info_dto);

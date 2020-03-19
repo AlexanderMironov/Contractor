@@ -22,6 +22,7 @@ public:
         int                         add(const QString& str_skill_name);
         SkillsList                  add(const QStringList& str_list_skills);
         QString                     getSkillNameById(int id);
+        const SkillStorage&         getStorage() const;
 
 signals:
 

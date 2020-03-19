@@ -5,14 +5,15 @@
 AgentBaseDTO::AgentBaseDTO()
 {
     m_iAgencyId = VALUE_UNDEFINED;
+    m_iId = VALUE_UNDEFINED;
 }
 
 int AgentBaseDTO::getId() const{
-    return m_iID;
+    return m_iId;
 }
 
 void  AgentBaseDTO::setId(int i_id){
-    m_iID = i_id;
+    m_iId = i_id;
 }
 
 const QString&  AgentBaseDTO::getName() const{

@@ -2,7 +2,6 @@
 
 AgencyDTO::AgencyDTO()
 {
-
 }
 
 AgencyDTO::AgencyDTO (AgencyDTO const& val){
