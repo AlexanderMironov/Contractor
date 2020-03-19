@@ -10,7 +10,7 @@
 //
 #include "graficcontainers/graficcontainerlistoffers.h"
 //
-#include "dialogs/dlgnewoffer.h"
+
 
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -36,12 +36,8 @@ MainWindow::MainWindow(QWidget *parent) :
     this->setMaximumWidth(dw.width()*0.95);
     //
     this->setWindowTitle("Contractor");
-    //debug code
-    //DlgNewOffer dlg;
-    //dlg.exec();
-    //debug code
-    return;
     //
+    return;
 }
 
 MainWindow::~MainWindow()

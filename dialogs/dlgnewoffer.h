@@ -24,6 +24,7 @@ class DlgNewOffer : public QDialog
 public:
     DlgNewOffer(QWidget *parent = nullptr);
     ~DlgNewOffer();
+    void init();
 
 public slots:
 
@@ -41,7 +42,9 @@ private slots:
     void        onClickBtnAcceptAgencyName();
     void        onClickBtnSaveOffer();
     void        onClickBtnScan();
+
 signals:
+    void        addedNewOffer();
 
 private:
     void        setMenuAction();

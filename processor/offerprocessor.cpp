@@ -70,7 +70,7 @@ int OfferProcessor::insertIntoDB(OfferBaseDTO* pos_description){
     qry.bindValue(":ID_COUNTRY", pos_description->getCountryId());
     qry.bindValue(":ID_TOWN", pos_description->getTownId());
     qry.bindValue(":ID_AGENT", pos_description->getAgentId());
-    qry.bindValue(":ID_STATUS", pos_description->getStatus());
+    qry.bindValue(":ID_STATUS", pos_description->getStatusId());
     qry.bindValue(":ID_ATTRACTIVITY", pos_description->getAttractivity());
     qry.bindValue(":RATE", pos_description->getRate());
     //
@@ -88,11 +88,11 @@ int OfferProcessor::insertIntoDB(OfferBaseDTO* pos_description){
                          pos_description->getCountryId(),
                          pos_description->getTownId(),
                          pos_description->getAgentId(),
-                         pos_description->getStatus(),
+                         pos_description->getStatusId(),
                          pos_description->getAttractivity(),
                          pos_description->getRate());
     //
-    OfferSkillProcesor::getInstance().add(i_last_id, pos_description->getSkillsListIDs());
+    //OfferSkillProcesor::getInstance().add(i_last_id, pos_description->getSkillsListIDs());
     //
     return i_last_id;
 }
@@ -156,12 +156,9 @@ void OfferProcessor::addNewValueToStorage(int i_id,                             
     ptr_offer->setCountryId(i_id_country);
     ptr_offer->setTownId(i_id_town);
     ptr_offer->setAgentId(i_id_agent);
-    ptr_offer->setStatus(i_id_status);
+    ptr_offer->setStatusId(i_id_status);
     ptr_offer->setAttractivity(i_attractivity);
     ptr_offer->setRate(i_rate);
-    //
-    const SkillsList  v_skill_list = OfferSkillProcesor::getInstance().getSkillsList(i_id);
-    ptr_offer->setSkillsListIDs(v_skill_list);
     //
     m_mapStorage.insert(i_id, ptr_offer);
 }

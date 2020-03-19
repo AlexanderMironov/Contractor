@@ -7,7 +7,7 @@ OfferBaseDTO::OfferBaseDTO()
     m_iCountryId    = VALUE_UNDEFINED;
     m_iCountryId    = VALUE_UNDEFINED;
     m_iRate         = 0;
-    m_iStatus       = VALUE_UNDEFINED;
+    m_iStatusId     = VALUE_UNDEFINED;
     m_iAgentId      = VALUE_UNDEFINED;
     m_iAttractivity = VALUE_UNDEFINED;
 }
@@ -51,14 +51,6 @@ void OfferBaseDTO::setTownId(int i_pos_town){
     m_iTownId = i_pos_town;
 }
 
-const SkillsList&  OfferBaseDTO::getSkillsListIDs() const{
-    return m_vSkillsListIDs;
-}
-
-void OfferBaseDTO::setSkillsListIDs(const SkillsList&  v_skill_list){
-    m_vSkillsListIDs = v_skill_list;
-}
-
 int OfferBaseDTO::getRate() const{
     return m_iRate;
 }
@@ -67,12 +59,12 @@ void OfferBaseDTO::setRate(int rate){
     m_iRate = rate;
 }
 
-int OfferBaseDTO::getStatus() const{
-    return m_iStatus;
+int OfferBaseDTO::getStatusId() const{
+    return m_iStatusId;
 }
 
-void OfferBaseDTO::setStatus(int i_status){
-    m_iStatus = i_status;
+void OfferBaseDTO::setStatusId(int i_status){
+    m_iStatusId = i_status;
 }
 
 int  OfferBaseDTO::getAgentId() const{

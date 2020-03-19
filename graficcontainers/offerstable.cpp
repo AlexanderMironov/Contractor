@@ -1,6 +1,8 @@
 #include <QStringList>
 #include <QHeaderView>
 #include <QComboBox>
+#include <QMessageBox>
+#include <QMenu>
 //
 #include "commondef.h"
 #include "offerstable.h"
@@ -26,13 +28,20 @@
 //
 #include "dto/statusdto.h"
 #include "processor/statusprocessor.h"
+//
+#include "processor/offerskillprocesor.h"
 
 OffersTable::OffersTable(QWidget *parent):QTableWidget(parent)
 {
     m_bFillTableModeOn = false;
     setHeaderParams();
+    setPopUpMnu();
     bindSignalsAndSlots();
     showTable();
+}
+
+OffersTable::~OffersTable(){
+
 }
 
 void OffersTable::setHeaderParams(){
@@ -50,7 +59,7 @@ void OffersTable::setHeaderParams(){
     this->setColumnWidth(COL_SKILLS, 55);
     this->setColumnWidth(COL_COUNTRY, 85);
     this->setColumnWidth(COL_TOWN, 85);
-    this->setColumnWidth(COL_AGENT, 95);
+    this->setColumnWidth(COL_AGENT, 115);
     this->setColumnWidth(COL_AGENCY, 105);
     this->setColumnWidth(COL_STATUS, 160);
     this->setColumnWidth(COL_ATTRACTIVITY, 140);
@@ -66,6 +75,14 @@ void OffersTable::setHeaderParams(){
     header->setSectionResizeMode(COL_STATUS,        QHeaderView::Fixed);
     header->setSectionResizeMode(COL_ATTRACTIVITY,  QHeaderView::Fixed);
     header->setSectionResizeMode(COL_RATE,          QHeaderView::Fixed);
+}
+
+void OffersTable::setPopUpMnu(){
+    m_actionShowNewOfferDlg.setText("Add new offer");
+    m_actionShowNewOfferDlg.setEnabled(true);
+    //
+    m_actionDeleteCurrentOffer.setText("Delete current offer");
+    m_actionDeleteCurrentOffer.setEnabled(true);
 }
 
 void OffersTable::showTable(){
@@ -99,7 +116,7 @@ void OffersTable::showTable(){
 void OffersTable::fillDataRow (int ui_row_num, OfferBaseDTO* ptr_dto){
     QTableWidgetItem* ptr_item_date     = makeCellDate(ptr_dto);
     QTableWidgetItem* ptr_item_title    = makeCellTitle(ptr_dto);
-    QTableWidgetItem* ptr_item_skills   = makeCellSkills(ptr_dto);
+    QTableWidgetItem* ptr_item_skills   = makeCellSkills(ui_row_num, ptr_dto);
     QTableWidgetItem* ptr_item_country  = makeCellCountry(ptr_dto);
     QTableWidgetItem* ptr_item_town     = makeCellTown(ptr_dto);
     QTableWidgetItem* ptr_item_agent    = makeCellAgent(ptr_dto);
@@ -145,9 +162,9 @@ QTableWidgetItem* OffersTable::makeCellRate(OfferBaseDTO* ptr_dto){
     return ptr_item_rate;
 }
 
-QTableWidgetItem* OffersTable::makeCellSkills(OfferBaseDTO* ptr_dto){
+QTableWidgetItem* OffersTable::makeCellSkills(int ui_row_num, OfferBaseDTO* ptr_dto){
     QString str_res_skills;
-    const SkillsList&  skill_list_ids = ptr_dto->getSkillsListIDs();
+    const SkillsList&  skill_list_ids = OfferSkillProcesor::getInstance().getSkillsList(ptr_dto->getId());
     //
     for (int i = 0; i < skill_list_ids.size(); ++i){
         QString str_skill = SkillProcessor::getInstance().getSkillNameById(skill_list_ids[i]);
@@ -219,7 +236,7 @@ QTableWidgetItem* OffersTable::makeCellStatus(int ui_row_num, OfferBaseDTO* ptr_
     while (i != status_storage.constEnd()) {
         StatusDTO* ptr_status = i.value();
         combo->addItem(ptr_status->getName(), QVariant(ptr_status->getId()));
-        if (ptr_status->getId() == ptr_dto->getStatus()){
+        if (ptr_status->getId() == ptr_dto->getStatusId()){
             i_active_index = i_current_index;
         };
         //
@@ -310,30 +327,29 @@ void OffersTable::statusChanged(int /*index*/){
 }
 
 void  OffersTable::updateAttractivity(unsigned int ui_row){
-    QTableWidgetItem* ptr_item_date   = this->item(static_cast<int>(ui_row), COL_CREATION_DATE);
-    const QVariant var_record_id = ptr_item_date->data(Qt::UserRole);
-    //
+
+    const int i_record_id = getRecordIdByRowNum(static_cast<int>(ui_row));
     QComboBox*  prt_item_attractivity = dynamic_cast<QComboBox*>(QTableWidget::cellWidget(static_cast<int>(ui_row), COL_ATTRACTIVITY)) ;
     const QVariant var_attractivity = prt_item_attractivity->currentData();
     //
-    OfferProcessor::getInstance().updateAttractivity(var_record_id.toInt(), var_attractivity.toInt());
+    OfferProcessor::getInstance().updateAttractivity(i_record_id, var_attractivity.toInt());
     return;
 }
 
 void OffersTable::updateStatus (unsigned int ui_row){
 
-    QTableWidgetItem* ptr_item_date   = this->item(static_cast<int>(ui_row), COL_CREATION_DATE);
-    const QVariant var_record_id = ptr_item_date->data(Qt::UserRole);
+    const int i_record_id = getRecordIdByRowNum(static_cast<int>(ui_row));
     //
     QComboBox*  prt_item_status = dynamic_cast<QComboBox*>(QTableWidget::cellWidget(static_cast<int>(ui_row), COL_STATUS)) ;
     const QVariant var_status = prt_item_status->currentData();
     //
-    OfferProcessor::getInstance().updateOfferStatus(var_record_id.toInt(), var_status.toInt());
+    OfferProcessor::getInstance().updateOfferStatus(i_record_id, var_status.toInt());
     return;
 }
 
 void OffersTable::bindSignalsAndSlots(){
      QObject::connect(this,  SIGNAL(itemChanged(QTableWidgetItem*)), this, SLOT(onChangeItem(QTableWidgetItem*)));
+     QObject::connect(&m_actionShowNewOfferDlg, SIGNAL(triggered()), this, SLOT(onShowNewOfferDlg()));
 }
 
 void OffersTable::onChangeItem(QTableWidgetItem* item)
@@ -345,8 +361,8 @@ void OffersTable::onChangeItem(QTableWidgetItem* item)
         return;  //do nothing, it is automatic process
     };
     //
-    const unsigned int ui_row   = static_cast<unsigned int>(this->row(item));
-    const int i_col             = this->column(item);
+    const int i_row   = this->row(item);
+    const int i_col   = this->column(item);
     //
     QString str_rate;
     //
@@ -357,13 +373,54 @@ void OffersTable::onChangeItem(QTableWidgetItem* item)
     const int i_rate = str_rate.toInt(&b_ok);
     //
     if (false == b_ok){
-        //add messagebox can not covert value to digit
+        const QString str_msg = QString("can not convert %1 to integer").arg(str_rate);
+        QMessageBox::critical(nullptr, "Error", str_msg, QMessageBox::Ok);
         return;
     };
     //
-    QTableWidgetItem* ptr_item_date = this->item(ui_row, COL_CREATION_DATE);
-    const QVariant var_record_id = ptr_item_date->data(Qt::UserRole);
-    //call update rate here
-    OfferProcessor::getInstance().updateRate(var_record_id.toInt(), i_rate);
+    const int i_record_id = getRecordIdByRowNum(i_row);
+    OfferProcessor::getInstance().updateRate(i_record_id, i_rate);
     return;
+}
+
+void OffersTable::onShowNewOfferDlg(){
+    emit needNewOfferDlg();
+}
+
+void OffersTable::showPopupMenu(){
+    QMenu popup_menu(this);
+    popup_menu.addAction(&m_actionShowNewOfferDlg);
+    //
+    const int i_row = this->currentRow();
+    const int i_column = this->currentColumn();
+    //
+    if ((i_row < 0) || (i_column < 0)){
+        m_actionDeleteCurrentOffer.setEnabled(false);
+    }else{
+        m_actionDeleteCurrentOffer.setEnabled(true);
+    };
+    //
+    popup_menu.addAction(&m_actionDeleteCurrentOffer);
+
+
+    popup_menu.exec(QCursor::pos());
+}
+
+void OffersTable::mouseReleaseEvent (QMouseEvent *event)
+{
+    QTableWidget::mouseReleaseEvent(event);
+    //
+    Qt::MouseButton btn = event->button();
+    //
+    if ( btn == Qt::RightButton )
+    {
+        showPopupMenu ();
+    };
+}
+
+int OffersTable::getRecordIdByRowNum(int i_row_num){
+    QTableWidgetItem* ptr_item_date   = this->item(static_cast<int>(i_row_num), COL_CREATION_DATE);
+    const QVariant var_record_id = ptr_item_date->data(Qt::UserRole);
+    const int i_record_id = var_record_id.toInt();
+    return i_record_id;
 }

@@ -23,13 +23,6 @@
 DlgNewOffer::DlgNewOffer(QWidget *parent) :
     QDialog(parent)
 {
-    setDlgSizes();
-    setElementSizes();
-    setDlgLayout();
-    setMenuAction();
-    //
-    createWidgets();
-    addWidgetsToLayout();
 
 }
 
@@ -37,6 +30,15 @@ DlgNewOffer::~DlgNewOffer(){
 
 }
 
+void DlgNewOffer::init(){
+    setDlgSizes();
+    setElementSizes();
+    setDlgLayout();
+    setMenuAction();
+    //
+    createWidgets();
+    addWidgetsToLayout();
+}
 
 void DlgNewOffer::setMenuAction(){
     m_actionAcceptOfferCore.setText("set position title");
@@ -55,7 +57,7 @@ void DlgNewOffer::setMenuAction(){
     m_actionAcceptAgentPhone1.setText("Set agent phone N 1");
     connect(&m_actionAcceptAgentPhone1, SIGNAL(triggered()), this, SLOT(onClickBtnAcceptAgentPhone1()));
     m_actionAcceptAgentPhone2.setText("Set agent phone N 2");
-    connect(&m_actionAcceptAgentPhone1, SIGNAL(triggered()), this, SLOT(onClickBtnAcceptAgentPhone2()));
+    connect(&m_actionAcceptAgentPhone2, SIGNAL(triggered()), this, SLOT(onClickBtnAcceptAgentPhone2()));
     m_actionAcceptAgencyName.setText("Set agency name");
     connect(&m_actionAcceptAgencyName, SIGNAL(triggered()), this, SLOT(onClickBtnAcceptAgencyName()));
     //
@@ -540,7 +542,8 @@ void  DlgNewOffer::onClickBtnSaveOffer(){
     //
     saveAgentInfo();
     saveOffer();
-
+    //
+    emit addedNewOffer();
     return;
 }
 
@@ -555,14 +558,17 @@ void DlgNewOffer::saveOffer(){
     m_dtoOffer.setPositionTitle(m_EditOfferCore.text());
     m_dtoOffer.setCountryId(i_country_id);
     m_dtoOffer.setTownId(i_town_id);
-    m_dtoOffer.setSkillsListIDs(skill_list_ids);
-    m_dtoOffer.setRate(m_EditTown.text().toInt());
+    //m_dtoOffer.setSkillsListIDs(skill_list_ids);
+    //
+    const QString str_rate = m_EditRate.text();
+    m_dtoOffer.setRate(str_rate.toInt());
     const int i_attractivity = m_ComboAttractivity.currentData().toInt();
     m_dtoOffer.setAttractivity(i_attractivity);
     const int i_status = m_ComboStatus.currentData().toInt();
-    m_dtoOffer.setStatus(i_status);
-    const int i_insert_id = OfferProcessor::getInstance().add(&m_dtoOffer);
-    m_dtoOffer.setId(i_insert_id);
+    m_dtoOffer.setStatusId(i_status);
+    const int i_offer_id = OfferProcessor::getInstance().add(&m_dtoOffer);
+    m_dtoOffer.setId(i_offer_id);
+    OfferSkillProcesor::getInstance().add(i_offer_id,skill_list_ids);
 }
 
 void DlgNewOffer::saveAgentInfo(){

@@ -29,14 +29,11 @@ public:
     int                 getTownId() const;
     void                setTownId(int i_pos_town);
     //
-    const SkillsList&   getSkillsListIDs() const;
-    void                setSkillsListIDs(const SkillsList&  v_skill_list);
-    //
     int                 getRate() const;
     void                setRate(int rate);
     //
-    int                 getStatus() const;
-    void                setStatus(int i_status);
+    int                 getStatusId() const;
+    void                setStatusId(int i_status);
     //
     int                 getAgentId() const;
     void                setAgentId(int i_agent_id);
@@ -50,9 +47,8 @@ private:
     QString             m_strPositionTitle;
     int                 m_iCountryId;
     int                 m_iTownId;
-    SkillsList          m_vSkillsListIDs;
     int                 m_iRate;
-    int                 m_iStatus;
+    int                 m_iStatusId;
     int                 m_iAgentId;
     int                 m_iAttractivity;
 };
