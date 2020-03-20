@@ -54,7 +54,9 @@ SOURCES += \
     graficcontainers/offerstable.cpp \
     operations/offerscaner.cpp \
     menucontainers/mainwindowmenu.cpp \
-    menucontainers/offerstablemenu.cpp
+    menucontainers/offerstablemenu.cpp \
+    graficcontainers/graficcontainerlistagent.cpp \
+    graficcontainers/agentstable.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -87,7 +89,9 @@ HEADERS += \
     graficcontainers/offerstable.h \
     operations/offerscaner.h \
     menucontainers/mainwindowmenu.h \
-    menucontainers/offerstablemenu.h
+    menucontainers/offerstablemenu.h \
+    graficcontainers/graficcontainerlistagent.h \
+    graficcontainers/agentstable.h
 
 FORMS += \
         mainwindow.ui

@@ -33,6 +33,7 @@ private:
     void                removeEmptyStrings();
     void                generateSkillsList();
     void                generateAgentInfo();
+    void                generateAgencyInfo();
     void                generateTownInfo();
 
 private:

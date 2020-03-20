@@ -73,7 +73,8 @@ int AgentProcessor::insertIntoDB(AgentBaseDTO* ptr_agent_base_info_dto){
                          ptr_agent_base_info_dto->getPhone2(),
                          "", //description
                          ptr_agent_base_info_dto->getAgencyId(),
-                         VALUE_UNDEFINED);
+                         VALUE_UNDEFINED,
+                         ptr_agent_base_info_dto->getWebProfile());
     //
     return i_last_id;
 }
@@ -96,7 +97,7 @@ bool AgentProcessor::readAllFromDB(){
     //
     QSqlQuery qry(*ptr_db);
     //
-    const QString str_query = QString("select id, name, e_mail, phone_1, phone_2, description, id_agency, level from agents_tbl;");
+    const QString str_query = QString("select id, name, e_mail, phone_1, phone_2, description, id_agency, level, web_profile from agents_tbl;");
     //
     if ( !qry.prepare( str_query ) )
     {
@@ -120,7 +121,8 @@ bool AgentProcessor::readAllFromDB(){
                              qry.value(4).toString(),
                              qry.value(5).toString(),
                              qry.value(6).toInt(),
-                             qry.value(7).toInt());
+                             qry.value(7).toInt(),
+                             qry.value(8).toString());
     };
     //
     return b_res;
@@ -133,7 +135,8 @@ void AgentProcessor::addNewValueToStorage(int id,
                                           const QString& str_phone2,
                                           const QString& str_description,
                                           int i_agency_id,
-                                          int i_level){
+                                          int i_level,
+                                          const QString& str_web_profile){
 
     AgentBaseDTO* ptr_agent = new AgentBaseDTO();
     ptr_agent->setId(id);
@@ -144,6 +147,7 @@ void AgentProcessor::addNewValueToStorage(int id,
     ptr_agent->setDescription(str_description);
     ptr_agent->setAgencyId(i_agency_id);
     ptr_agent->setLevel(i_level);
+    ptr_agent->setWebProfile(str_web_profile);
     //
     m_mapStorage.insert(ptr_agent->getEMail(), ptr_agent);
 }

@@ -31,7 +31,8 @@ private:
                                               const QString& str_phone2,
                                               const QString& str_description,
                                               int i_agency_id,
-                                              int i_level);
+                                              int i_level,
+                                              const QString &str_web_profile);
 
 signals:
 

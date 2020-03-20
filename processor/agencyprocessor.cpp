@@ -125,3 +125,7 @@ QString AgencyProcessor::getAgencyNameByID(int i_id){
     };
     return str_res;
 }
+
+const AgencyStorage& AgencyProcessor::getStorage() const{
+    return m_mapStorage;
+}

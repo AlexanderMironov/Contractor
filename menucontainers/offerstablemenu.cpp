@@ -22,6 +22,7 @@ void OffersTableMenu::init(OffersTable* pt_main_window){
     //
     m_actionDeleteCurrentOffer.setText("Delete current offer");
     m_actionDeleteCurrentOffer.setEnabled(true);
+    QObject::connect(&m_actionDeleteCurrentOffer, SIGNAL(triggered()), m_ptrParentWindow, SLOT(onDeleteCurrentOffer()));
 }
 
 void OffersTableMenu::fillPopupMenu(QMenu* ptr_mnu, bool enable_delete){

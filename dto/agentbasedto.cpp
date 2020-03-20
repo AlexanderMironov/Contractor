@@ -48,6 +48,21 @@ void AgentBaseDTO::setPhone2(const QString& str_phone_2){
     m_strPhone2 = str_phone_2;
 }
 
+
+const QString&  AgentBaseDTO::getWebProfile() const{
+    return m_strWebProfile;
+}
+
+void  AgentBaseDTO::setWebProfile(const QString& str_web_profile){
+    m_strWebProfile = str_web_profile;
+}
+
+
+
+
+
+
+
 const QString& AgentBaseDTO::getDescription() const{
     return m_strDescription;
 }

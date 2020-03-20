@@ -21,6 +21,7 @@ public:
     bool                    updateOfferStatus(int i_offer_id, int i_offer_status);
     bool                    updateAttractivity(int i_offer_id, int i_offer_attractivity);
     bool                    updateRate(int i_offer_id, int i_rate);
+    bool                    removeOffer(int i_offer_id);
 
 signals:
 

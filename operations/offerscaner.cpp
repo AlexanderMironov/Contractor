@@ -7,6 +7,7 @@
 #include "dto/agentbasedto.h"
 #include "processor/agentprocessor.h"
 //
+#include "dto/agencydto.h"
 #include "processor/agencyprocessor.h"
 //
 #include "dto/towndto.h"
@@ -25,6 +26,10 @@ void OfferScaner::parse(const QString& str_original_text){
     removeEmptyStrings();
     generateSkillsList();
     generateAgentInfo();
+    if(m_strAgencyName.length() == 0){
+        //we did not find agent, may be we can find agency?
+        generateAgencyInfo();
+    };
     generateTownInfo();
 }
 
@@ -90,6 +95,20 @@ void OfferScaner::generateTownInfo(){
         const int i_found_pos = m_strModifiedText.indexOf(str_current_town,Qt::CaseInsensitive);
         if (-1 != i_found_pos){
             m_strTown = str_current_town;
+            break;
+        };
+    };
+}
+
+void OfferScaner::generateAgencyInfo(){
+    const AgencyStorage& agency_storage = AgencyProcessor::getInstance().getStorage();
+    AgencyStorage ::const_iterator i = agency_storage.constBegin();
+    //
+    for (;i != agency_storage.constEnd(); i++){
+        const QString& str_current_agency = i.value()->getName();
+        const int i_found_pos = m_strModifiedText.indexOf(str_current_agency, Qt::CaseInsensitive);
+        if (-1 != i_found_pos){
+            m_strAgencyName = str_current_agency;
             break;
         };
     };

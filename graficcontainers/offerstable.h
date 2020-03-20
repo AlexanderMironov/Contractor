@@ -22,13 +22,14 @@ signals:
 
 public slots:
     void    showTable();
+    void    onShowNewOfferDlg();
+    void    onDeleteCurrentOffer();
 
 
 private slots:
     void            statusChanged (int i_index);
     void            attractivityChanged(int i_index);
     void            onChangeItem (QTableWidgetItem * item);
-    void            onShowNewOfferDlg();
 
 
 protected:

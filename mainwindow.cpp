@@ -10,6 +10,8 @@
 #include "ui_mainwindow.h"
 //
 #include "graficcontainers/graficcontainerlistoffers.h"
+#include "graficcontainers/graficcontainerlistagent.h"
+
 //
 
 
@@ -28,6 +30,7 @@ MainWindow::MainWindow(QWidget *parent) :
     //create TabPages 1 by 1
     //offers
     GraficContainerListOffers::getInstance().init(m_ptrMainTab);
+    GraficContainerListAgent::getInstance().init(m_ptrMainTab);
     //agents
     //todo add it
     QDesktopWidget dw;

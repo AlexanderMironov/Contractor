@@ -48,6 +48,7 @@ bool OfferSkillProcesor::isExist(int i_offer_id, int i_skill_id){
     return b_res;
 }
 
+
 bool OfferSkillProcesor::readAllFromDB(){
     bool b_res = true;
     //
@@ -133,4 +134,30 @@ SkillsList OfferSkillProcesor::getSkillsList(int i_offer_id){
         };
     };
     return ret_vector;
+}
+
+bool OfferSkillProcesor::removeOffer(int i_offer_id){
+    DBAcccessSafe dbAccess;
+    QSqlDatabase* ptr_db =  dbAccess.getDB();
+    if (nullptr == ptr_db){
+        return false;
+    };
+    //
+    QSqlQuery qry(*ptr_db);
+    //
+    const QString str_update_string = QString("DELETE FROM offers_skills_tbl WHERE id_offer = %1;").arg(i_offer_id);
+    //
+    if ( !qry.prepare( str_update_string  ) )
+    {
+        QMessageBox::critical(nullptr, "Error prepare", str_update_string, QMessageBox::Ok);
+        return false;
+    };
+    //
+    if ( !qry.exec() )
+    {
+        QMessageBox::critical(nullptr, "Error exec", str_update_string + "\n" + qry.lastError().text(), QMessageBox::Ok);
+        return false;
+    };
+    //
+    return true;
 }

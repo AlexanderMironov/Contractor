@@ -20,6 +20,7 @@ public:
     bool                        init();
     void                        add(int i_offer_id, const SkillsList& skill_list);
     SkillsList                  getSkillsList(int i_offer_id);
+    bool                        removeOffer(int i_offer_id);
 signals:
 
 public slots:

@@ -521,9 +521,8 @@ void  DlgNewOffer::onClickBtnScan(){
         m_EditAgentName.setText(scaner.getAgentName());
         m_EditAgentPhone1.setText(scaner.getAgentPhone1());
         m_EditAgentPhone2.setText(scaner.getAgentPhone2());
-        //
-        m_EditAgencyName.setText(scaner.getAgencyName());
     };
+    m_EditAgencyName.setText(scaner.getAgencyName());
     m_EditTown.setText(scaner.getTownName());
 }
 

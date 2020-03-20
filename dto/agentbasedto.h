@@ -22,6 +22,9 @@ public:
     const QString&  getPhone2() const;
     void            setPhone2(const QString& str_phone_2);
     //
+    const QString&  getWebProfile() const;
+    void            setWebProfile(const QString& str_web_profile);
+    //
     const QString&  getDescription() const;
     void            setDescription(const QString& str_description);
     //
@@ -39,6 +42,7 @@ private:
     QString     m_strEMail;
     QString     m_strPhone1;
     QString     m_strPhone2;
+    QString     m_strWebProfile;
     QString     m_strDescription;
     int         m_iAgencyId;
     int         m_iLevel;

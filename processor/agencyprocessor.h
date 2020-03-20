@@ -21,6 +21,7 @@ public:
     int                         add(const QString& str_agency_name);
     bool                        init();
     QString                     getAgencyNameByID(int i_id);
+    const AgencyStorage&        getStorage() const;
 
 signals:
 

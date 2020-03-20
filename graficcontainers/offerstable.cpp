@@ -143,6 +143,7 @@ QTableWidgetItem* OffersTable::makeCellDate (OfferBaseDTO* ptr_dto)
 QTableWidgetItem* OffersTable::makeCellTitle(OfferBaseDTO* ptr_dto){
     QTableWidgetItem*   ptr_item_title  = new  QTableWidgetItem( ptr_dto->getPositionTitle());
     ptr_item_title->setFlags( Qt::ItemIsEnabled |Qt::ItemIsSelectable );
+    ptr_item_title->setToolTip(ptr_dto->getPositionTitle());
     return ptr_item_title;
 }
 
@@ -198,6 +199,13 @@ QTableWidgetItem* OffersTable::makeCellAgent(OfferBaseDTO* ptr_dto){
     if (nullptr != ptr_agent){
         str_ret = ptr_agent->getName();
     };
+    //
+    if (ptr_agent->getDescription().length() > 0){
+        ptr_item_agent->setToolTip(ptr_agent->getDescription());
+    }else{
+        ptr_item_agent->setToolTip("Description not available");
+    }
+
     ptr_item_agent->setText(str_ret);
     ptr_item_agent->setFlags( Qt::ItemIsEnabled |Qt::ItemIsSelectable );
     return ptr_item_agent;
@@ -337,6 +345,34 @@ void OffersTable::updateStatus (unsigned int ui_row){
     //
     OfferProcessor::getInstance().updateOfferStatus(i_record_id, var_status.toInt());
     return;
+}
+
+void OffersTable::onDeleteCurrentOffer(){
+    QTableWidgetItem* ptr_current_item = this->currentItem();
+    if (nullptr == ptr_current_item){
+        return;
+    };
+    //
+    const int i_row = this->row(ptr_current_item);
+    //
+    QTableWidgetItem* ptr_pos_name_item = this->item(i_row, COL_TITLE);
+    const QString str_pos_name = ptr_pos_name_item->text();
+    //
+    QMessageBox box;
+    box.setStandardButtons( QMessageBox::Yes|QMessageBox::No );
+    QString str_box_msg = QString("Do you really want to delete offer [%1]").arg(str_pos_name);
+    box.setText(str_box_msg);
+    const int ret = box.exec();
+    if (ret != QMessageBox::Yes){
+        return;
+    };
+    //
+    const int i_record_id = getRecordIdByRowNum(i_row);
+    if (OfferProcessor::getInstance().removeOffer(i_record_id) == true){
+        OfferSkillProcesor::getInstance().removeOffer(i_record_id);
+    };
+    //
+    this->removeRow(i_row);
 }
 
 void OffersTable::bindSignalsAndSlots(){
