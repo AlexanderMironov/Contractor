@@ -52,7 +52,9 @@ SOURCES += \
     dto/statusdto.cpp \
     processor/statusprocessor.cpp \
     graficcontainers/offerstable.cpp \
-    operations/offerscaner.cpp
+    operations/offerscaner.cpp \
+    menucontainers/mainwindowmenu.cpp \
+    menucontainers/offerstablemenu.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -83,7 +85,9 @@ HEADERS += \
     dto/statusdto.h \
     processor/statusprocessor.h \
     graficcontainers/offerstable.h \
-    operations/offerscaner.h
+    operations/offerscaner.h \
+    menucontainers/mainwindowmenu.h \
+    menucontainers/offerstablemenu.h
 
 FORMS += \
         mainwindow.ui

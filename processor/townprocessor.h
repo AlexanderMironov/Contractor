@@ -20,6 +20,7 @@ public:
         bool                        init();
         int                         add(const QString& str_country_name);
         QString                     getTownNameByID(int i_id) const;
+        const TownStorage&          getStorage() const;
 signals:
 
 public slots:

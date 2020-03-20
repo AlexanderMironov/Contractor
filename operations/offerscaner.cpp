@@ -8,6 +8,9 @@
 #include "processor/agentprocessor.h"
 //
 #include "processor/agencyprocessor.h"
+//
+#include "dto/towndto.h"
+#include "processor/townprocessor.h"
 
 
 OfferScaner::OfferScaner(QObject *parent) : QObject(parent)
@@ -22,6 +25,11 @@ void OfferScaner::parse(const QString& str_original_text){
     removeEmptyStrings();
     generateSkillsList();
     generateAgentInfo();
+    generateTownInfo();
+}
+
+const QString& OfferScaner::getTownName() const{
+    return m_strTown;
 }
 
 const QString& OfferScaner::getModifiedText() const{
@@ -60,6 +68,7 @@ const QString& OfferScaner::getAgencyName() const{
 }
 
 void OfferScaner::resetFields(){
+    m_strTown           = "";
     m_strSkills         = "";
     m_iAgentId          = VALUE_UNDEFINED;
     m_iAgencyId         = VALUE_UNDEFINED;
@@ -69,6 +78,21 @@ void OfferScaner::resetFields(){
     m_strAgentPhone2    = "";
     //
     m_strAgencyName     = "";
+}
+
+void OfferScaner::generateTownInfo(){
+    const TownStorage& town_storage = TownProcessor::getInstance().getStorage();
+    TownStorage::const_iterator i = town_storage.constBegin();
+    //
+    for(;i != town_storage.constEnd(); i++){
+        TownDTO* ptr_town = i.value();
+        const QString str_current_town = ptr_town->getName();
+        const int i_found_pos = m_strModifiedText.indexOf(str_current_town,Qt::CaseInsensitive);
+        if (-1 != i_found_pos){
+            m_strTown = str_current_town;
+            break;
+        };
+    };
 }
 
 void OfferScaner::generateAgentInfo(){
@@ -105,7 +129,7 @@ void OfferScaner::generateSkillsList(){
     for (;i != skill_storage.constEnd(); i++){
         const QString str_current_skill = i.value()->getName();
         if (str_current_skill.length() > 1){
-            const int i_found_pos = m_strModifiedText.indexOf(str_current_skill);
+            const int i_found_pos = m_strModifiedText.indexOf(str_current_skill, Qt::CaseInsensitive);
             if (-1 != i_found_pos){
                 if (m_strSkills.length() > 0){
                     m_strSkills += ",";

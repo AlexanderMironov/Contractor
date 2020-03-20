@@ -129,3 +129,7 @@ QString TownProcessor::getTownNameByID(int i_id) const{
     //
     return str_ret;
 }
+
+const TownStorage& TownProcessor::getStorage() const{
+    return m_mapStorage;
+}

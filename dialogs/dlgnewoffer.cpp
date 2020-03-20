@@ -103,7 +103,6 @@ void  DlgNewOffer::createOfferWidgets(){
     m_OfferEdit.setContextMenuPolicy(Qt::CustomContextMenu);
     connect(&m_OfferEdit, &QPlainTextEdit::copyAvailable, this, &DlgNewOffer::onSelectText);
     connect(&m_OfferEdit, &QWidget::customContextMenuRequested, this, &DlgNewOffer::onRequestUserMenu);
-    //m_OfferEdit->viewport()->installEventFilter(this);
     //
     m_LblOfferInfo.setText("Offer info");
     m_LblOfferInfo.setMinimumWidth(300);
@@ -279,9 +278,11 @@ void  DlgNewOffer::createControlButtons(){
     //
     m_ButtonShowAgentInfo.setText("Show agent info");
     m_ButtonShowAgentInfo.setMinimumWidth(m_iMinButtonWidth);
+    m_ButtonShowAgentInfo.setEnabled(false);
     //
     m_ButtonShareOffer.setText("Share offer with colleagues");
     m_ButtonShareOffer.setMinimumWidth(m_iMinButtonWidth);
+    m_ButtonShareOffer.setEnabled(false);
     //
     m_ButtonScan.setText("Scan offer");
     m_ButtonScan.setMinimumWidth(m_iMinButtonWidth);
@@ -523,8 +524,7 @@ void  DlgNewOffer::onClickBtnScan(){
         //
         m_EditAgencyName.setText(scaner.getAgencyName());
     };
-    //
-    return;
+    m_EditTown.setText(scaner.getTownName());
 }
 
 void  DlgNewOffer::onClickBtnSaveOffer(){
@@ -592,6 +592,8 @@ void DlgNewOffer::saveOffer(){
     const int i_offer_id = OfferProcessor::getInstance().add(&m_dtoOffer);
     m_dtoOffer.setId(i_offer_id);
     OfferSkillProcesor::getInstance().add(i_offer_id,skill_list_ids);
+    //
+    this->close();
 }
 
 void DlgNewOffer::saveAgentInfo(){

@@ -4,6 +4,7 @@
 #include <QFrame>
 #include <QVBoxLayout>
 #include <QDesktopWidget>
+#include <QMenu>
 //
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
@@ -30,12 +31,15 @@ MainWindow::MainWindow(QWidget *parent) :
     //agents
     //todo add it
     QDesktopWidget dw;
-    this->setMinimumHeight(dw.height()*0.8);
+    this->setMinimumHeight(dw.height()*0.5);
+    this->setMaximumHeight(dw.height()*0.9);
     //
     this->setMinimumWidth(dw.width()*0.7);
-    this->setMaximumWidth(dw.width()*0.95);
+    this->setMaximumWidth(dw.width()*0.9);
     //
     this->setWindowTitle("Contractor");
+    //
+    m_mnuContainer.init(this);
     //
     return;
 }

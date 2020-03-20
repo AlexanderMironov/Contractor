@@ -35,7 +35,7 @@ OffersTable::OffersTable(QWidget *parent):QTableWidget(parent)
 {
     m_bFillTableModeOn = false;
     setHeaderParams();
-    setPopUpMnu();
+    m_mnuContainer.init(this);
     bindSignalsAndSlots();
     showTable();
 }
@@ -59,8 +59,8 @@ void OffersTable::setHeaderParams(){
     this->setColumnWidth(COL_SKILLS, 55);
     this->setColumnWidth(COL_COUNTRY, 85);
     this->setColumnWidth(COL_TOWN, 85);
-    this->setColumnWidth(COL_AGENT, 115);
-    this->setColumnWidth(COL_AGENCY, 105);
+    this->setColumnWidth(COL_AGENT, 135);
+    this->setColumnWidth(COL_AGENCY, 135);
     this->setColumnWidth(COL_STATUS, 160);
     this->setColumnWidth(COL_ATTRACTIVITY, 140);
     this->setColumnWidth(COL_RATE, 45);
@@ -75,14 +75,6 @@ void OffersTable::setHeaderParams(){
     header->setSectionResizeMode(COL_STATUS,        QHeaderView::Fixed);
     header->setSectionResizeMode(COL_ATTRACTIVITY,  QHeaderView::Fixed);
     header->setSectionResizeMode(COL_RATE,          QHeaderView::Fixed);
-}
-
-void OffersTable::setPopUpMnu(){
-    m_actionShowNewOfferDlg.setText("Add new offer");
-    m_actionShowNewOfferDlg.setEnabled(true);
-    //
-    m_actionDeleteCurrentOffer.setText("Delete current offer");
-    m_actionDeleteCurrentOffer.setEnabled(true);
 }
 
 void OffersTable::showTable(){
@@ -185,7 +177,7 @@ QTableWidgetItem* OffersTable::makeCellCountry(OfferBaseDTO* ptr_dto){
     const QString str_country = CountryProcessor::getInstance().getCountryNameByID(ptr_dto->getCountryId());
     QTableWidgetItem*   ptr_item_country = new  QTableWidgetItem(str_country);
     ptr_item_country->setFlags( Qt::ItemIsEnabled |Qt::ItemIsSelectable );
-    ptr_item_country->setTextAlignment(Qt::AlignCenter|Qt::AlignHCenter);
+    ptr_item_country->setTextAlignment(Qt::AlignLeft|Qt::AlignVCenter);
     return ptr_item_country;
 }
 
@@ -193,7 +185,7 @@ QTableWidgetItem* OffersTable::makeCellTown(OfferBaseDTO* ptr_dto){
     const QString str_town = TownProcessor::getInstance().getTownNameByID(ptr_dto->getTownId());
     QTableWidgetItem*   ptr_item_country = new  QTableWidgetItem(str_town);
     ptr_item_country->setFlags( Qt::ItemIsEnabled |Qt::ItemIsSelectable );
-    ptr_item_country->setTextAlignment(Qt::AlignCenter|Qt::AlignHCenter);
+    ptr_item_country->setTextAlignment(Qt::AlignLeft|Qt::AlignVCenter);
     return ptr_item_country;
 }
 
@@ -349,7 +341,6 @@ void OffersTable::updateStatus (unsigned int ui_row){
 
 void OffersTable::bindSignalsAndSlots(){
      QObject::connect(this,  SIGNAL(itemChanged(QTableWidgetItem*)), this, SLOT(onChangeItem(QTableWidgetItem*)));
-     QObject::connect(&m_actionShowNewOfferDlg, SIGNAL(triggered()), this, SLOT(onShowNewOfferDlg()));
 }
 
 void OffersTable::onChangeItem(QTableWidgetItem* item)
@@ -389,20 +380,13 @@ void OffersTable::onShowNewOfferDlg(){
 
 void OffersTable::showPopupMenu(){
     QMenu popup_menu(this);
-    popup_menu.addAction(&m_actionShowNewOfferDlg);
     //
     const int i_row = this->currentRow();
     const int i_column = this->currentColumn();
     //
-    if ((i_row < 0) || (i_column < 0)){
-        m_actionDeleteCurrentOffer.setEnabled(false);
-    }else{
-        m_actionDeleteCurrentOffer.setEnabled(true);
-    };
+    const bool b_disable_delete = (i_row < 0) || (i_column < 0);
+    m_mnuContainer.fillPopupMenu(&popup_menu,!b_disable_delete);
     //
-    popup_menu.addAction(&m_actionDeleteCurrentOffer);
-
-
     popup_menu.exec(QCursor::pos());
 }
 

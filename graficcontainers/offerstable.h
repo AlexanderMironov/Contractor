@@ -5,6 +5,8 @@
 #include <QTableWidget>
 #include <QAction>
 //
+#include "menucontainers/offerstablemenu.h"
+//
 class OfferBaseDTO;
 //
 class OffersTable : public QTableWidget
@@ -27,6 +29,7 @@ private slots:
     void            attractivityChanged(int i_index);
     void            onChangeItem (QTableWidgetItem * item);
     void            onShowNewOfferDlg();
+
 
 protected:
     void            mouseReleaseEvent   (QMouseEvent *event);
@@ -52,7 +55,6 @@ private:
     void                fillDataRow (int ui_row_num, OfferBaseDTO* ptr_dto);
     void                updateStatus (unsigned int ui_row);
     void                updateAttractivity(unsigned int ui_row);
-    void                setPopUpMnu();
     void                showPopupMenu();
     int                 getRecordIdByRowNum(int i_row_num);
     //
@@ -67,8 +69,7 @@ private:
     QTableWidgetItem*   makeCellAttractity(int ui_row_num, OfferBaseDTO* ptr_dto);
     QTableWidgetItem*   makeCellRate(OfferBaseDTO* ptr_dto);
     //
-    QAction             m_actionShowNewOfferDlg;
-    QAction             m_actionDeleteCurrentOffer;
+    OffersTableMenu     m_mnuContainer;
     //
     bool    m_bFillTableModeOn;
 

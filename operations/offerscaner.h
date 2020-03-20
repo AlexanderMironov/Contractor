@@ -21,6 +21,7 @@ public:
     const QString&      getAgentPhone2() const;
     //
     const QString&      getAgencyName() const;
+    const QString&      getTownName() const;
     //
 
 signals:
@@ -32,12 +33,15 @@ private:
     void                removeEmptyStrings();
     void                generateSkillsList();
     void                generateAgentInfo();
+    void                generateTownInfo();
 
 private:
 
     QString m_strModifiedText;
     //
     QString m_strSkills;
+    //
+    QString                 m_strTown;
     //
     int                     m_iAgentId;
     int                     m_iAgencyId;
