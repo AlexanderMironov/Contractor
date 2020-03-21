@@ -19,6 +19,7 @@
 //
 #include "dto/statusdto.h"
 #include "dto/attractivity.h"
+#include "dto/agentrank.h"
 //
 #include "config/configuration.h"
 
@@ -268,9 +269,14 @@ void  DlgNewOffer::createAgentWidgets(){
     m_LblAgentRank.setMaximumWidth(m_iMaxElementWidth);
     //..
     m_ComboAgentRank.setMinimumWidth(m_iMinButtonWidth);
-    m_ComboAgentRank.addItem("Unknown");
     m_ComboAgentRank.setMaximumWidth(m_iMaxElementWidth);
-    //
+    m_ComboAgentRank.addItem(Configuration::getInstance().getAgentRankAsString(AGENT_RANK::RankUnknown), QVariant(static_cast<int>(AGENT_RANK::RankUnknown)));
+    m_ComboAgentRank.addItem(Configuration::getInstance().getAgentRankAsString(AGENT_RANK::RankVeryBad), QVariant(static_cast<int>(AGENT_RANK::RankVeryBad)));
+    m_ComboAgentRank.addItem(Configuration::getInstance().getAgentRankAsString(AGENT_RANK::RankBad), QVariant(static_cast<int>(AGENT_RANK::RankBad)));
+    m_ComboAgentRank.addItem(Configuration::getInstance().getAgentRankAsString(AGENT_RANK::RankNeutral), QVariant(static_cast<int>(AGENT_RANK::RankNeutral)));
+    m_ComboAgentRank.addItem(Configuration::getInstance().getAgentRankAsString(AGENT_RANK::RankGood), QVariant(static_cast<int>(AGENT_RANK::RankGood)));
+    m_ComboAgentRank.addItem(Configuration::getInstance().getAgentRankAsString(AGENT_RANK::RankVeryGood), QVariant(static_cast<int>(AGENT_RANK::RankVeryGood)));
+    m_ComboAgentRank.setCurrentIndex(0);
 }
 
 void  DlgNewOffer::createControlButtons(){
@@ -529,6 +535,14 @@ void  DlgNewOffer::onClickBtnScan(){
         m_EditAgentName.setText(scaner.getAgentName());
         m_EditAgentPhone1.setText(scaner.getAgentPhone1());
         m_EditAgentPhone2.setText(scaner.getAgentPhone2());
+        //
+        for (int i = 0; i < m_ComboAgentRank.count(); ++i){
+            QVariant current_rank = m_ComboAgentRank.itemData(i,Qt::UserRole);
+            if (current_rank.toInt() == scaner.getAgentRank()){
+                m_ComboAgentRank.setCurrentIndex(i);
+                break;
+            };
+        };
     };
     m_EditAgencyName.setText(scaner.getAgencyName());
     m_EditTown.setText(scaner.getTownName());
@@ -598,6 +612,7 @@ void DlgNewOffer::saveOffer(){
     m_dtoOffer.setStatusId(i_status);
     const int i_offer_id = OfferProcessor::getInstance().add(&m_dtoOffer);
     m_dtoOffer.setId(i_offer_id);
+    //
     OfferSkillProcesor::getInstance().add(i_offer_id,skill_list_ids);
     //
     this->close();
@@ -615,6 +630,8 @@ void DlgNewOffer::saveAgentInfo(){
     m_dtoAgent.setPhone1(m_EditAgentPhone1.text());
     m_dtoAgent.setPhone2(m_EditAgentPhone2.text());
     m_dtoAgent.setAgencyId(i_agency_id);
+    const QVariant agent_rank = m_ComboAgentRank.currentData();
+    m_dtoAgent.setRank(agent_rank.toInt());
     //
     int id = AgentProcessor::getInstance().add(&m_dtoAgent);
     m_dtoAgent.setId(id);

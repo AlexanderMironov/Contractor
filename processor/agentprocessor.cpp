@@ -44,7 +44,7 @@ int AgentProcessor::insertIntoDB(AgentBaseDTO* ptr_agent_base_info_dto){
     //
     QSqlQuery qry(*ptr_db);
     //
-    QString str_insert_string = QString("INSERT INTO agents_tbl (name, e_mail, phone_1, phone_2, id_agency) values (:NAME, :EMAIL, :PHONE1, :PHONE2, :ID_AGENCY);");
+    QString str_insert_string = QString("INSERT INTO agents_tbl (name, e_mail, phone_1, phone_2, id_agency, level) values (:NAME, :EMAIL, :PHONE1, :PHONE2, :ID_AGENCY, :LEVEL);");
     //
     if( !qry.prepare( str_insert_string ) )
     {
@@ -52,11 +52,12 @@ int AgentProcessor::insertIntoDB(AgentBaseDTO* ptr_agent_base_info_dto){
         return VALUE_UNDEFINED;
     };
     //
-    qry.bindValue(":NAME",   ptr_agent_base_info_dto->getName());
-    qry.bindValue(":EMAIL",  ptr_agent_base_info_dto->getEMail());
-    qry.bindValue(":PHONE1", ptr_agent_base_info_dto->getPhone1());
-    qry.bindValue(":PHONE2", ptr_agent_base_info_dto->getPhone2());
+    qry.bindValue(":NAME",      ptr_agent_base_info_dto->getName());
+    qry.bindValue(":EMAIL",     ptr_agent_base_info_dto->getEMail());
+    qry.bindValue(":PHONE1",    ptr_agent_base_info_dto->getPhone1());
+    qry.bindValue(":PHONE2",    ptr_agent_base_info_dto->getPhone2());
     qry.bindValue(":ID_AGENCY", ptr_agent_base_info_dto->getAgencyId());
+    qry.bindValue(":LEVEL",     ptr_agent_base_info_dto->getRank());
     //
     if( !qry.exec() )
     {
@@ -135,7 +136,7 @@ void AgentProcessor::addNewValueToStorage(int id,
                                           const QString& str_phone2,
                                           const QString& str_description,
                                           int i_agency_id,
-                                          int i_level,
+                                          int i_rank,
                                           const QString& str_web_profile){
 
     AgentBaseDTO* ptr_agent = new AgentBaseDTO();
@@ -146,11 +147,38 @@ void AgentProcessor::addNewValueToStorage(int id,
     ptr_agent->setPhone2(str_phone2);
     ptr_agent->setDescription(str_description);
     ptr_agent->setAgencyId(i_agency_id);
-    ptr_agent->setLevel(i_level);
+    ptr_agent->setRank(i_rank);
     ptr_agent->setWebProfile(str_web_profile);
     //
     m_mapStorage.insert(ptr_agent->getEMail(), ptr_agent);
 }
+
+bool AgentProcessor::updateRank(int i_agent_id, int i_rank){
+    DBAcccessSafe dbAccess;
+    QSqlDatabase* ptr_db =  dbAccess.getDB();
+    if (nullptr == ptr_db){
+        return false;
+    };
+    //
+    QSqlQuery qry(*ptr_db);
+    //
+    const QString str_update_string = QString("UPDATE agents_tbl SET level = %1 WHERE id = %2;").arg(i_rank).arg(i_agent_id);
+    //
+    if ( !qry.prepare( str_update_string  ) )
+    {
+        QMessageBox::critical(nullptr, "Error prepare", str_update_string, QMessageBox::Ok);
+        return false;
+    };
+    //
+    if ( !qry.exec() )
+    {
+        QMessageBox::critical(nullptr, "Error exec", str_update_string + "\n" + qry.lastError().text(), QMessageBox::Ok);
+        return false;
+    };
+    //
+    return true;
+}
+
 
 AgentBaseDTO* AgentProcessor::getAgentByID(int i_id) const{
     AgentBaseDTO* ptr_ret = nullptr;

@@ -20,6 +20,7 @@ public:
     bool                    init();
     AgentBaseDTO*           getAgentByID(int i_id) const;
     const AgentStorage&     getStorage() const;
+    bool                    updateRank(int i_agent_id, int i_rank);
 private:
     explicit                AgentProcessor(QObject *parent = nullptr);
     int                     insertIntoDB(AgentBaseDTO* ptr_agent_base_info_dto);
@@ -31,7 +32,7 @@ private:
                                               const QString& str_phone2,
                                               const QString& str_description,
                                               int i_agency_id,
-                                              int i_level,
+                                              int i_rank,
                                               const QString &str_web_profile);
 
 signals:

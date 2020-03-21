@@ -15,5 +15,13 @@
     static const char AT_ATTRACTIVITY_STANDARD[]    = "attractivity_standard";
     static const char AT_ATTRACTIVITY_HIGH[]        = "attractivity_high";
     static const char AT_ATTRACTIVITY_VERY_HIGH[]   = "attractivity_very_high";
+    //
+    static const char RANK_SECTION_NAME[]       = "AGENT_RANK";
+    static const char RANK_UNKNOWN[]            = "rank_unknown";
+    static const char RANK_VERY_BAD[]           = "rank_very_bad";
+    static const char RANK_BAD[]                = "rank_bad";
+    static const char RANK_NEUTRAL[]            = "rank_neutral";
+    static const char RANK_GOOD[]               = "rank_good";
+    static const char RANK_VERY_GOOD[]          = "rank_very_good";
 
 #endif // CONFIGDEF_H

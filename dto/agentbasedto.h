@@ -31,8 +31,8 @@ public:
     int             getAgencyId() const;
     void            setAgencyId(int i_agency_id);
     //
-    int             getLevel() const;
-    void            setLevel(int i_rank);
+    int             getRank() const;
+    void            setRank(int i_rank);
 
 private:
 
@@ -45,7 +45,7 @@ private:
     QString     m_strWebProfile;
     QString     m_strDescription;
     int         m_iAgencyId;
-    int         m_iLevel;
+    int         m_iRank;
 };
 
 #endif // AGENTBASEDTO_H

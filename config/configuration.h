@@ -6,6 +6,7 @@
 #include <QString>
 //
 #include "dto/attractivity.h"
+#include "dto/agentrank.h"
 
 class QSettings;
 
@@ -26,12 +27,14 @@ public:
     const QString& getDBConnectionName() const;
     const QString& getDBDatabaseType() const;
     const QString& getAttractivityAsString(ATTRACTIVITY en_attractivity);
+    const QString& getAgentRankAsString(AGENT_RANK en_rank);
 
 private:
-    Configuration();
-    bool getDBSettings(QSettings* ptr_settings);
-    bool getAttractivity(QSettings* ptr_settings);
-    static QString    getConfigFullPath();
+                    Configuration();
+    bool            getDBSettings(QSettings* ptr_settings);
+    bool            getAgentRank(QSettings* ptr_settings);
+    bool            getAttractivity(QSettings* ptr_settings);
+    static QString  getConfigFullPath();
     //
 private:
     QSettings*  m_ptrSettings;
@@ -49,6 +52,14 @@ private:
     QString m_str_AttractivityStandard;
     QString m_str_AttractivityHigh;
     QString m_str_AttractivityVeryHigh;
+    //
+    QString m_str_RankUnknown;
+    QString m_str_RankVeryBad;
+    QString m_str_RankBad;
+    QString m_str_RankNeutral;
+    QString m_str_RankGood;
+    QString m_str_RankVeryGood;
+
 
 };
 

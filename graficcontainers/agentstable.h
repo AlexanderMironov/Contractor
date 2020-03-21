@@ -39,7 +39,7 @@ private:
     enum AgentsTableColumns
     {
          COL_NAME           = 0
-        ,COL_REPUTATION     = 1
+        ,COL_RANK           = 1
         ,COL_EMAIL          = 2
         ,COL_PHONE_1        = 3
         ,COL_PHONE_2        = 4
@@ -55,7 +55,7 @@ private:
     int                 getRecordIdByRowNum(int i_row_num);
     //
     QTableWidgetItem*   makeCellName (AgentBaseDTO* ptr_agent);
-    QTableWidgetItem*   makeCellReputation(AgentBaseDTO* ptr_agent);
+    QTableWidgetItem*   makeCellRank(int i_row_num, AgentBaseDTO* ptr_agent);
     QTableWidgetItem*   makeCellEmail (AgentBaseDTO* ptr_agent);
     QTableWidgetItem*   makeCellPhone_1(AgentBaseDTO* ptr_agent);
     QTableWidgetItem*   makeCellPhone_2(AgentBaseDTO* ptr_agent);

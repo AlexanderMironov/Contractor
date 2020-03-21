@@ -91,7 +91,8 @@ HEADERS += \
     menucontainers/mainwindowmenu.h \
     menucontainers/offerstablemenu.h \
     graficcontainers/graficcontainerlistagent.h \
-    graficcontainers/agentstable.h
+    graficcontainers/agentstable.h \
+    dto/agentrank.h
 
 FORMS += \
         mainwindow.ui

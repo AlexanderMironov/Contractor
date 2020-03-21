@@ -22,6 +22,7 @@ public:
     //
     const QString&      getAgencyName() const;
     const QString&      getTownName() const;
+    int                 getAgentRank() const;
     //
 
 signals:
@@ -45,12 +46,14 @@ private:
     QString                 m_strTown;
     //
     int                     m_iAgentId;
+    int                     m_iAgentRank;
     int                     m_iAgencyId;
     QString                 m_strAgencyName;
     QString                 m_strAgentName;
     QString                 m_strAgentEmail;
     QString                 m_strAgentPhone1;
     QString                 m_strAgentPhone2;
+
 
 
 };

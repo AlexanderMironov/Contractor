@@ -1,11 +1,13 @@
 #include "agentbasedto.h"
 #include "processor/agencyprocessor.h"
 #include "commondef.h"
+#include "dto/agentrank.h"
 
 AgentBaseDTO::AgentBaseDTO()
 {
     m_iAgencyId = VALUE_UNDEFINED;
     m_iId = VALUE_UNDEFINED;
+    m_iRank = AGENT_RANK::RankUnknown;
 }
 
 int AgentBaseDTO::getId() const{
@@ -58,11 +60,6 @@ void  AgentBaseDTO::setWebProfile(const QString& str_web_profile){
 }
 
 
-
-
-
-
-
 const QString& AgentBaseDTO::getDescription() const{
     return m_strDescription;
 }
@@ -79,10 +76,10 @@ void AgentBaseDTO::setAgencyId(int i_agency_id){
     m_iAgencyId = i_agency_id;
 }
 
-int  AgentBaseDTO::getLevel() const{
-    return m_iLevel;
+int  AgentBaseDTO::getRank() const{
+    return m_iRank;
 }
 
-void AgentBaseDTO::setLevel(int i_level){
-    m_iLevel = i_level;
+void AgentBaseDTO::setRank(int i_rank){
+    m_iRank = i_rank;
 }

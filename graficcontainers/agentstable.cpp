@@ -9,6 +9,7 @@
 //
 #include "config/configuration.h"
 //
+#include "dto/agentrank.h"
 #include "dto/agentbasedto.h"
 #include "processor/agentprocessor.h"
 //
@@ -36,13 +37,13 @@ void AgentsTable::setHeaderParams(){
     //
     QStringList str_att_header;
     //                0         1             2           3           4             5       6
-    str_att_header<<"Name"<<"Reputation"<< "Email"<<"Phone 1"<< "Phone 2"<<"Web profile"<<"Agency";
+    str_att_header<<"Name"<<"Rank"<< "Email"<<"Phone 1"<< "Phone 2"<<"Web profile"<<"Agency";
     this->setHorizontalHeaderLabels(str_att_header);
     //
     QHeaderView *header = this->horizontalHeader();
     //
     this->setColumnWidth(COL_NAME, 65);
-    this->setColumnWidth(COL_REPUTATION, 85);
+    this->setColumnWidth(COL_RANK, 105);
     this->setColumnWidth(COL_EMAIL, 230);
     this->setColumnWidth(COL_PHONE_1, 200);
     this->setColumnWidth(COL_PHONE_2, 200);
@@ -50,7 +51,7 @@ void AgentsTable::setHeaderParams(){
     this->setColumnWidth(COL_AGENCY, 135);
     //
     header->setSectionResizeMode(COL_NAME,          QHeaderView::Stretch);
-    header->setSectionResizeMode(COL_REPUTATION,    QHeaderView::Fixed);
+    header->setSectionResizeMode(COL_RANK,          QHeaderView::Fixed);
     header->setSectionResizeMode(COL_EMAIL,         QHeaderView::Stretch);
     header->setSectionResizeMode(COL_PHONE_1,       QHeaderView::Stretch);
     header->setSectionResizeMode(COL_PHONE_2,       QHeaderView::Fixed);
@@ -88,7 +89,7 @@ void AgentsTable::showTable(){
 
 void AgentsTable::fillDataRow (int ui_row_num, AgentBaseDTO* ptr_dto){
     QTableWidgetItem* ptr_item_name         = makeCellName(ptr_dto);
-    QTableWidgetItem* ptr_item_reputation   = makeCellReputation(ptr_dto);
+    QTableWidgetItem* ptr_item_rate         = makeCellRank(ui_row_num, ptr_dto);
     QTableWidgetItem* ptr_item_email        = makeCellEmail(ptr_dto);
     QTableWidgetItem* ptr_item_phone_1      = makeCellPhone_1(ptr_dto);
     QTableWidgetItem* ptr_item_phone_2      = makeCellPhone_2(ptr_dto);
@@ -96,6 +97,7 @@ void AgentsTable::fillDataRow (int ui_row_num, AgentBaseDTO* ptr_dto){
     QTableWidgetItem* ptr_item_agency       = makeCellAgency(ptr_dto);
     //
     this->setItem(ui_row_num, COL_NAME,         ptr_item_name);
+    this->setItem(ui_row_num, COL_RANK,         ptr_item_rate);
     this->setItem(ui_row_num, COL_EMAIL,        ptr_item_email);
     this->setItem(ui_row_num, COL_PHONE_1,      ptr_item_phone_1);
     this->setItem(ui_row_num, COL_PHONE_2,      ptr_item_phone_2);
@@ -111,10 +113,33 @@ QTableWidgetItem* AgentsTable::makeCellName(AgentBaseDTO* ptr_dto){
     return ptr_item_title;
 }
 
-QTableWidgetItem*  AgentsTable::makeCellReputation(AgentBaseDTO* ptr_agent){
-    QTableWidgetItem* ptr_item_reputation  = new  QTableWidgetItem("not yet");
-    ptr_item_reputation->setFlags( Qt::ItemIsEnabled |Qt::ItemIsSelectable);
-    return ptr_item_reputation;
+QTableWidgetItem*  AgentsTable::makeCellRank(int i_row_num, AgentBaseDTO* ptr_agent){
+    QComboBox* combo = new QComboBox();
+    //
+    combo->addItem(Configuration::getInstance().getAgentRankAsString(AGENT_RANK::RankUnknown), QVariant(static_cast<int>(AGENT_RANK::RankUnknown)));
+    combo->addItem(Configuration::getInstance().getAgentRankAsString(AGENT_RANK::RankVeryBad), QVariant(static_cast<int>(AGENT_RANK::RankVeryBad)));
+    combo->addItem(Configuration::getInstance().getAgentRankAsString(AGENT_RANK::RankBad), QVariant(static_cast<int>(AGENT_RANK::RankBad)));
+    combo->addItem(Configuration::getInstance().getAgentRankAsString(AGENT_RANK::RankNeutral), QVariant(static_cast<int>(AGENT_RANK::RankNeutral)));
+    combo->addItem(Configuration::getInstance().getAgentRankAsString(AGENT_RANK::RankGood), QVariant(static_cast<int>(AGENT_RANK::RankGood)));
+    combo->addItem(Configuration::getInstance().getAgentRankAsString(AGENT_RANK::RankVeryGood), QVariant(static_cast<int>(AGENT_RANK::RankVeryGood)));
+    //
+    for (int i = 0; i < combo->count(); ++i){
+        QVariant current_rank = combo->itemData(i,Qt::UserRole);
+        if (current_rank.toInt() == ptr_agent->getRank()){
+            combo->setCurrentIndex(i);
+            break;
+        };
+    };
+    //
+    QTableWidget::setCellWidget(static_cast<int>(i_row_num), COL_RANK,combo);
+    QTableWidgetItem* ptr_item_rank = new  QTableWidgetItem();
+    //todo::
+    //QObject::connect(combo, SIGNAL(currentIndexChanged(int)), this, SLOT(statusChanged(int)));
+    //
+    ptr_item_rank->setFlags( Qt::ItemIsEnabled | Qt::ItemIsEditable );
+    ptr_item_rank->setTextAlignment(Qt::AlignCenter);
+    //
+    return ptr_item_rank;
 }
 
 QTableWidgetItem* AgentsTable::makeCellEmail(AgentBaseDTO* ptr_dto){

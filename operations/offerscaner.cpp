@@ -8,6 +8,7 @@
 #include "processor/agentprocessor.h"
 //
 #include "dto/agencydto.h"
+#include "dto/agentrank.h"
 #include "processor/agencyprocessor.h"
 //
 #include "dto/towndto.h"
@@ -72,6 +73,11 @@ const QString& OfferScaner::getAgencyName() const{
     return m_strAgencyName;
 }
 
+int OfferScaner::getAgentRank() const{
+    return m_iAgentRank;
+};
+
+
 void OfferScaner::resetFields(){
     m_strTown           = "";
     m_strSkills         = "";
@@ -83,6 +89,7 @@ void OfferScaner::resetFields(){
     m_strAgentPhone2    = "";
     //
     m_strAgencyName     = "";
+    m_iAgentRank        = AGENT_RANK::RankUnknown;
 }
 
 void OfferScaner::generateTownInfo(){
@@ -137,6 +144,7 @@ void OfferScaner::generateAgentInfo(){
     m_strAgentEmail     = ptr_agent->getEMail();
     m_strAgentPhone1    = ptr_agent->getPhone1();
     m_strAgentPhone2    = ptr_agent->getPhone2();
+    m_iAgentRank        = ptr_agent->getRank();
     //
     m_strAgencyName     = AgencyProcessor::getInstance().getAgencyNameByID(m_iAgencyId);
 }

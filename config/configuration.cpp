@@ -52,7 +52,29 @@ bool Configuration::init(){
         return false;
     };
     //
+    b_res = getAgentRank(m_ptrSettings);
+    if (false == b_res){
+        return false;
+    };
+    //
     return b_res;
+}
+
+const QString& Configuration::getAgentRankAsString(AGENT_RANK en_rank){
+    switch(en_rank){
+    case RankUnknown:
+        return m_str_RankUnknown;
+    case RankVeryBad:
+        return m_str_RankVeryBad;
+    case RankBad:
+        return m_str_RankBad;
+    case RankNeutral:
+        return m_str_RankNeutral;
+    case RankGood:
+        return m_str_RankGood;
+    case RankVeryGood:
+        return m_str_RankVeryGood;
+    };
 }
 
 const QString& Configuration::getAttractivityAsString(ATTRACTIVITY en_attractivity){
@@ -70,28 +92,62 @@ const QString& Configuration::getAttractivityAsString(ATTRACTIVITY en_attractivi
     };
 }
 
+bool Configuration::getAgentRank(QSettings* ptr_settings){
+    //
+    bool b_res = ConfigBaseFunctionality::assignValue(ptr_settings, m_str_RankUnknown,RANK_SECTION_NAME, RANK_UNKNOWN, true);
+    if (false == b_res){
+        return b_res;
+    };
+    //
+    b_res = ConfigBaseFunctionality::assignValue(ptr_settings, m_str_RankVeryBad,RANK_SECTION_NAME, RANK_VERY_BAD, true);
+    if (false == b_res){
+        return b_res;
+    };
+    //
+    b_res = ConfigBaseFunctionality::assignValue(ptr_settings, m_str_RankBad,RANK_SECTION_NAME, RANK_BAD, true);
+    if (false == b_res){
+        return b_res;
+    };
+    //
+    b_res = ConfigBaseFunctionality::assignValue(ptr_settings, m_str_RankNeutral,RANK_SECTION_NAME, RANK_NEUTRAL, true);
+    if (false == b_res){
+        return b_res;
+    };
+    //
+    b_res = ConfigBaseFunctionality::assignValue(ptr_settings, m_str_RankGood,RANK_SECTION_NAME, RANK_GOOD, true);
+    if (false == b_res){
+        return b_res;
+    };
+    //
+    b_res = ConfigBaseFunctionality::assignValue(ptr_settings, m_str_RankVeryGood,RANK_SECTION_NAME, RANK_VERY_GOOD, true);
+    if (false == b_res){
+        return b_res;
+    };
+    return b_res;
+}
+
 bool Configuration::getAttractivity(QSettings *ptr_settings){
-    bool b_res = ConfigBaseFunctionality::assignValue(ptr_settings, m_str_AttractivityUnknown,ATTRACTIVITY_SECTION_NAME, AT_ATTRACTIVITY_UNKNOWN, false);
+    bool b_res = ConfigBaseFunctionality::assignValue(ptr_settings, m_str_AttractivityUnknown,ATTRACTIVITY_SECTION_NAME, AT_ATTRACTIVITY_UNKNOWN, true);
     if (false == b_res){
         return false;
     };
     //
-    b_res = ConfigBaseFunctionality::assignValue(ptr_settings, m_str_AttractivityLow,ATTRACTIVITY_SECTION_NAME, AT_ATTRACTIVITY_LOW, false);
+    b_res = ConfigBaseFunctionality::assignValue(ptr_settings, m_str_AttractivityLow,ATTRACTIVITY_SECTION_NAME, AT_ATTRACTIVITY_LOW, true);
     if (false == b_res){
         return false;
     };
     //
-    b_res = ConfigBaseFunctionality::assignValue(ptr_settings, m_str_AttractivityStandard,ATTRACTIVITY_SECTION_NAME, AT_ATTRACTIVITY_STANDARD, false);
+    b_res = ConfigBaseFunctionality::assignValue(ptr_settings, m_str_AttractivityStandard,ATTRACTIVITY_SECTION_NAME, AT_ATTRACTIVITY_STANDARD, true);
     if (false == b_res){
         return false;
     };
     //
-    b_res = ConfigBaseFunctionality::assignValue(ptr_settings, m_str_AttractivityHigh,ATTRACTIVITY_SECTION_NAME, AT_ATTRACTIVITY_HIGH, false);
+    b_res = ConfigBaseFunctionality::assignValue(ptr_settings, m_str_AttractivityHigh,ATTRACTIVITY_SECTION_NAME, AT_ATTRACTIVITY_HIGH, true);
     if (false == b_res){
         return false;
     };
     //
-    b_res = ConfigBaseFunctionality::assignValue(ptr_settings, m_str_AttractivityVeryHigh,ATTRACTIVITY_SECTION_NAME, AT_ATTRACTIVITY_VERY_HIGH, false);
+    b_res = ConfigBaseFunctionality::assignValue(ptr_settings, m_str_AttractivityVeryHigh,ATTRACTIVITY_SECTION_NAME, AT_ATTRACTIVITY_VERY_HIGH, true);
     if (false == b_res){
         return false;
     };
