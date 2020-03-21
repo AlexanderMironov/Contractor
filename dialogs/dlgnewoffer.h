@@ -146,6 +146,7 @@ private:
     QAction         m_actionAcceptAgentPhone2;
     QAction         m_actionAcceptAgencyName;
     QAction         m_actionScan;
+    QAction         m_actionPaste;
     //
     OfferBaseDTO    m_dtoOffer;
     AgentBaseDTO    m_dtoAgent;

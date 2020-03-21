@@ -43,9 +43,9 @@ void DlgNewOffer::init(){
 }
 
 void DlgNewOffer::setMenuAction(){
-    m_actionAcceptOfferCore.setText("set position title");
+    m_actionAcceptOfferCore.setText("Set position title");
     connect(&m_actionAcceptOfferCore,   SIGNAL(triggered()), this, SLOT(onClickBtnAcceptPositionDescription()));
-    m_actionAcceptCountry.setText("set country");
+    m_actionAcceptCountry.setText("Set country");
     connect(&m_actionAcceptCountry,    SIGNAL(triggered()), this, SLOT(onClickBtnAcceptCountry()));
     m_actionAcceptTown.setText("Set town");
     connect(&m_actionAcceptTown,     SIGNAL(triggered()), this, SLOT(onClickBtnAcceptTown()));
@@ -65,6 +65,9 @@ void DlgNewOffer::setMenuAction(){
     //
     m_actionScan.setText("Scan offer");
     connect(&m_actionScan, SIGNAL(triggered()), this, SLOT(onClickBtnScan()));
+    //
+    m_actionPaste.setText("Paste");
+    connect(&m_actionPaste, SIGNAL(triggered()), &m_OfferEdit, SLOT(paste()));
 }
 
 void DlgNewOffer::setDlgLayout(){
@@ -191,7 +194,6 @@ void  DlgNewOffer::createOfferWidgets(){
     m_ComboAttractivity.addItem(Configuration::getInstance().getAttractivityAsString(ATTRACTIVITY_HIGH), QVariant(static_cast<int>(ATTRACTIVITY_HIGH)));
     m_ComboAttractivity.addItem(Configuration::getInstance().getAttractivityAsString(ATTRACTIVITY_VERY_HIGH), QVariant(static_cast<int>(ATTRACTIVITY_VERY_HIGH)));
     m_ComboAttractivity.setCurrentIndex(2); //standard
-
 }
 
 void  DlgNewOffer::createAgentWidgets(){
@@ -424,7 +426,13 @@ void  DlgNewOffer::onSelectText(bool b_selected){
 
 void  DlgNewOffer::onRequestUserMenu(){
     QMenu popup_menu(this);
+    bool b_can_paste = m_OfferEdit.canPaste();
+    m_actionPaste.setEnabled(b_can_paste);
+    //
     const QString str_selected = m_OfferEdit.textCursor().selectedText();
+    //
+    popup_menu.addAction(&m_actionPaste);
+    popup_menu.addSeparator();
     //
     if (str_selected.length() == 0){
         popup_menu.addAction(&m_actionScan);
