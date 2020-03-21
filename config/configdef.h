@@ -23,5 +23,10 @@
     static const char RANK_NEUTRAL[]            = "rank_neutral";
     static const char RANK_GOOD[]               = "rank_good";
     static const char RANK_VERY_GOOD[]          = "rank_very_good";
+    //
+    static const char PATHS_SECTION_NAME[]      = "PATHS";
+    static const char DEFAULT_EXPORT_PATH[]     = "default_export_path";
+    static const char DEFAULT_IMPORT_PATH[]     = "default_import_path";
+
 
 #endif // CONFIGDEF_H

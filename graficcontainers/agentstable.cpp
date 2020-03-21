@@ -81,7 +81,7 @@ void AgentsTable::showTable(){
         fillDataRow(i_current_row, ptrDTO);
         //
         i_current_row++; //increment row
-        i++; //increment iterator
+        i++;
     };
     //
     m_bFillTableModeOn = false;

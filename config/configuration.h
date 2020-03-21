@@ -26,14 +26,17 @@ public:
     const QString& getDBUserPassword() const;
     const QString& getDBConnectionName() const;
     const QString& getDBDatabaseType() const;
-    const QString& getAttractivityAsString(ATTRACTIVITY en_attractivity);
-    const QString& getAgentRankAsString(AGENT_RANK en_rank);
+    const QString& getAttractivityAsString(ATTRACTIVITY en_attractivity)const;
+    const QString& getAgentRankAsString(AGENT_RANK en_rank) const;
+    const QString& getDefaultExportPath() const;
+    const QString& getDefaultImportPath() const;
 
 private:
                     Configuration();
     bool            getDBSettings(QSettings* ptr_settings);
     bool            getAgentRank(QSettings* ptr_settings);
     bool            getAttractivity(QSettings* ptr_settings);
+    bool            getPaths(QSettings* ptr_settings);
     static QString  getConfigFullPath();
     //
 private:
@@ -59,6 +62,9 @@ private:
     QString m_str_RankNeutral;
     QString m_str_RankGood;
     QString m_str_RankVeryGood;
+    //
+    QString m_str_DefaultExportPath;
+    QString m_str_DefaultImportPath;
 
 
 };

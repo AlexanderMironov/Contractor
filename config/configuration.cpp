@@ -57,10 +57,23 @@ bool Configuration::init(){
         return false;
     };
     //
+    b_res = getPaths(m_ptrSettings);
+    if (false == b_res){
+        return false;
+    };
+    //
     return b_res;
 }
 
-const QString& Configuration::getAgentRankAsString(AGENT_RANK en_rank){
+const QString& Configuration::getDefaultExportPath() const{
+    return m_str_DefaultExportPath;
+}
+
+const QString& Configuration::getDefaultImportPath() const{
+    return m_str_DefaultImportPath;
+}
+
+const QString& Configuration::getAgentRankAsString(AGENT_RANK en_rank) const{
     switch(en_rank){
     case RankUnknown:
         return m_str_RankUnknown;
@@ -77,7 +90,7 @@ const QString& Configuration::getAgentRankAsString(AGENT_RANK en_rank){
     };
 }
 
-const QString& Configuration::getAttractivityAsString(ATTRACTIVITY en_attractivity){
+const QString& Configuration::getAttractivityAsString(ATTRACTIVITY en_attractivity) const{
     switch(en_attractivity){
     case ATTRACTIVITY_UNKNOWN:
         return m_str_AttractivityUnknown;
@@ -90,6 +103,21 @@ const QString& Configuration::getAttractivityAsString(ATTRACTIVITY en_attractivi
     case ATTRACTIVITY_VERY_HIGH:
         return m_str_AttractivityVeryHigh;
     };
+}
+
+bool Configuration::getPaths(QSettings* ptr_settings){
+    //
+    bool b_res = ConfigBaseFunctionality::assignValue(ptr_settings, m_str_DefaultExportPath,PATHS_SECTION_NAME, DEFAULT_EXPORT_PATH, true);
+    if (false == b_res){
+        return b_res;
+    };
+    //
+    b_res = ConfigBaseFunctionality::assignValue(ptr_settings, m_str_DefaultImportPath,PATHS_SECTION_NAME, DEFAULT_IMPORT_PATH, true);
+    if (false == b_res){
+        return b_res;
+    };
+    //
+    return b_res;
 }
 
 bool Configuration::getAgentRank(QSettings* ptr_settings){
