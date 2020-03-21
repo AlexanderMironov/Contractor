@@ -3,6 +3,7 @@
 #include <QComboBox>
 #include <QMessageBox>
 #include <QMenu>
+#include <QMouseEvent>
 //
 #include "commondef.h"
 #include "offerstable.h"

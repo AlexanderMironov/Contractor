@@ -8,6 +8,7 @@
 #include "menucontainers/offerstablemenu.h"
 //
 class OfferBaseDTO;
+class QMouseEvent;
 //
 class OffersTable : public QTableWidget
 {

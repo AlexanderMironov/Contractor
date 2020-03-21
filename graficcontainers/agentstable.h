@@ -8,6 +8,7 @@
 #include "menucontainers/offerstablemenu.h"
 //
 class AgentBaseDTO;
+class QMouseEvent;
 //
 class AgentsTable : public QTableWidget
 {
