@@ -23,14 +23,17 @@ void MainWindowMenu::init(MainWindow* pt_main_window){
     //
     m_ptrFileMenu->addAction(&actionCreateNewOffer);
     m_ptrFileMenu->addSeparator();
-
+    m_ptrFileMenu->addAction(&actionCountriesOperation);
 }
 
 void MainWindowMenu::createActionNewOffer(){
     actionCreateNewOffer.setText("Create new job offer");
     actionCreateNewOffer.setEnabled(true);
     GraficContainerListOffers& container = GraficContainerListOffers::getInstance();
-
     QObject::connect(&actionCreateNewOffer, &QAction::triggered, &container, &GraficContainerListOffers::onShowNewOfferDlg);
+    //
+    actionCountriesOperation.setText("Manage countries");
+    actionCountriesOperation.setEnabled(true);
+    QObject::connect(&actionCountriesOperation, &QAction::triggered, m_ptrMainWindow, &MainWindow::onShowManageCountriesDlg);
 
 }

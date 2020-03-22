@@ -19,6 +19,8 @@ private:
     QMenu*      m_ptrFileMenu;
     //
     QAction     actionCreateNewOffer;
+    QAction     actionCountriesOperation;
+
 };
 
 #endif // MAINWINDOWMENU_H

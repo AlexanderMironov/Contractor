@@ -8,7 +8,10 @@
 //
 #include "processor/agencyprocessor.h"
 #include "processor/agentprocessor.h"
+//
+#include "dto/countrydto.h"
 #include "processor/countryprocessor.h"
+//
 #include "processor/townprocessor.h"
 #include "processor/skillprocessor.h"
 #include "processor/offerskillprocesor.h"
@@ -26,7 +29,7 @@
 DlgNewOffer::DlgNewOffer(QWidget *parent) :
     QDialog(parent)
 {
-
+    this->setWindowTitle("Create new job offer");
 }
 
 DlgNewOffer::~DlgNewOffer(){
@@ -41,6 +44,7 @@ void DlgNewOffer::init(){
     //
     createWidgets();
     addWidgetsToLayout();
+
 }
 
 void DlgNewOffer::setMenuAction(){
@@ -79,7 +83,7 @@ void DlgNewOffer::setDlgSizes(){
     const int i_height = 600;
     //
     this->setMinimumHeight(i_height);
-    this->setMaximumHeight(i_height);
+    //this->setMaximumHeight(i_height);
 
     this->setMinimumWidth(1200);
 
@@ -98,6 +102,20 @@ void DlgNewOffer::createWidgets(){
     createOfferWidgets();
     createAgentWidgets();
     createControlButtons();
+}
+
+void DlgNewOffer::onAddNewCountry(){
+    m_ComboCountry.clear();
+    //
+    const CountryStorage&  country_storage = CountryProcessor::getInstance().getStorage();
+    CountryStorage::const_iterator i = country_storage.constBegin();
+    while(i != country_storage.constEnd()){
+        CountryDTO* ptr_country = i.value();
+        m_ComboCountry.addItem(ptr_country->getName(), QVariant(ptr_country->getId()));
+        i++;
+    };
+    //
+    return;
 }
 
 void  DlgNewOffer::createOfferWidgets(){
@@ -129,14 +147,11 @@ void  DlgNewOffer::createOfferWidgets(){
     m_LblCountry.setText("Country");
     m_LblCountry.setMinimumWidth(m_iMinLabelWidth);
     //..
-    m_EditCountry.setToolTip("Target country name");
-    m_EditCountry.setMinimumWidth(m_iMinEditWidth);
-    m_EditCountry.setMaximumWidth(m_iMaxElementWidth);
+    m_ComboCountry.setToolTip("Coose country of job offer");
+    m_ComboCountry.setMinimumWidth(m_iMinEditWidth);
+    m_ComboCountry.setMaximumWidth(m_iMaxElementWidth);
+    onAddNewCountry();
     //..
-    m_ButtonAcceptCountry.setText("Accept selection");
-    m_ButtonAcceptCountry.setMinimumWidth(m_iMinButtonWidth);
-    m_ButtonAcceptCountry.setEnabled(false);
-    connect(&m_ButtonAcceptCountry, &QPushButton::released, this, &DlgNewOffer::onClickBtnAcceptCountry);
     //create town country line
     m_LblTown.setText("Town");
     m_LblTown.setMinimumWidth(m_iMinLabelWidth);
@@ -341,8 +356,7 @@ void DlgNewOffer::addWidgetsToLayout(){
     //
     i_row++;
     m_MainLayout.addWidget(&m_LblCountry,i_row,1,1,1);
-    m_MainLayout.addWidget(&m_EditCountry,i_row,2,1,1);
-    m_MainLayout.addWidget(&m_ButtonAcceptCountry,i_row,3,1,1);
+    m_MainLayout.addWidget(&m_ComboCountry,i_row,2,1,1);
     //
     i_row++;
     m_MainLayout.addWidget(&m_LblTown,i_row,1,1,1);
@@ -418,7 +432,6 @@ void DlgNewOffer::addWidgetsToLayout(){
 
 void  DlgNewOffer::onSelectText(bool b_selected){
     m_ButtonAcceptOfferCore.setEnabled(b_selected);
-    m_ButtonAcceptCountry.setEnabled(b_selected);
     m_ButtonAcceptTown.setEnabled(b_selected);
     m_ButtonAcceptSkills.setEnabled(b_selected);
     //
@@ -469,10 +482,6 @@ QString DlgNewOffer::getSelectedPartOfOffer() const{
 
 void DlgNewOffer::onClickBtnAcceptPositionDescription(){
     m_EditOfferCore.setText(this->getSelectedPartOfOffer());
-}
-
-void DlgNewOffer::onClickBtnAcceptCountry(){
-    m_EditCountry.setText(this->getSelectedPartOfOffer());
 }
 
 void DlgNewOffer::onClickBtnAcceptTown(){
@@ -557,7 +566,7 @@ void  DlgNewOffer::onClickBtnSaveOffer(){
         str_message_text = "Position title can not be empty\n";
     };
     //
-    if(m_EditCountry.text().isEmpty() == true){
+    if(m_ComboCountry.currentIndex() == -1){
         str_message_text = str_message_text + "Country can not be empty\n";
     };
     //
@@ -592,7 +601,7 @@ void  DlgNewOffer::onClickBtnSaveOffer(){
 }
 
 void DlgNewOffer::saveOffer(){
-    const int           i_country_id    = CountryProcessor::getInstance().add(m_EditCountry.text().trimmed());
+    const int           i_country_id    = m_ComboCountry.currentData(Qt::UserRole).toInt();
     const int           i_town_id       = TownProcessor::getInstance().add(m_EditTown.text().trimmed());
     const QStringList   str_l_skills    =  m_EditSkills.text().split(",", QString::SkipEmptyParts);
     const SkillsList    skill_list_ids  = SkillProcessor::getInstance().add(str_l_skills);
@@ -646,7 +655,7 @@ void DlgNewOffer::clearFields(){
     const QString str_empty_txt = "";
     m_OfferEdit.setPlainText(str_empty_txt);
     m_EditOfferCore.setText(str_empty_txt);
-    m_EditCountry.setText(str_empty_txt);
+    m_ComboCountry.setCurrentIndex(-1);
     m_EditTown.setText(str_empty_txt);
     m_EditSkills.setText(str_empty_txt);
     m_EditRate.setText(str_empty_txt);

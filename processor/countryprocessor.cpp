@@ -27,6 +27,18 @@ bool CountryProcessor::init(){
 
 int CountryProcessor::add(const QString& str_country_name){
     //search existing
+    int i_res = isCountryAlreadyExists(str_country_name);
+    if(VALUE_UNDEFINED != i_res){
+        return i_res;
+    };
+    //
+    i_res = insertIntoDB(str_country_name);
+    //
+    return i_res;
+}
+
+int CountryProcessor::isCountryAlreadyExists(const QString& str_country_name){
+
     CountryStorage::const_iterator i = m_mapStorage.constBegin();
     while (i != m_mapStorage.constEnd()) {
 
@@ -36,10 +48,7 @@ int CountryProcessor::add(const QString& str_country_name){
         };
         i++;
     };
-    //if not exists - add new one.
-    int i_res = insertIntoDB(str_country_name);
-    //
-    return i_res;
+    return VALUE_UNDEFINED;
 }
 
 int CountryProcessor::insertIntoDB(const QString& str_country_name){
@@ -126,4 +135,8 @@ QString CountryProcessor::getCountryNameByID(int id){
     };
     //
     return str_ret;
+}
+
+const CountryStorage& CountryProcessor::getStorage(){
+    return m_mapStorage;
 }

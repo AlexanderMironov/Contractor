@@ -33,7 +33,6 @@ private slots:
     void        onSelectText(bool b_selected);
     void        onRequestUserMenu();
     void        onClickBtnAcceptPositionDescription();
-    void        onClickBtnAcceptCountry();
     void        onClickBtnAcceptTown();
     void        onClickBtnAcceptSkills();
     void        onClickBtnAcceptAgentName();
@@ -43,6 +42,8 @@ private slots:
     void        onClickBtnAcceptAgencyName();
     void        onClickBtnSaveOffer();
     void        onClickBtnScan();
+    void        onAddNewCountry();
+
 
 signals:
     void        addedNewOffer();
@@ -83,8 +84,7 @@ private:
     QPushButton     m_ButtonAcceptOfferCore;
     //
     QLabel          m_LblCountry;
-    QLineEdit       m_EditCountry;
-    QPushButton     m_ButtonAcceptCountry;
+    QComboBox       m_ComboCountry;
     //
     QLabel          m_LblTown;
     QLineEdit       m_EditTown;

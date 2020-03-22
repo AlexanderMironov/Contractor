@@ -20,6 +20,9 @@ public:
         bool                        init();
         int                         add(const QString& str_country_name);
         QString                     getCountryNameByID(int id);
+        const CountryStorage&       getStorage();
+        //returns VALUE_UNDEFINED id does not exists, or returns country ID if exists
+        int                         isCountryAlreadyExists(const QString& str_country_name);
 signals:
 
 public slots:

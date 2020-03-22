@@ -5,6 +5,7 @@
 #include <QAction>
 //
 #include "menucontainers/mainwindowmenu.h"
+#include "dialogs/dlgmanagecountries.h"
 
 class QTabWidget;
 class QVBoxLayout;
@@ -20,14 +21,24 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+    DlgManageCountries* getDlgManageCountries();
+
+public slots:
+    void onShowManageCountriesDlg();
+
+private:
+    void    setWindowSize();
+    void    createTabPages();
+    void    createLayout();
 
 private:
     Ui::MainWindow* ui;
-    QTabWidget*     m_ptrMainTab;
-    QVBoxLayout*    m_ptrLayoutMain;
+    QTabWidget*         m_ptrMainTab;
+    QVBoxLayout*        m_ptrLayoutMain;
     //
-    MainWindowMenu  m_mnuContainer;
+    MainWindowMenu      m_mnuContainer;
     //
+    DlgManageCountries  m_dlgManageCountries;
 };
 
 #endif // MAINWINDOW_H
