@@ -106,6 +106,7 @@ void DlgNewOffer::createWidgets(){
 }
 
 void DlgNewOffer::onAddNewCountry(){
+
     m_ComboCountry.clear();
     //
     const CountryStorage&  country_storage = CountryProcessor::getInstance().getStorage();

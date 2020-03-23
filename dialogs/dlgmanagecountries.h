@@ -21,11 +21,13 @@ public:
 
 signals:
     void createNewCountry();
+    void modifyCountry(int i_country_id);
 
 private slots:
-    void onCurrentItemChanged(QListWidgetItem *current, QListWidgetItem *previous);
-    void onEditTextChanged(const QString& str_txt);
-    void onClickButtonAddNew();
+    void    onCurrentItemChanged(QListWidgetItem *current, QListWidgetItem *previous);
+    void    onEditTextChanged(const QString& str_txt);
+    void    onClickButtonAddNew();
+    void    onClickButtonModifyCurrent();
 
 private:
     void    setDlgLayout();

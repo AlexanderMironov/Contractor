@@ -17,6 +17,7 @@ public:
     //
     void                init(QTabWidget* ptr_tab);
     DlgNewOffer*        getDlgNewOffer();
+    OffersTable*        getOffersTab();
 
 private:
     explicit            GraficContainerListOffers(QObject *parent = nullptr);

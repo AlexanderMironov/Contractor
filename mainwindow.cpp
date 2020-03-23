@@ -11,6 +11,7 @@
 //
 #include "graficcontainers/graficcontainerlistoffers.h"
 #include "graficcontainers/graficcontainerlistagent.h"
+#include "graficcontainers/offerstable.h"
 
 //
 
@@ -32,8 +33,12 @@ MainWindow::MainWindow(QWidget *parent) :
     m_dlgManageCountries.init();
     //
     DlgNewOffer* ptr_dlg_new_offer = GraficContainerListOffers::getInstance().getDlgNewOffer();
+    OffersTable* ptr_offers_tab =  GraficContainerListOffers::getInstance().getOffersTab();
     //
     connect(&m_dlgManageCountries, SIGNAL(createNewCountry()), ptr_dlg_new_offer, SLOT(onAddNewCountry()));
+    connect(&m_dlgManageCountries, SIGNAL( modifyCountry(int)), ptr_dlg_new_offer, SLOT(onAddNewCountry()));
+    //
+    connect(&m_dlgManageCountries, SIGNAL( modifyCountry(int)), ptr_offers_tab, SLOT(onChangeCountryName(int)));
 }
 
 MainWindow::~MainWindow()

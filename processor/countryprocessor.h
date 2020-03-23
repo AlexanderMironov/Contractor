@@ -23,6 +23,7 @@ public:
         const CountryStorage&       getStorage();
         //returns VALUE_UNDEFINED id does not exists, or returns country ID if exists
         int                         isCountryAlreadyExists(const QString& str_country_name);
+        bool                        updateCountryName(int i_country_id, const QString& str_name);
 signals:
 
 public slots:

@@ -72,6 +72,7 @@ void DlgManageCountries::createButtons(){
     m_ButtonModifyCurrent.setMinimumHeight(m_iItemsHeight);
     m_ButtonModifyCurrent.setMaximumHeight(m_iItemsHeight);
     m_ButtonModifyCurrent.setText("Modify selected country");
+    connect(&m_ButtonModifyCurrent, &QPushButton::released, this, &DlgManageCountries::onClickButtonModifyCurrent);
     m_ButtonModifyCurrent.setEnabled(false);
 }
 
@@ -98,6 +99,32 @@ void DlgManageCountries::createCountriesList(){
     };
     //
     connect(&m_wListOfCountries, SIGNAL(currentItemChanged(QListWidgetItem*, QListWidgetItem*)), this, SLOT(onCurrentItemChanged(QListWidgetItem*, QListWidgetItem*)));
+}
+
+void DlgManageCountries::onClickButtonModifyCurrent(){
+    if (m_EditCountry.text().length() == 0){
+        return;
+    };
+    //
+    QListWidgetItem* ptr_item = m_wListOfCountries.currentItem();
+    if(nullptr == ptr_item){
+
+    };
+    //
+    QString str_msg = QString ("Do you want to replace name of the country from [%1] to [%2]?").arg(ptr_item->text()).arg(m_EditCountry.text());
+    QMessageBox box;
+    box.setStandardButtons( QMessageBox::Yes|QMessageBox::No );
+    box.setText(str_msg);
+    const int ret = box.exec();
+    if (ret != QMessageBox::Yes){
+        return;
+    };
+    //
+    const QVariant var_country_id = ptr_item->data(Qt::UserRole);
+    ptr_item->setText(m_EditCountry.text());
+    //
+    CountryProcessor::getInstance().updateCountryName(var_country_id.toInt(), m_EditCountry.text());
+    emit modifyCountry(var_country_id.toInt());
 }
 
 void DlgManageCountries::onClickButtonAddNew(){

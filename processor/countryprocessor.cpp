@@ -118,6 +118,35 @@ bool CountryProcessor::readAllFromDB(){
     return b_res;
 }
 
+bool CountryProcessor::updateCountryName(int i_country_id, const QString& str_name){
+    DBAcccessSafe dbAccess;
+    QSqlDatabase* ptr_db =  dbAccess.getDB();
+    if (nullptr == ptr_db){
+        return false;
+    };
+    //
+    QSqlQuery qry(*ptr_db);
+    //
+    const QString str_update_string = QString("UPDATE countries_tbl SET name='%1' WHERE id=%2;").arg(str_name).arg(i_country_id);
+    //
+    if ( !qry.prepare( str_update_string  ) )
+    {
+        QMessageBox::critical(nullptr, "Error prepare", str_update_string, QMessageBox::Ok);
+        return false;
+    };
+    //
+    if ( !qry.exec() )
+    {
+        QMessageBox::critical(nullptr, "Error exec", str_update_string + "\n" + qry.lastError().text(), QMessageBox::Ok);
+        return false;
+    };
+    //
+    CountryStorage::iterator it = m_mapStorage.find(i_country_id);
+    it.value()->setName(str_name);
+    //
+    return true;
+}
+
 void CountryProcessor::addNewValueToStorage(int id, const QString& str_name){
     CountryDTO* ptr_country = new CountryDTO() ;
     ptr_country->setId(id);

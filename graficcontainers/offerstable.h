@@ -25,6 +25,7 @@ public slots:
     void    showTable();
     void    onShowNewOfferDlg();
     void    onDeleteCurrentOffer();
+    void    onChangeCountryName(int i_country_id);
 
 
 private slots:

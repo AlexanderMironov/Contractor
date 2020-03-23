@@ -47,6 +47,10 @@ void GraficContainerListOffers::bindSignalsAndSlots(){
     //todo: also update agents table here
 }
 
+OffersTable* GraficContainerListOffers::getOffersTab(){
+    return m_ptrTblOffersTable;
+}
+
 DlgNewOffer* GraficContainerListOffers::getDlgNewOffer(){
     return &m_dlgNewOffer;
 }

@@ -178,6 +178,7 @@ QTableWidgetItem* OffersTable::makeCellSkills(int ui_row_num, OfferBaseDTO* ptr_
 QTableWidgetItem* OffersTable::makeCellCountry(OfferBaseDTO* ptr_dto){
     const QString str_country = CountryProcessor::getInstance().getCountryNameByID(ptr_dto->getCountryId());
     QTableWidgetItem*   ptr_item_country = new  QTableWidgetItem(str_country);
+    ptr_item_country->setData(Qt::UserRole, ptr_dto->getCountryId());
     ptr_item_country->setFlags( Qt::ItemIsEnabled |Qt::ItemIsSelectable );
     ptr_item_country->setTextAlignment(Qt::AlignLeft|Qt::AlignVCenter);
     return ptr_item_country;
@@ -380,6 +381,25 @@ void OffersTable::bindSignalsAndSlots(){
      QObject::connect(this,  SIGNAL(itemChanged(QTableWidgetItem*)), this, SLOT(onChangeItem(QTableWidgetItem*)));
 }
 
+void OffersTable::onChangeCountryName(int i_country_id){
+    m_bFillTableModeOn = true;
+    for (int i_row = 0; i_row < this->rowCount(); i_row++){
+        QTableWidgetItem* ptr_country_item = this->item(i_row, COL_COUNTRY);
+        if(nullptr == ptr_country_item){
+            continue;
+        };
+        //
+        const QVariant var_country_id = ptr_country_item->data(Qt::UserRole);
+        //
+        if (var_country_id.toInt() == i_country_id){
+            const QString str_new_country_name = CountryProcessor::getInstance().getCountryNameByID(var_country_id.toInt());
+            ptr_country_item->setText(str_new_country_name);
+        };
+    };
+    m_bFillTableModeOn = false;
+}
+
+
 void OffersTable::onChangeItem(QTableWidgetItem* item)
 {
     if(nullptr == item)
@@ -396,18 +416,19 @@ void OffersTable::onChangeItem(QTableWidgetItem* item)
     //
     if (i_col == static_cast<int>(COL_RATE)){
         str_rate = item->text();
+        bool b_ok = true;
+        const int i_rate = str_rate.toInt(&b_ok);
+        //
+        if (false == b_ok){
+            const QString str_msg = QString("can not convert %1 to integer").arg(str_rate);
+            QMessageBox::critical(nullptr, "Error", str_msg, QMessageBox::Ok);
+            return;
+        };
+        //
+        const int i_record_id = getRecordIdByRowNum(i_row);
+        OfferProcessor::getInstance().updateRate(i_record_id, i_rate);
     };
-    bool b_ok = true;
-    const int i_rate = str_rate.toInt(&b_ok);
-    //
-    if (false == b_ok){
-        const QString str_msg = QString("can not convert %1 to integer").arg(str_rate);
-        QMessageBox::critical(nullptr, "Error", str_msg, QMessageBox::Ok);
-        return;
-    };
-    //
-    const int i_record_id = getRecordIdByRowNum(i_row);
-    OfferProcessor::getInstance().updateRate(i_record_id, i_rate);
+
     return;
 }
 
