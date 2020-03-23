@@ -29,6 +29,7 @@
 DlgNewOffer::DlgNewOffer(QWidget *parent) :
     QDialog(parent)
 {
+    m_bOfferSaved = false;
     this->setWindowTitle("Create new job offer");
 }
 
@@ -119,12 +120,17 @@ void DlgNewOffer::onAddNewCountry(){
 }
 
 void  DlgNewOffer::createOfferWidgets(){
-    //m_OfferEdit = new QOfferEdit();
-    //m_OfferEdit = new QPlainTextEdit();
-    m_OfferEdit.setMinimumWidth(700);
+    const int i_left_side_max_width = 700;
+    m_LblnsertOffer.setText("Insert job offer:");
+    m_LblnsertOffer.setMinimumWidth(i_left_side_max_width);
+    m_OfferEdit.setMinimumWidth(i_left_side_max_width);
     m_OfferEdit.setContextMenuPolicy(Qt::CustomContextMenu);
     connect(&m_OfferEdit, &QPlainTextEdit::copyAvailable, this, &DlgNewOffer::onSelectText);
     connect(&m_OfferEdit, &QWidget::customContextMenuRequested, this, &DlgNewOffer::onRequestUserMenu);
+    //
+    m_LblnsertComment.setText("Insert comments:");
+    m_LblnsertComment.setMinimumWidth(i_left_side_max_width);
+    m_CommentEdit.setMinimumWidth(i_left_side_max_width);
     //
     m_LblOfferInfo.setText("Offer info");
     m_LblOfferInfo.setMinimumWidth(300);
@@ -213,6 +219,8 @@ void  DlgNewOffer::createOfferWidgets(){
 }
 
 void  DlgNewOffer::createAgentWidgets(){
+    m_ptrSpacer = new QSpacerItem(100,325);
+    //
     m_LblAgentInfo.setText("Agent info");
     m_LblAgentInfo.setMinimumWidth(300);
     m_LblAgentInfo.setMaximumWidth(m_iMaxElementWidth);
@@ -295,21 +303,16 @@ void  DlgNewOffer::createAgentWidgets(){
 }
 
 void  DlgNewOffer::createControlButtons(){
+    m_ButtonScan.setText("Scan offer");
+    m_ButtonScan.setMinimumWidth(m_iMinButtonWidth);
+    connect(&m_ButtonScan, &QPushButton::released, this, &DlgNewOffer::onClickBtnScan);
+    //
     m_ButtonSaveOffer.setText("Save offer ");
     m_ButtonSaveOffer.setMinimumWidth(m_iMinButtonWidth);
     connect(&m_ButtonSaveOffer, &QPushButton::released, this, &DlgNewOffer::onClickBtnSaveOffer);
     //
-    m_ButtonShowAgentInfo.setText("Show agent info");
-    m_ButtonShowAgentInfo.setMinimumWidth(m_iMinButtonWidth);
-    m_ButtonShowAgentInfo.setEnabled(false);
-    //
-    m_ButtonShareOffer.setText("Share offer with colleagues");
-    m_ButtonShareOffer.setMinimumWidth(m_iMinButtonWidth);
-    m_ButtonShareOffer.setEnabled(false);
-    //
-    m_ButtonScan.setText("Scan offer");
-    m_ButtonScan.setMinimumWidth(m_iMinButtonWidth);
-    connect(&m_ButtonScan, &QPushButton::released, this, &DlgNewOffer::onClickBtnScan);
+    m_ButtonClose.setText("Close window");
+    connect(&m_ButtonClose, &QPushButton::released, this, &DlgNewOffer::close);
 }
 
 /*
@@ -342,23 +345,27 @@ void  DlgNewOffer::createControlButtons(){
 void DlgNewOffer::addWidgetsToLayout(){
     //offer text
     //const int i_total_column_number = 4;
-    const int i_total_row_number = 20;
+    const int i_total_row_number = 21;
     //
     int i_row = 0;
     //->addWidget(ptr_widget, row,column,rowSpan,columnSpan, aligment);
-    m_MainLayout.addWidget(&m_OfferEdit,i_row,0,i_total_row_number,1);
+    m_MainLayout.addWidget(&m_LblnsertOffer,i_row,0,1,1);
     m_MainLayout.addWidget(&m_LblOfferInfo,i_row,1,1,3);
     //
     i_row++;
+    m_MainLayout.addWidget(&m_OfferEdit,i_row,0,12,1);
+    //
     m_MainLayout.addWidget(&m_LblOfferCore,i_row,1,1,1);
     m_MainLayout.addWidget(&m_EditOfferCore,i_row,2,1,1);
     m_MainLayout.addWidget(&m_ButtonAcceptOfferCore,i_row,3,1,1);
     //
     i_row++;
+    //
     m_MainLayout.addWidget(&m_LblCountry,i_row,1,1,1);
     m_MainLayout.addWidget(&m_ComboCountry,i_row,2,1,1);
     //
     i_row++;
+    //
     m_MainLayout.addWidget(&m_LblTown,i_row,1,1,1);
     m_MainLayout.addWidget(&m_EditTown,i_row,2,1,1);
     m_MainLayout.addWidget(&m_ButtonAcceptTown,i_row,3,1,1);
@@ -381,6 +388,9 @@ void DlgNewOffer::addWidgetsToLayout(){
     m_MainLayout.addWidget(&m_ComboAttractivity,i_row,2,1,1);
     //--------------------------------------------------------------------------
     i_row++;
+    m_MainLayout.addItem(m_ptrSpacer,i_row,1,1,1);
+    //
+    i_row++;
     m_MainLayout.addWidget(&m_LblAgentInfo,i_row,1,1,3);
     //
     i_row++;
@@ -399,11 +409,15 @@ void DlgNewOffer::addWidgetsToLayout(){
     m_MainLayout.addWidget(&m_ButtonAcceptAgentEmail,i_row,3,1,1);
     //
     i_row++;
+    m_MainLayout.addWidget(&m_LblnsertComment,i_row,0,1,1);
+    //
     m_MainLayout.addWidget(&m_LblAgentPhone1,i_row,1,1,1);
     m_MainLayout.addWidget(&m_EditAgentPhone1,i_row,2,1,1);
     m_MainLayout.addWidget(&m_ButtonAcceptAgentPhone1,i_row,3,1,1);
     //
     i_row++;
+    m_MainLayout.addWidget(&m_CommentEdit,i_row,0,6,1);
+    //
     m_MainLayout.addWidget(&m_LblAgentPhone2,i_row,1,1,1);
     m_MainLayout.addWidget(&m_EditAgentPhone2,i_row,2,1,1);
     m_MainLayout.addWidget(&m_ButtonAcceptAgentPhone2,i_row,3,1,1);
@@ -417,17 +431,15 @@ void DlgNewOffer::addWidgetsToLayout(){
     m_MainLayout.addWidget(&m_LblAgentRank,i_row,1,1,1);
     m_MainLayout.addWidget(&m_ComboAgentRank,i_row,2,1,1);
     //------------------------------------------------------------------------------
+    //
+    i_row++;
+    m_MainLayout.addWidget(&m_ButtonScan,i_row,1,1,3);
+    //
     i_row++;
     m_MainLayout.addWidget(&m_ButtonSaveOffer,i_row,1,1,3);
     //
     i_row++;
-    m_MainLayout.addWidget(&m_ButtonShowAgentInfo,i_row,1,1,3);
-    //
-    i_row++;
-    m_MainLayout.addWidget(&m_ButtonShareOffer,i_row,1,1,3);
-    //
-    i_row++;
-    m_MainLayout.addWidget(&m_ButtonScan,i_row,1,1,3);
+    m_MainLayout.addWidget(&m_ButtonClose,i_row,1,1,3);
 }
 
 void  DlgNewOffer::onSelectText(bool b_selected){
@@ -482,10 +494,12 @@ QString DlgNewOffer::getSelectedPartOfOffer() const{
 
 void DlgNewOffer::onClickBtnAcceptPositionDescription(){
     m_EditOfferCore.setText(this->getSelectedPartOfOffer());
+    m_bOfferSaved = false;
 }
 
 void DlgNewOffer::onClickBtnAcceptTown(){
     m_EditTown.setText(this->getSelectedPartOfOffer());
+    m_bOfferSaved = false;
 }
 
 void  DlgNewOffer::onClickBtnAcceptSkills(){
@@ -499,46 +513,54 @@ void  DlgNewOffer::onClickBtnAcceptSkills(){
     //
     str_full_skills_list +=str_property;
     m_EditSkills.setText(str_full_skills_list);
+    m_bOfferSaved = false;
 }
 
 void DlgNewOffer::onClickBtnAcceptAgentName(){
     const QString str_name = this->getSelectedPartOfOffer();
-    //todo: make right register here
     m_EditAgentName.setText(str_name);
+    m_bOfferSaved = false;
 }
 
 void DlgNewOffer::onClickBtnAcceptAgentEmail(){
     const QString str_email = this->getSelectedPartOfOffer();
     //todo: check e-mail
     m_EditAgentEmail.setText(str_email);
+    m_bOfferSaved = false;
 }
 
 void DlgNewOffer::onClickBtnAcceptAgentPhone1(){
     //todo: check if it is a phone
     m_EditAgentPhone1.setText(this->getSelectedPartOfOffer());
+    m_bOfferSaved = false;
 }
 
 void DlgNewOffer::onClickBtnAcceptAgentPhone2(){
     //todo: check if it is a phone
     m_EditAgentPhone2.setText(this->getSelectedPartOfOffer());
+    m_bOfferSaved = false;
 }
 
 void DlgNewOffer::onClickBtnAcceptAgencyName(){
     m_EditAgencyName.setText(this->getSelectedPartOfOffer());
+    m_bOfferSaved = false;
 }
 
 void  DlgNewOffer::onClickBtnScan(){
-    //todo: implement it
     OfferScaner scaner;
     scaner.parse(m_OfferEdit.toPlainText());
     //
     m_OfferEdit.setPlainText(scaner.getModifiedText());
     m_EditSkills.setText(scaner.getSkills());
     //
+    if (scaner.getAgencyName().length() > 0){
+        m_EditAgencyName.setText(scaner.getAgencyName());
+        m_dtoAgent.setAgencyId(scaner.getAgentId());
+    };
+    //
     if (scaner.getAgentEmail().length() > 0){
         //for prevent double saving operations
         m_dtoAgent.setId(scaner.getAgentId());
-        m_dtoAgent.setAgencyId(scaner.getAgentId());
         //for visualisation
         m_EditAgentEmail.setText(scaner.getAgentEmail());
         m_EditAgentName.setText(scaner.getAgentName());
@@ -553,7 +575,7 @@ void  DlgNewOffer::onClickBtnScan(){
             };
         };
     };
-    m_EditAgencyName.setText(scaner.getAgencyName());
+    //
     m_EditTown.setText(scaner.getTownName());
 }
 
@@ -609,6 +631,8 @@ void DlgNewOffer::saveOffer(){
     m_dtoOffer.setAgentId(m_dtoAgent.getId());
     m_dtoOffer.setCreationDate(QDate::currentDate());
     m_dtoOffer.setPositionTitle(m_EditOfferCore.text());
+    m_dtoOffer.setDescription(m_OfferEdit.toPlainText());
+    m_dtoOffer.setComments(m_CommentEdit.toPlainText());
     m_dtoOffer.setCountryId(i_country_id);
     m_dtoOffer.setTownId(i_town_id);
     //m_dtoOffer.setSkillsListIDs(skill_list_ids);
@@ -624,6 +648,7 @@ void DlgNewOffer::saveOffer(){
     //
     OfferSkillProcesor::getInstance().add(i_offer_id,skill_list_ids);
     //
+    m_bOfferSaved = true;
     this->close();
 }
 
@@ -647,8 +672,19 @@ void DlgNewOffer::saveAgentInfo(){
 }
 
 void DlgNewOffer::closeEvent(QCloseEvent *event){
+    if((false == m_bOfferSaved) && (m_EditOfferCore.text().length() > 0)){
+        QString str_msg = "Job description not saved. Do you want to close window?";
+        QMessageBox box;
+        box.setStandardButtons( QMessageBox::Yes|QMessageBox::No );
+        box.setText(str_msg);
+        const int ret = box.exec();
+        if (ret != QMessageBox::Yes){
+            event->ignore();
+            return;
+        };
+    };
     clearFields();
-    QDialog::closeEvent(event);
+    event->accept();
 }
 
 void DlgNewOffer::clearFields(){

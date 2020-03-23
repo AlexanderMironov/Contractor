@@ -20,6 +20,13 @@ public:
     const QDate&        getCreationDate() const;
     void                setCreationDate(const QDate& creation_date);
     //
+    const QString&      getDescription() const;
+    void                setDescription(const QString& str_pos_description);
+    //
+    const QString&      getComments() const;
+    void                setComments(const QString& str_pos_comments);
+
+    //
     const QString&      getPositionTitle() const;
     void                setPositionTitle(const QString& str_pos_title);
     //
@@ -45,6 +52,8 @@ private:
     int                 m_iId;
     QDate               m_dCreationDate;
     QString             m_strPositionTitle;
+    QString             m_strDescription;
+    QString             m_strComments;
     int                 m_iCountryId;
     int                 m_iTownId;
     int                 m_iRate;

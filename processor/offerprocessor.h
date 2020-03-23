@@ -34,6 +34,8 @@ private:
     void                    addNewValueToStorage(int i_id,
                                               const QDate& d_creation_date,
                                               const QString& str_pos_title,
+                                              const QString& str_pos_decription,
+                                              const QString& str_pos_comments,
                                               int i_id_country,
                                               int i_id_town,
                                               int i_id_agent,

@@ -46,15 +46,15 @@ void AgentsTable::setHeaderParams(){
     this->setColumnWidth(COL_NAME, 65);
     this->setColumnWidth(COL_RANK, 105);
     this->setColumnWidth(COL_EMAIL, 230);
-    this->setColumnWidth(COL_PHONE_1, 200);
-    this->setColumnWidth(COL_PHONE_2, 200);
+    this->setColumnWidth(COL_PHONE_1, 180);
+    this->setColumnWidth(COL_PHONE_2, 180);
     this->setColumnWidth(COL_WEB_PROFILE, 150);
     this->setColumnWidth(COL_AGENCY, 135);
     //
     header->setSectionResizeMode(COL_NAME,          QHeaderView::Stretch);
     header->setSectionResizeMode(COL_RANK,          QHeaderView::Fixed);
-    header->setSectionResizeMode(COL_EMAIL,         QHeaderView::Stretch);
-    header->setSectionResizeMode(COL_PHONE_1,       QHeaderView::Stretch);
+    header->setSectionResizeMode(COL_EMAIL,         QHeaderView::Fixed);
+    header->setSectionResizeMode(COL_PHONE_1,       QHeaderView::Fixed);
     header->setSectionResizeMode(COL_PHONE_2,       QHeaderView::Fixed);
     header->setSectionResizeMode(COL_WEB_PROFILE,   QHeaderView::Stretch);
     header->setSectionResizeMode(COL_AGENCY,        QHeaderView::Fixed);
@@ -134,8 +134,8 @@ QTableWidgetItem*  AgentsTable::makeCellRank(int i_row_num, AgentBaseDTO* ptr_ag
     //
     QTableWidget::setCellWidget(static_cast<int>(i_row_num), COL_RANK,combo);
     QTableWidgetItem* ptr_item_rank = new  QTableWidgetItem();
-    //todo::
-    //QObject::connect(combo, SIGNAL(currentIndexChanged(int)), this, SLOT(statusChanged(int)));
+    //
+    QObject::connect(combo, SIGNAL(currentIndexChanged(int)), this, SLOT(onRankChanged(int)));
     //
     ptr_item_rank->setFlags( Qt::ItemIsEnabled | Qt::ItemIsEditable );
     ptr_item_rank->setTextAlignment(Qt::AlignCenter);
@@ -151,19 +151,19 @@ QTableWidgetItem* AgentsTable::makeCellEmail(AgentBaseDTO* ptr_dto){
 
 QTableWidgetItem* AgentsTable::makeCellPhone_1(AgentBaseDTO* ptr_dto){
     QTableWidgetItem*   ptr_item_title  = new  QTableWidgetItem( ptr_dto->getPhone1());
-    ptr_item_title->setFlags( Qt::ItemIsEnabled |Qt::ItemIsSelectable );
+    ptr_item_title->setFlags( Qt::ItemIsEnabled |Qt::ItemIsSelectable|Qt::ItemIsEditable);
     return ptr_item_title;
 }
 
 QTableWidgetItem* AgentsTable::makeCellPhone_2(AgentBaseDTO* ptr_dto){
     QTableWidgetItem*   ptr_item_title  = new  QTableWidgetItem( ptr_dto->getPhone2());
-    ptr_item_title->setFlags( Qt::ItemIsEnabled |Qt::ItemIsSelectable );
+    ptr_item_title->setFlags( Qt::ItemIsEnabled |Qt::ItemIsSelectable|Qt::ItemIsEditable);
     return ptr_item_title;
 }
 
 QTableWidgetItem* AgentsTable::makeCellWebProfile(AgentBaseDTO* ptr_dto){
     QTableWidgetItem*   ptr_item_title  = new  QTableWidgetItem( ptr_dto->getWebProfile());
-    ptr_item_title->setFlags( Qt::ItemIsEnabled |Qt::ItemIsSelectable );
+    ptr_item_title->setFlags( Qt::ItemIsEnabled |Qt::ItemIsSelectable |Qt::ItemIsEditable);
     return ptr_item_title;
 }
 
@@ -175,98 +175,6 @@ QTableWidgetItem* AgentsTable::makeCellAgency(AgentBaseDTO* ptr_dto){
     ptr_item_agency->setFlags( Qt::ItemIsEnabled |Qt::ItemIsSelectable );
     return ptr_item_agency;
 }
-
-/*
-QTableWidgetItem* AgentsTable::makeCellAttractity(int ui_row_num, OfferBaseDTO* ptr_dto){
-    QComboBox* combo = new QComboBox();
-    //
-    combo->addItem(Configuration::getInstance().getAttractivityAsString(ATTRACTIVITY_UNKNOWN),  QVariant(ATTRACTIVITY_UNKNOWN));
-    combo->addItem(Configuration::getInstance().getAttractivityAsString(ATTRACTIVITY_LOW),      QVariant(ATTRACTIVITY_LOW));
-    combo->addItem(Configuration::getInstance().getAttractivityAsString(ATTRACTIVITY_STANDARD), QVariant(ATTRACTIVITY_STANDARD));
-    combo->addItem(Configuration::getInstance().getAttractivityAsString(ATTRACTIVITY_HIGH),     QVariant(ATTRACTIVITY_HIGH));
-    combo->addItem(Configuration::getInstance().getAttractivityAsString(ATTRACTIVITY_VERY_HIGH),QVariant(ATTRACTIVITY_VERY_HIGH));
-    //
-    int i_active_index = 0;
-    switch(ptr_dto->getAttractivity()){
-    case ATTRACTIVITY_UNKNOWN:
-        i_active_index = 0;
-        break;
-    case ATTRACTIVITY_LOW:
-        i_active_index = 1;
-        break;
-    case ATTRACTIVITY_STANDARD:
-        i_active_index = 2;
-        break;
-    case ATTRACTIVITY_HIGH:
-        i_active_index = 3;
-        break;
-    case ATTRACTIVITY_VERY_HIGH:
-        i_active_index = 4;
-        break;
-    }
-    //
-    combo->setCurrentIndex(i_active_index);
-    //
-    QTableWidget::setCellWidget(static_cast<int>(ui_row_num), COL_ATTRACTIVITY,combo);
-    QTableWidgetItem* ptr_item_attractivity = new QTableWidgetItem();
-    //
-    QObject::connect(combo, SIGNAL(currentIndexChanged(int)), this, SLOT(attractivityChanged(int)));
-    //
-    combo->setProperty("row",QVariant(ui_row_num));
-    //
-    ptr_item_attractivity->setFlags( Qt::ItemIsEnabled | Qt::ItemIsEditable );
-    ptr_item_attractivity->setTextAlignment(Qt::AlignCenter);
-    //
-    return ptr_item_attractivity;
-
-}
-*/
-/*
-void AgentsTable::attractivityChanged(int i_index){
-    //
-    if(true == m_bFillTableModeOn){
-        return;  //do nothing, it is automatic process
-    };
-    unsigned int row = static_cast<unsigned int>(sender()->property("row").toInt());
-    //
-    updateAttractivity(row);
-    return;
-}
-*/
-/*
-void AgentsTable::statusChanged(int ){
-    //
-    if(true == m_bFillTableModeOn){
-        return;  //do nothing, it is automatic process
-    };
-    //
-    unsigned int row = static_cast<unsigned int>(sender()->property("row").toInt());
-    //
-    updateStatus(row);
-    return;
-}
-*/
-
-/*
-void AgentsTable::onDeleteCurrentOffer(){
-    QTableWidgetItem* ptr_current_item = this->currentItem();
-    if (nullptr == ptr_current_item){
-        return;
-    };
-    //
-    const int i_row = this->row(ptr_current_item);
-    //
-    QTableWidgetItem* ptr_pos_name_item = this->item(i_row, COL_TITLE);
-    const QString str_pos_name = ptr_pos_name_item->text();
-    //
-    const int i_record_id = getRecordIdByRowNum(i_row);
-    if (OfferProcessor::getInstance().removeOffer(i_record_id) == true){
-        OfferSkillProcesor::getInstance().removeOffer(i_record_id);
-    };
-    //
-    this->removeRow(i_row);
-}
-*/
 
 void AgentsTable::bindSignalsAndSlots(){
      QObject::connect(this,  SIGNAL(itemChanged(QTableWidgetItem*)), this, SLOT(onChangeItem(QTableWidgetItem*)));
@@ -280,48 +188,33 @@ void AgentsTable::onChangeItem(QTableWidgetItem* item)
     if(true == m_bFillTableModeOn){
         return;  //do nothing, it is automatic process
     };
-/*
     //
-    const int i_row   = this->row(item);
-    const int i_col   = this->column(item);
+    const int i_column = this->column(item);
+    const int i_row = this->row(item);
+    const int i_agent_id = getRecordIdByRowNum(i_row);
     //
-    QString str_rate;
-    //
-    if (i_col == static_cast<int>(COL_RATE)){
-        str_rate = item->text();
+    if(i_column == COL_WEB_PROFILE){
+        const QString str_web_profile = item->text();
+        AgentProcessor::getInstance().updateWebProfile(i_agent_id, str_web_profile);
+    }else if(i_column == COL_PHONE_1){
+        const QString str_phone_num_1 = item->text();
+        if(str_phone_num_1.length() == 0){
+            QMessageBox box;
+            box.setStandardButtons( QMessageBox::Close);
+            QString str_box_msg = "Phone number can not be empty";
+            box.setText(str_box_msg);
+            box.exec();
+            return;
+        };
+        AgentProcessor::getInstance().updatePhone(i_agent_id, str_phone_num_1,AgentProcessor::PHONE_NUM::PHONE_NUM_1);
+    }else if(i_column == COL_PHONE_2){
+        const QString str_phone_num_2 = item->text();
+        AgentProcessor::getInstance().updatePhone(i_agent_id, str_phone_num_2,AgentProcessor::PHONE_NUM::PHONE_NUM_2);
     };
-    bool b_ok = true;
-    const int i_rate = str_rate.toInt(&b_ok);
     //
-    if (false == b_ok){
-        const QString str_msg = QString("can not convert %1 to integer").arg(str_rate);
-        QMessageBox::critical(nullptr, "Error", str_msg, QMessageBox::Ok);
-        return;
-    };
-    //
-    const int i_record_id = getRecordIdByRowNum(i_row);
-    OfferProcessor::getInstance().updateRate(i_record_id, i_rate);
+
     return;
-*/
 }
-/*
-void AgentsTable::onShowNewOfferDlg(){
-    emit needNewOfferDlg();
-}
-*/
-/*
-void AgentsTable::showPopupMenu(){
-    QMenu popup_menu(this);
-    //
-    const int i_row = this->currentRow();
-    const int i_column = this->currentColumn();
-    //
-    const bool b_disable_delete = (i_row < 0) || (i_column < 0);
-    m_mnuContainer.fillPopupMenu(&popup_menu,!b_disable_delete);
-    //
-    popup_menu.exec(QCursor::pos());
-}
-*/
 
 void AgentsTable::mouseReleaseEvent (QMouseEvent *event)
 {
@@ -340,4 +233,40 @@ int AgentsTable::getRecordIdByRowNum(int i_row_num){
     const QVariant var_record_id = ptr_item_date->data(Qt::UserRole);
     const int i_record_id = var_record_id.toInt();
     return i_record_id;
+}
+
+void AgentsTable::onRankChanged (int){
+    if (true == m_bFillTableModeOn){
+        return;
+    };
+    //
+    int i_current_row = this->currentRow();
+    if (i_current_row < 0 ){
+        return;
+    };
+    //
+
+    QTableWidgetItem* ptr_agent_name = this->item(i_current_row, COL_NAME);
+    if(nullptr == ptr_agent_name){
+        return;
+    };
+    const int i_agent_id = getRecordIdByRowNum(i_current_row);
+    //
+    QComboBox* combo =static_cast<QComboBox*> (QTableWidget::cellWidget(i_current_row, COL_RANK));
+    const QString str_combo_text = combo->currentText();
+    const QVariant variant_rank = combo->currentData(Qt::UserRole);
+    if (str_combo_text.length() == 0){
+        return;
+    };
+    //
+    QMessageBox box;
+    box.setStandardButtons( QMessageBox::Yes|QMessageBox::No );
+    QString str_box_msg = QString("Do you really want to change rank of agent [%1] to [%2] ?").arg(ptr_agent_name->text()).arg(str_combo_text);
+    box.setText(str_box_msg);
+    const int ret = box.exec();
+    if (ret != QMessageBox::Yes){
+        return;
+    };
+    //
+    AgentProcessor::getInstance().updateRank(i_agent_id, variant_rank.toInt());
 }

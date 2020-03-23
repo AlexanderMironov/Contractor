@@ -42,6 +42,8 @@ CREATE TABLE IF NOT EXISTS `skills_tbl`(`id`   int(11)   NOT NULL AUTO_INCREMENT
 CREATE TABLE IF NOT EXISTS `offers_tbl`(`id`   int(11)   NOT NULL AUTO_INCREMENT,
                                         `creation_date`     date            NOT NULL,
                                         `pos_title`         varchar(255)    NOT NULL,
+                                        `description`       varchar(2000)   NOT NULL,
+                                        `comments`          varchar(2000),
                                         `id_country`        int(11)         NOT NULL,
                                         `id_town`           int(11)         NOT NULL DEFAULT -1,
                                         `id_agent`          int(11)         NOT NULL,

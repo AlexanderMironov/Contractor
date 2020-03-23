@@ -35,6 +35,22 @@ void OfferBaseDTO::setPositionTitle(const QString& str_pos_title){
     m_strPositionTitle = str_pos_title;
 }
 
+const QString& OfferBaseDTO::getDescription() const{
+    return m_strDescription;
+}
+
+void OfferBaseDTO::setDescription(const QString& str_pos_description){
+    m_strDescription = str_pos_description;
+}
+
+const QString& OfferBaseDTO::getComments() const{
+    return m_strComments;
+}
+
+void OfferBaseDTO::setComments(const QString& str_pos_comments){
+    m_strComments = str_pos_comments;
+}
+
 int OfferBaseDTO::getCountryId() const{
     return m_iCountryId;
 }

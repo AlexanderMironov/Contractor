@@ -15,12 +15,19 @@ class AgentProcessor : public QObject
 {
     Q_OBJECT
 public:
+    enum PHONE_NUM{
+        PHONE_NUM_1 = 0,
+        PHONE_NUM_2 = 1
+    };
+    //
     static AgentProcessor&  getInstance();
     int                     add(AgentBaseDTO* ptr_agent_base_info_dto);
     bool                    init();
     AgentBaseDTO*           getAgentByID(int i_id) const;
     const AgentStorage&     getStorage() const;
     bool                    updateRank(int i_agent_id, int i_rank);
+    bool                    updateWebProfile(int i_agent_id, const QString& web_profile);
+    bool                    updatePhone(int i_agent_id, const QString& phone_number, PHONE_NUM en_phone_num);
 private:
     explicit                AgentProcessor(QObject *parent = nullptr);
     int                     insertIntoDB(AgentBaseDTO* ptr_agent_base_info_dto);

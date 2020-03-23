@@ -359,14 +359,14 @@ void OffersTable::onDeleteCurrentOffer(){
     QTableWidgetItem* ptr_pos_name_item = this->item(i_row, COL_TITLE);
     const QString str_pos_name = ptr_pos_name_item->text();
     //
-    QMessageBox box;
-    box.setStandardButtons( QMessageBox::Yes|QMessageBox::No );
-    QString str_box_msg = QString("Do you really want to delete offer [%1]").arg(str_pos_name);
-    box.setText(str_box_msg);
-    const int ret = box.exec();
-    if (ret != QMessageBox::Yes){
-        return;
-    };
+        QMessageBox box;
+        box.setStandardButtons( QMessageBox::Yes|QMessageBox::No );
+        QString str_box_msg = QString("Do you really want to delete offer [%1]").arg(str_pos_name);
+        box.setText(str_box_msg);
+        const int ret = box.exec();
+        if (ret != QMessageBox::Yes){
+            return;
+        };
     //
     const int i_record_id = getRecordIdByRowNum(i_row);
     if (OfferProcessor::getInstance().removeOffer(i_record_id) == true){

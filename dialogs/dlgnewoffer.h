@@ -12,6 +12,7 @@
 #include <QComboBox>
 #include <QAction>
 #include <QCloseEvent>
+#include <QSpacerItem>
 //
 #include "dto/offerbasedto.h"
 #include "dto/agentbasedto.h"
@@ -76,6 +77,7 @@ private:
     //
     QGridLayout     m_MainLayout;
     //
+    QLabel          m_LblnsertOffer;
     QPlainTextEdit  m_OfferEdit;
     QLabel          m_LblOfferInfo;
     //
@@ -103,6 +105,9 @@ private:
     QLabel          m_LblAttractivity;
     QComboBox       m_ComboAttractivity;
     //-------------------------------
+    QSpacerItem*    m_ptrSpacer;
+    QLabel          m_LblnsertComment;
+    QPlainTextEdit  m_CommentEdit;
     QLabel          m_LblAgentInfo;
     //
     QLabel          m_LblAgentName;
@@ -128,13 +133,11 @@ private:
     QLabel          m_LblAgentRank;
     QComboBox       m_ComboAgentRank;
     //
+    QPushButton     m_ButtonScan;
+    //
     QPushButton     m_ButtonSaveOffer;
     //
-    QPushButton     m_ButtonShowAgentInfo;
-    //
-    QPushButton     m_ButtonShareOffer;
-    //
-    QPushButton     m_ButtonScan;
+    QPushButton     m_ButtonClose;
     //
     QAction         m_actionAcceptOfferCore;
     QAction         m_actionAcceptCountry;
@@ -150,6 +153,8 @@ private:
     //
     OfferBaseDTO    m_dtoOffer;
     AgentBaseDTO    m_dtoAgent;
+    //
+    bool            m_bOfferSaved;
 };
 
 

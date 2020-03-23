@@ -179,6 +179,65 @@ bool AgentProcessor::updateRank(int i_agent_id, int i_rank){
     return true;
 }
 
+bool AgentProcessor::updatePhone(int i_agent_id, const QString& phone_number, PHONE_NUM en_phone_num){
+    DBAcccessSafe dbAccess;
+    QSqlDatabase* ptr_db =  dbAccess.getDB();
+    if (nullptr == ptr_db){
+        return false;
+    };
+    //
+    QSqlQuery qry(*ptr_db);
+    //
+    QString str_update_string;
+    switch(en_phone_num){
+    case PHONE_NUM_1:
+        str_update_string = QString("UPDATE agents_tbl SET phone_1 = '%1' WHERE id = %2;").arg(phone_number).arg(i_agent_id);
+        break;
+    case PHONE_NUM_2:
+        str_update_string = QString("UPDATE agents_tbl SET phone_2 = '%1' WHERE id = %2;").arg(phone_number).arg(i_agent_id);
+        break;
+    };
+    //
+    if ( !qry.prepare( str_update_string  ) )
+    {
+        QMessageBox::critical(nullptr, "Error prepare", str_update_string, QMessageBox::Ok);
+        return false;
+    };
+    //
+    if ( !qry.exec() )
+    {
+        QMessageBox::critical(nullptr, "Error exec", str_update_string + "\n" + qry.lastError().text(), QMessageBox::Ok);
+        return false;
+    };
+    //
+    return true;
+}
+
+bool AgentProcessor::updateWebProfile(int i_agent_id, const QString& web_profile){
+    DBAcccessSafe dbAccess;
+    QSqlDatabase* ptr_db =  dbAccess.getDB();
+    if (nullptr == ptr_db){
+        return false;
+    };
+    //
+    QSqlQuery qry(*ptr_db);
+    //
+    const QString str_update_string = QString("UPDATE agents_tbl SET web_profile = '%1' WHERE id = %2;").arg(web_profile).arg(i_agent_id);
+    //
+    if ( !qry.prepare( str_update_string  ) )
+    {
+        QMessageBox::critical(nullptr, "Error prepare", str_update_string, QMessageBox::Ok);
+        return false;
+    };
+    //
+    if ( !qry.exec() )
+    {
+        QMessageBox::critical(nullptr, "Error exec", str_update_string + "\n" + qry.lastError().text(), QMessageBox::Ok);
+        return false;
+    };
+    //
+    return true;
+}
 
 AgentBaseDTO* AgentProcessor::getAgentByID(int i_id) const{
     AgentBaseDTO* ptr_ret = nullptr;

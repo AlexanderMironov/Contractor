@@ -28,13 +28,14 @@ public slots:
 
 
 private slots:
-//    void            statusChanged (int i_index);
 //    void            attractivityChanged(int i_index);
     void            onChangeItem (QTableWidgetItem * item);
+    void            onRankChanged (int i_index);
 
 
 protected:
     void            mouseReleaseEvent   (QMouseEvent *event);
+
 private:
     //
     enum AgentsTableColumns
