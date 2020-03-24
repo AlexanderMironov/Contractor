@@ -235,6 +235,16 @@ int AgentsTable::getRecordIdByRowNum(int i_row_num){
     return i_record_id;
 }
 
+void AgentsTable::onCurrentAgentChanged(int i_agent_id){
+    for (int i_row = 0; i_row < this->rowCount(); i_row++){
+        const int i_current_agent_id = getRecordIdByRowNum(i_row);
+        if (i_agent_id == i_current_agent_id){
+            this->selectRow(i_row);
+            break;
+        };
+    };
+}
+
 void AgentsTable::onRankChanged (int){
     if (true == m_bFillTableModeOn){
         return;

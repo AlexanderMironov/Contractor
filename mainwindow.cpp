@@ -12,11 +12,8 @@
 #include "graficcontainers/graficcontainerlistoffers.h"
 #include "graficcontainers/graficcontainerlistagent.h"
 #include "graficcontainers/offerstable.h"
-
+#include "graficcontainers/agentstable.h"
 //
-
-
-
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -35,10 +32,13 @@ MainWindow::MainWindow(QWidget *parent) :
     DlgNewOffer* ptr_dlg_new_offer = GraficContainerListOffers::getInstance().getDlgNewOffer();
     OffersTable* ptr_offers_tab =  GraficContainerListOffers::getInstance().getOffersTab();
     //
+    AgentsTable* ptr_agents_tab = GraficContainerListAgent::getInstance().getAgentsTab();
+    //
     connect(&m_dlgManageCountries, SIGNAL(createNewCountry()), ptr_dlg_new_offer, SLOT(onAddNewCountry()));
     connect(&m_dlgManageCountries, SIGNAL( modifyCountry(int)), ptr_dlg_new_offer, SLOT(onAddNewCountry()));
     //
     connect(&m_dlgManageCountries, SIGNAL( modifyCountry(int)), ptr_offers_tab, SLOT(onChangeCountryName(int)));
+    connect(ptr_offers_tab, SIGNAL(currentAgentChanged(int)), ptr_agents_tab, SLOT(onCurrentAgentChanged(int)));
 }
 
 MainWindow::~MainWindow()

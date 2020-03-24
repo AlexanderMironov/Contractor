@@ -23,6 +23,11 @@ void OffersTableMenu::init(OffersTable* pt_main_window){
     m_actionDeleteCurrentOffer.setText("Delete current offer");
     m_actionDeleteCurrentOffer.setEnabled(true);
     QObject::connect(&m_actionDeleteCurrentOffer, SIGNAL(triggered()), m_ptrParentWindow, SLOT(onDeleteCurrentOffer()));
+    //
+    m_actionEditCurrentOffer.setText("Edit/View Current offer");
+    m_actionEditCurrentOffer.setEnabled(true);
+    //
+    QObject::connect(&m_actionEditCurrentOffer, SIGNAL(triggered()), m_ptrParentWindow, SLOT(onEditCurrentOffer()));
 }
 
 void OffersTableMenu::fillPopupMenu(QMenu* ptr_mnu, bool enable_delete){
@@ -34,7 +39,10 @@ void OffersTableMenu::fillPopupMenu(QMenu* ptr_mnu, bool enable_delete){
     //
     m_actionDeleteCurrentOffer.setEnabled(enable_delete);
     //
+    ptr_mnu->addAction(&m_actionEditCurrentOffer);
+    //
     ptr_mnu->addAction(&m_actionDeleteCurrentOffer);
+
 
 }
 

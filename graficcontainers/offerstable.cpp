@@ -35,10 +35,12 @@
 OffersTable::OffersTable(QWidget *parent):QTableWidget(parent)
 {
     m_bFillTableModeOn = false;
+    m_i_CurrentAgentId = VALUE_UNDEFINED;
     setHeaderParams();
     m_mnuContainer.init(this);
     bindSignalsAndSlots();
     showTable();
+    m_i_CurrentAgentId = VALUE_UNDEFINED;
 }
 
 OffersTable::~OffersTable(){
@@ -206,9 +208,10 @@ QTableWidgetItem* OffersTable::makeCellAgent(OfferBaseDTO* ptr_dto){
         ptr_item_agent->setToolTip(ptr_agent->getDescription());
     }else{
         ptr_item_agent->setToolTip("Description not available");
-    }
-
+    };
+    //
     ptr_item_agent->setText(str_ret);
+    ptr_item_agent->setData(Qt::UserRole, QVariant(ptr_dto->getAgentId()));
     ptr_item_agent->setFlags( Qt::ItemIsEnabled |Qt::ItemIsSelectable );
     return ptr_item_agent;
 }
@@ -349,6 +352,16 @@ void OffersTable::updateStatus (unsigned int ui_row){
     return;
 }
 
+void OffersTable::onEditCurrentOffer(){
+    QTableWidgetItem* ptr_current_item = this->currentItem();
+    if (nullptr == ptr_current_item){
+        return;
+    };
+    //
+    const int i_row = this->row(ptr_current_item);
+    //
+}
+
 void OffersTable::onDeleteCurrentOffer(){
     QTableWidgetItem* ptr_current_item = this->currentItem();
     if (nullptr == ptr_current_item){
@@ -379,6 +392,7 @@ void OffersTable::onDeleteCurrentOffer(){
 
 void OffersTable::bindSignalsAndSlots(){
      QObject::connect(this,  SIGNAL(itemChanged(QTableWidgetItem*)), this, SLOT(onChangeItem(QTableWidgetItem*)));
+     QObject::connect(this,  SIGNAL(currentCellChanged(int, int, int, int)), this, SLOT(onCurrentCellChanged(int, int, int, int)));
 }
 
 void OffersTable::onChangeCountryName(int i_country_id){
@@ -430,6 +444,27 @@ void OffersTable::onChangeItem(QTableWidgetItem* item)
     };
 
     return;
+}
+
+void OffersTable::onCurrentCellChanged(int currentRow, int currentColumn, int previousRow, int previousColumn){
+    if (m_bFillTableModeOn == true){
+        return;
+    };
+    //
+    if (currentRow == previousRow){
+        return; //do nothing, agent was not changed
+    };
+    QTableWidgetItem* ptr_country_agent = this->item(currentRow,COL_AGENT);
+    if(nullptr == ptr_country_agent){
+        return;
+    };
+    //
+    QVariant var_agent_id = ptr_country_agent->data(Qt::UserRole);
+    //
+    if (m_i_CurrentAgentId != var_agent_id.toInt()){
+        m_i_CurrentAgentId =var_agent_id.toInt();
+        emit currentAgentChanged(var_agent_id.toInt());
+    };
 }
 
 void OffersTable::onShowNewOfferDlg(){

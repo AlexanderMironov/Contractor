@@ -14,6 +14,7 @@ public:
     static GraficContainerListAgent& getInstance();
     //
     void                init(QTabWidget* ptr_tab);
+    AgentsTable*        getAgentsTab();
     //DlgNewOffer*        getDlgNewOffer();
 
 private:

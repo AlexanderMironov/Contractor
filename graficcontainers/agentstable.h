@@ -1,5 +1,5 @@
-#ifndef OFFERSTABLE_H
-#define OFFERSTABLE_H
+#ifndef AGENTSSTABLE_H
+#define AGENTSSTABLE_H
 
 #include <QObject>
 #include <QTableWidget>
@@ -23,6 +23,7 @@ signals:
 
 public slots:
     void    showTable();
+    void    onCurrentAgentChanged(int i_agent_id);
 //    void    onShowNewOfferDlg();
 //    void    onDeleteCurrentOffer();
 
@@ -70,4 +71,4 @@ private:
 
 };
 
-#endif // OFFERSTABLE_H
+#endif // AGENTSSTABLE_H

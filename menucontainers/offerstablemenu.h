@@ -22,6 +22,8 @@ private:
 
     QAction             m_actionShowNewOfferDlg;
     QAction             m_actionDeleteCurrentOffer;
+    QAction             m_actionEditCurrentOffer;
+
 };
 
 #endif // OFFERSTABLEMENU_H

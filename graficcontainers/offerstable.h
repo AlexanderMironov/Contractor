@@ -20,11 +20,14 @@ public:
 
 signals:
     void needNewOfferDlg();
+    void currentAgentChanged(int i_agent_id);
 
 public slots:
+
     void    showTable();
     void    onShowNewOfferDlg();
     void    onDeleteCurrentOffer();
+    void    onEditCurrentOffer();
     void    onChangeCountryName(int i_country_id);
 
 
@@ -32,6 +35,7 @@ private slots:
     void            statusChanged (int i_index);
     void            attractivityChanged(int i_index);
     void            onChangeItem (QTableWidgetItem * item);
+    void            onCurrentCellChanged(int currentRow, int currentColumn, int previousRow, int previousColumn);
 
 
 protected:
@@ -75,6 +79,7 @@ private:
     OffersTableMenu     m_mnuContainer;
     //
     bool    m_bFillTableModeOn;
+    int     m_i_CurrentAgentId;
 
 };
 
