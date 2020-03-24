@@ -31,6 +31,8 @@
 #include "processor/statusprocessor.h"
 //
 #include "processor/offerskillprocesor.h"
+//
+#include "dialogs/dlgeditviewoffer.h"
 
 OffersTable::OffersTable(QWidget *parent):QTableWidget(parent)
 {
@@ -359,6 +361,10 @@ void OffersTable::onEditCurrentOffer(){
     };
     //
     const int i_row = this->row(ptr_current_item);
+    const int job_offer_id = getRecordIdByRowNum(i_row);
+    DlgEditViewOffer dlg;
+    dlg.init(job_offer_id);
+    dlg.exec();
     //
 }
 

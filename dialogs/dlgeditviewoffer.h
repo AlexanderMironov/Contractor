@@ -3,8 +3,18 @@
 
 #include <QDialog>
 #include <QObject>
-
-
+//
+#include <QGridLayout>
+#include <QLabel>
+#include <QPlainTextEdit>
+#include <QLineEdit>
+#include <QPushButton>
+#include <QComboBox>
+#include <QAction>
+//
+class OfferBaseDTO;
+class AgentBaseDTO;
+//
 class DlgEditViewOffer : public QDialog
 {
     Q_OBJECT
@@ -12,7 +22,111 @@ class DlgEditViewOffer : public QDialog
 public:
     DlgEditViewOffer(QWidget *parent = nullptr);
     ~DlgEditViewOffer();
-    void init();
+    void init(int i_offer_id);
+
+signals:
+
+public slots:
+
+private slots:
+
+private:
+    void            setDlgSizes();
+    void            setElementSizes();
+    void            setDlgLayout();
+    void            setMenuAction();
+    void            createWidgets();
+    void            createOfferWidgets();
+    void            createAgentWidgets();
+    void            createControlButtons();
+    void            addWidgetsToLayout();
+    void            fillCountryCombo();
+    void            fillSkillList();
+    void            fillStatusCombo();
+    void            fillAttractivityCombo();
+
+
+private:
+    int             m_iMinButtonWidth;
+    int             m_iMinLabelWidth;
+    int             m_iMinEditWidth;
+    int             m_iMaxElementWidth;
+    int             m_iMaxLabelHeight;
+    //
+    QGridLayout     m_MainLayout;
+    //
+    QLabel          m_LblnsertOffer;
+    QPlainTextEdit  m_OfferEdit;
+    QLabel          m_LblOfferInfo;
+    //
+    QLabel          m_LblOfferCore;
+    QLineEdit       m_EditOfferCore;
+    QPushButton     m_ButtonAcceptOfferCore;
+    //
+    QLabel          m_LblCountry;
+    QComboBox       m_ComboCountry;
+    //
+    QLabel          m_LblTown;
+    QLineEdit       m_EditTown;
+    QPushButton     m_ButtonAcceptTown;
+    //
+    QLabel          m_LblSkills;
+    QLineEdit       m_EditSkills;
+    QPushButton     m_ButtonAcceptSkills;
+    //
+    QLabel          m_LblRate;
+    QLineEdit       m_EditRate;
+    //
+    QLabel          m_LblStatus;
+    QComboBox       m_ComboStatus;
+    //
+    QLabel          m_LblAttractivity;
+    QComboBox       m_ComboAttractivity;
+    //-------------------------------
+    QSpacerItem*    m_ptrSpacer;
+    QLabel          m_LblnsertComment;
+    QPlainTextEdit  m_CommentEdit;
+    QLabel          m_LblAgentInfo;
+    //
+    QLabel          m_LblAgentName;
+    QLabel          m_LblAgentNameValue;
+    //
+    QLabel          m_LblAgentEmail;
+    QLabel          m_LblAgentEmailValue;
+    //
+    QLabel          m_LblAgentPhone1;
+    QLabel          m_LblAgentPhone1Value;
+    //
+    QLabel          m_LblAgentPhone2;
+    QLabel          m_LblAgentPhone2Value;
+    //
+    QLabel          m_LblAgencyName;
+    QLabel          m_LblAgencyNameValue;
+    //
+    QLabel          m_LblAgentRank;
+    QLabel          m_LblAgentRankValue;
+    //
+    QPushButton     m_ButtonSaveOffer;
+    //
+    QPushButton     m_ButtonClose;
+    //
+    QAction         m_actionAcceptOfferCore;
+    QAction         m_actionAcceptCountry;
+    QAction         m_actionAcceptTown;
+    QAction         m_actionAcceptSkills;
+    QAction         m_actionAcceptAgentName;
+    QAction         m_actionAcceptAgentEmail;
+    QAction         m_actionAcceptAgentPhone1;
+    QAction         m_actionAcceptAgentPhone2;
+    QAction         m_actionAcceptAgencyName;
+    QAction         m_actionScan;
+    QAction         m_actionPaste;
+    //
+    OfferBaseDTO*   m_ptrDtoOffer;
+    AgentBaseDTO*   m_ptrDTOAgent;
+    //
+    bool            m_bOfferUpdated;
+    bool            m_bOfferChanged;
 };
 
 #endif // DLGEDITVIEWOFFER_H

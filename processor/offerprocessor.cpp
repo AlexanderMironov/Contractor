@@ -279,3 +279,14 @@ bool OfferProcessor::removeOffer(int i_offer_id){
     //
     return true;
 }
+
+OfferBaseDTO*  OfferProcessor::getOfferById(int i_offer_id){
+    OfferBaseDTO* ptr_offer = nullptr;
+    //
+    OfferStorage::iterator i = m_mapStorage.find(i_offer_id);
+    if (i != m_mapStorage.end()){
+        ptr_offer = i.value();
+    };
+    //
+    return ptr_offer;
+}

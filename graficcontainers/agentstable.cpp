@@ -43,9 +43,9 @@ void AgentsTable::setHeaderParams(){
     //
     QHeaderView *header = this->horizontalHeader();
     //
-    this->setColumnWidth(COL_NAME, 65);
+    this->setColumnWidth(COL_NAME, 60);
     this->setColumnWidth(COL_RANK, 105);
-    this->setColumnWidth(COL_EMAIL, 230);
+    this->setColumnWidth(COL_EMAIL, 345);
     this->setColumnWidth(COL_PHONE_1, 180);
     this->setColumnWidth(COL_PHONE_2, 180);
     this->setColumnWidth(COL_WEB_PROFILE, 150);
@@ -145,6 +145,12 @@ QTableWidgetItem*  AgentsTable::makeCellRank(int i_row_num, AgentBaseDTO* ptr_ag
 
 QTableWidgetItem* AgentsTable::makeCellEmail(AgentBaseDTO* ptr_dto){
     QTableWidgetItem*   ptr_item_title  = new  QTableWidgetItem( ptr_dto->getEMail());
+    ptr_item_title->setForeground(QBrush(QColor(0, 0, 255)));
+    //
+    QFont originalFont = ptr_item_title->font();
+    originalFont.setUnderline(true);
+    ptr_item_title->setFont(originalFont);
+    //
     ptr_item_title->setFlags( Qt::ItemIsEnabled |Qt::ItemIsSelectable );
     return ptr_item_title;
 }

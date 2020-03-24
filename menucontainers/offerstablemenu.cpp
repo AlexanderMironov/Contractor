@@ -38,6 +38,7 @@ void OffersTableMenu::fillPopupMenu(QMenu* ptr_mnu, bool enable_delete){
     ptr_mnu->addAction(&m_actionShowNewOfferDlg);
     //
     m_actionDeleteCurrentOffer.setEnabled(enable_delete);
+    m_actionEditCurrentOffer.setEnabled(enable_delete);
     //
     ptr_mnu->addAction(&m_actionEditCurrentOffer);
     //

@@ -84,10 +84,7 @@ void DlgNewOffer::setDlgSizes(){
     const int i_height = 600;
     //
     this->setMinimumHeight(i_height);
-    //this->setMaximumHeight(i_height);
-
     this->setMinimumWidth(1200);
-
 }
 
 void DlgNewOffer::setElementSizes(){
@@ -116,8 +113,6 @@ void DlgNewOffer::onAddNewCountry(){
         m_ComboCountry.addItem(ptr_country->getName(), QVariant(ptr_country->getId()));
         i++;
     };
-    //
-    return;
 }
 
 void  DlgNewOffer::createOfferWidgets(){
@@ -313,6 +308,7 @@ void  DlgNewOffer::createControlButtons(){
     connect(&m_ButtonSaveOffer, &QPushButton::released, this, &DlgNewOffer::onClickBtnSaveOffer);
     //
     m_ButtonClose.setText("Close window");
+    m_ButtonClose.setMinimumWidth(m_iMinButtonWidth);
     connect(&m_ButtonClose, &QPushButton::released, this, &DlgNewOffer::close);
 }
 
@@ -354,7 +350,7 @@ void DlgNewOffer::addWidgetsToLayout(){
     m_MainLayout.addWidget(&m_LblOfferInfo,i_row,1,1,3);
     //
     i_row++;
-    m_MainLayout.addWidget(&m_OfferEdit,i_row,0,12,1);
+    m_MainLayout.addWidget(&m_OfferEdit,i_row,0,11,1);
     //
     m_MainLayout.addWidget(&m_LblOfferCore,i_row,1,1,1);
     m_MainLayout.addWidget(&m_EditOfferCore,i_row,2,1,1);
@@ -393,11 +389,6 @@ void DlgNewOffer::addWidgetsToLayout(){
     //
     i_row++;
     m_MainLayout.addWidget(&m_LblAgentInfo,i_row,1,1,3);
-    //
-    i_row++;
-    m_MainLayout.addWidget(&m_LblAgentName,i_row,1,1,1);
-    m_MainLayout.addWidget(&m_EditAgentName,i_row,2,1,1);
-    m_MainLayout.addWidget(&m_ButtonAcceptAgentName,i_row,3,1,1);
     //
     i_row++;
     m_MainLayout.addWidget(&m_LblAgentName,i_row,1,1,1);

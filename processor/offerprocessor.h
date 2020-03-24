@@ -18,6 +18,7 @@ public:
     int                     add(OfferBaseDTO* pos_description);
     bool                    init();
     const OfferStorage&     getStorage() const;
+    OfferBaseDTO*           getOfferById(int i_offer_id);
     bool                    updateOfferStatus(int i_offer_id, int i_offer_status);
     bool                    updateAttractivity(int i_offer_id, int i_offer_attractivity);
     bool                    updateRate(int i_offer_id, int i_rate);
