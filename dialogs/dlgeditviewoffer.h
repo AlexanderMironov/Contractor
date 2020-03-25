@@ -20,15 +20,26 @@ class DlgEditViewOffer : public QDialog
     Q_OBJECT
 
 public:
-    DlgEditViewOffer(QWidget *parent = nullptr);
-    ~DlgEditViewOffer();
-    void init(int i_offer_id);
+                    DlgEditViewOffer(QWidget *parent = nullptr);
+                    ~DlgEditViewOffer();
+    void            init(int i_offer_id);
+    bool            isSomethingChanged() const;
 
 signals:
 
 public slots:
 
 private slots:
+    void            onClickBtnUpdateOffer();
+    void            onChangeDescription();
+    void            onChangeComment();
+    void            onChangePositionTitle();
+    void            onChangeCountry();
+    void            onChangeTown();
+    void            onChangeSkillsList();
+    void            onChangeRate();
+    void            onChangeStatus();
+    void            onChangeAttractivity();
 
 private:
     void            setDlgSizes();
@@ -44,7 +55,16 @@ private:
     void            fillSkillList();
     void            fillStatusCombo();
     void            fillAttractivityCombo();
-
+    //
+    void            updateDesctiption();
+    void            updateComment();
+    void            updatePositionTitle();
+    void            updateCountry();
+    void            updateTown();
+    void            updateRate();
+    void            updateSkillList();
+    void            updateStatus();
+    void            updateAttractivity();
 
 private:
     int             m_iMinButtonWidth;
@@ -106,7 +126,7 @@ private:
     QLabel          m_LblAgentRank;
     QLabel          m_LblAgentRankValue;
     //
-    QPushButton     m_ButtonSaveOffer;
+    QPushButton     m_ButtonUpdateOffer;
     //
     QPushButton     m_ButtonClose;
     //
@@ -123,10 +143,19 @@ private:
     QAction         m_actionPaste;
     //
     OfferBaseDTO*   m_ptrDtoOffer;
-    AgentBaseDTO*   m_ptrDTOAgent;
+    AgentBaseDTO*   m_ptrDtoAgent;
     //
     bool            m_bOfferUpdated;
-    bool            m_bOfferChanged;
+    //
+    bool            m_bChangeDescription;
+    bool            m_bChangeComment;
+    bool            m_bChangePositionTitle;
+    bool            m_bChangeCountry;
+    bool            m_bChangeTown;
+    bool            m_bChangeSkillsList;
+    bool            m_bChangeRate;
+    bool            m_bChangeStatus;
+    bool            m_bChangeAttractivity;
 };
 
 #endif // DLGEDITVIEWOFFER_H

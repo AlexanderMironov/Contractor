@@ -21,6 +21,7 @@ public:
     void                        add(int i_offer_id, const SkillsList& skill_list);
     SkillsList                  getSkillsList(int i_offer_id);
     bool                        removeOffer(int i_offer_id);
+    bool                        replaceSkillsList(int i_offer_id, const SkillsList& skill_list);
 signals:
 
 public slots:

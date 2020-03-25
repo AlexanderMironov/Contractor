@@ -176,6 +176,11 @@ bool AgentProcessor::updateRank(int i_agent_id, int i_rank){
         return false;
     };
     //
+    AgentBaseDTO* ptr_agent = getAgentByID(i_agent_id);
+    if (nullptr != ptr_agent){
+        ptr_agent->setRank(i_rank);
+    };
+    //
     return true;
 }
 
@@ -210,6 +215,18 @@ bool AgentProcessor::updatePhone(int i_agent_id, const QString& phone_number, PH
         return false;
     };
     //
+    AgentBaseDTO* ptr_agent = getAgentByID(i_agent_id);
+    if (nullptr != ptr_agent){
+        switch(en_phone_num){
+        case PHONE_NUM_1:
+            ptr_agent->setPhone1(phone_number);
+            break;
+        case PHONE_NUM_2:
+            ptr_agent->setPhone2(phone_number);
+            break;
+        };
+    };
+    //
     return true;
 }
 
@@ -235,6 +252,11 @@ bool AgentProcessor::updateWebProfile(int i_agent_id, const QString& web_profile
         QMessageBox::critical(nullptr, "Error exec", str_update_string + "\n" + qry.lastError().text(), QMessageBox::Ok);
         return false;
     };
+    //
+    AgentBaseDTO* ptr_agent = getAgentByID(i_agent_id);
+    if (nullptr != ptr_agent){
+        ptr_agent->setWebProfile(web_profile);
+    }
     //
     return true;
 }

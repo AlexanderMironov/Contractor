@@ -64,6 +64,8 @@ private:
     void                updateAttractivity(unsigned int ui_row);
     void                showPopupMenu();
     int                 getRecordIdByRowNum(int i_row_num);
+    void                updateRow(int i_row_num);
+    QString             getSkillsListAsString(OfferBaseDTO* ptr_dto) const;
     //
     QTableWidgetItem*   makeCellDate (OfferBaseDTO* ptr_dto);
     QTableWidgetItem*   makeCellTitle(OfferBaseDTO* ptr_dto);

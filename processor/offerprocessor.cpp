@@ -175,6 +175,167 @@ const OfferStorage& OfferProcessor::getStorage() const{
     return m_mapStorage;
 }
 
+bool OfferProcessor::updateTown(int i_offer_id, int i_town_id){
+    //
+    DBAcccessSafe dbAccess;
+    QSqlDatabase* ptr_db =  dbAccess.getDB();
+    if (nullptr == ptr_db){
+        return false;
+    };
+    //
+    QSqlQuery qry(*ptr_db);
+    //
+    const QString str_update_string = QString("UPDATE offers_tbl SET id_town = %1 WHERE id = %2;").arg(i_town_id).arg(i_offer_id);
+    //
+    if ( !qry.prepare( str_update_string  ) )
+    {
+        QMessageBox::critical(nullptr, "Error prepare", str_update_string, QMessageBox::Ok);
+        return false;
+    };
+    //
+    if ( !qry.exec() )
+    {
+        QMessageBox::critical(nullptr, "Error exec", str_update_string + "\n" + qry.lastError().text(), QMessageBox::Ok);
+        return false;
+    };
+    //
+    OfferBaseDTO* ptr_offer =  this->getOfferById(i_offer_id);
+    if (nullptr != ptr_offer){
+        ptr_offer->setTownId(i_town_id);
+    };
+    //
+    return true;
+}
+
+bool OfferProcessor::updateCountry(int i_offer_id, int i_country_id){
+    //
+    DBAcccessSafe dbAccess;
+    QSqlDatabase* ptr_db =  dbAccess.getDB();
+    if (nullptr == ptr_db){
+        return false;
+    };
+    //
+    QSqlQuery qry(*ptr_db);
+    //
+    const QString str_update_string = QString("UPDATE offers_tbl SET id_country = %1 WHERE id = %2;").arg(i_country_id).arg(i_offer_id);
+    //
+    if ( !qry.prepare( str_update_string  ) )
+    {
+        QMessageBox::critical(nullptr, "Error prepare", str_update_string, QMessageBox::Ok);
+        return false;
+    };
+    //
+    if ( !qry.exec() )
+    {
+        QMessageBox::critical(nullptr, "Error exec", str_update_string + "\n" + qry.lastError().text(), QMessageBox::Ok);
+        return false;
+    };
+    //
+    OfferBaseDTO* ptr_offer =  this->getOfferById(i_offer_id);
+    if (nullptr != ptr_offer){
+        ptr_offer->setCountryId(i_country_id);
+    };
+    //
+    return true;
+}
+
+bool OfferProcessor::updatePositionTitle(int i_offer_id, const QString& str_position_title){
+    //
+    DBAcccessSafe dbAccess;
+    QSqlDatabase* ptr_db =  dbAccess.getDB();
+    if (nullptr == ptr_db){
+        return false;
+    };
+    //
+    QSqlQuery qry(*ptr_db);
+    //
+    const QString str_update_string = QString("UPDATE offers_tbl SET pos_title = '%1' WHERE id = %2;").arg(str_position_title).arg(i_offer_id);
+    //
+    if ( !qry.prepare( str_update_string  ) )
+    {
+        QMessageBox::critical(nullptr, "Error prepare", str_update_string, QMessageBox::Ok);
+        return false;
+    };
+    //
+    if ( !qry.exec() )
+    {
+        QMessageBox::critical(nullptr, "Error exec", str_update_string + "\n" + qry.lastError().text(), QMessageBox::Ok);
+        return false;
+    };
+    //
+    OfferBaseDTO* ptr_offer =  this->getOfferById(i_offer_id);
+    if (nullptr != ptr_offer){
+        ptr_offer->setPositionTitle(str_position_title);
+    };
+    //
+    return true;
+}
+
+
+bool OfferProcessor::updateComment(int i_offer_id, const QString& str_comment){
+    //
+    DBAcccessSafe dbAccess;
+    QSqlDatabase* ptr_db =  dbAccess.getDB();
+    if (nullptr == ptr_db){
+        return false;
+    };
+    //
+    QSqlQuery qry(*ptr_db);
+    //
+    const QString str_update_string = QString("UPDATE offers_tbl SET comments = '%1' WHERE id = %2;").arg(str_comment).arg(i_offer_id);
+    //
+    if ( !qry.prepare( str_update_string  ) )
+    {
+        QMessageBox::critical(nullptr, "Error prepare", str_update_string, QMessageBox::Ok);
+        return false;
+    };
+    //
+    if ( !qry.exec() )
+    {
+        QMessageBox::critical(nullptr, "Error exec", str_update_string + "\n" + qry.lastError().text(), QMessageBox::Ok);
+        return false;
+    };
+    //
+    OfferBaseDTO* ptr_offer =  this->getOfferById(i_offer_id);
+    if (nullptr != ptr_offer){
+        ptr_offer->setComments(str_comment);
+    };
+    //
+    return true;
+}
+
+bool OfferProcessor::updateDescription(int i_offer_id, const QString& str_descripiton){
+    //
+    DBAcccessSafe dbAccess;
+    QSqlDatabase* ptr_db =  dbAccess.getDB();
+    if (nullptr == ptr_db){
+        return false;
+    };
+    //
+    QSqlQuery qry(*ptr_db);
+    //
+    const QString str_update_string = QString("UPDATE offers_tbl SET description = '%1' WHERE id = %2;").arg(str_descripiton).arg(i_offer_id);
+    //
+    if ( !qry.prepare( str_update_string  ) )
+    {
+        QMessageBox::critical(nullptr, "Error prepare", str_update_string, QMessageBox::Ok);
+        return false;
+    };
+    //
+    if ( !qry.exec() )
+    {
+        QMessageBox::critical(nullptr, "Error exec", str_update_string + "\n" + qry.lastError().text(), QMessageBox::Ok);
+        return false;
+    };
+    //
+    OfferBaseDTO* ptr_offer =  this->getOfferById(i_offer_id);
+    if (nullptr != ptr_offer){
+        ptr_offer->setDescription(str_descripiton);
+    };
+    //
+    return true;
+}
+
 bool OfferProcessor::updateAttractivity(int i_offer_id, int i_offer_attractivity){
     //
     DBAcccessSafe dbAccess;
@@ -197,6 +358,11 @@ bool OfferProcessor::updateAttractivity(int i_offer_id, int i_offer_attractivity
     {
         QMessageBox::critical(nullptr, "Error exec", str_update_string + "\n" + qry.lastError().text(), QMessageBox::Ok);
         return false;
+    };
+    //
+    OfferBaseDTO* ptr_offer =  this->getOfferById(i_offer_id);
+    if (nullptr != ptr_offer){
+        ptr_offer->setAttractivity(i_offer_attractivity);
     };
     //
     return true;
@@ -225,6 +391,11 @@ bool OfferProcessor::updateOfferStatus(int i_offer_id, int i_offer_status){
         return false;
     };
     //
+    OfferBaseDTO* ptr_offer =  this->getOfferById(i_offer_id);
+    if (nullptr != ptr_offer){
+        ptr_offer->setStatusId(i_offer_status);
+    };
+    //
     return true;
 }
 
@@ -249,6 +420,11 @@ bool OfferProcessor::updateRate(int i_offer_id, int i_rate){
     {
         QMessageBox::critical(nullptr, "Error exec", str_update_string + "\n" + qry.lastError().text(), QMessageBox::Ok);
         return false;
+    };
+    //
+    OfferBaseDTO* ptr_offer =  this->getOfferById(i_offer_id);
+    if (nullptr != ptr_offer){
+        ptr_offer->setRate(i_rate);
     };
     //
     return true;
@@ -276,6 +452,8 @@ bool OfferProcessor::removeOffer(int i_offer_id){
         QMessageBox::critical(nullptr, "Error exec", str_update_string + "\n" + qry.lastError().text(), QMessageBox::Ok);
         return false;
     };
+    //
+    m_mapStorage.remove(i_offer_id);
     //
     return true;
 }

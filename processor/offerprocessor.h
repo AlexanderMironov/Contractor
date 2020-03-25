@@ -22,6 +22,11 @@ public:
     bool                    updateOfferStatus(int i_offer_id, int i_offer_status);
     bool                    updateAttractivity(int i_offer_id, int i_offer_attractivity);
     bool                    updateRate(int i_offer_id, int i_rate);
+    bool                    updateDescription(int i_offer_id, const QString& str_descripiton);
+    bool                    updateComment(int i_offer_id, const QString& str_comment);
+    bool                    updatePositionTitle(int i_offer_id, const QString& str_position_title);
+    bool                    updateCountry(int i_offer_id, int i_country_id);
+    bool                    updateTown(int i_offer_id, int i_town_id);
     bool                    removeOffer(int i_offer_id);
 
 signals:

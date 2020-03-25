@@ -1,3 +1,5 @@
+#include <QMessageBox>
+//
 #include "dlgeditviewoffer.h"
 #include "commondef.h"
 #include "config/configuration.h"
@@ -25,12 +27,8 @@
 DlgEditViewOffer::DlgEditViewOffer(QWidget *parent) :
     QDialog(parent)
 {
-    m_bOfferUpdated = false;
-    m_bOfferChanged = false;
     m_ptrDtoOffer   = nullptr;
-    m_ptrDTOAgent   = nullptr;
-    //
-    this->setWindowTitle("View/Edit job offer");
+    m_ptrDtoAgent   = nullptr;
 }
 
 DlgEditViewOffer::~DlgEditViewOffer(){
@@ -42,15 +40,29 @@ void DlgEditViewOffer::init(int i_offer_id){
         return; //already initialized
     };
     //
+    m_bOfferUpdated = false;
+    //
+    m_bChangeDescription = false;
+    m_bChangeComment = false;
+    m_bChangePositionTitle = false;
+    m_bChangeCountry = false;
+    m_bChangeTown = false;
+    m_bChangeSkillsList = false;
+    m_bChangeRate = false;
+    m_bChangeStatus = false;
+    m_bChangeAttractivity = false;
+    //
+    this->setWindowTitle("View/Edit job offer");
+    //
     m_ptrDtoOffer = OfferProcessor::getInstance().getOfferById(i_offer_id);
     //
     if (nullptr == m_ptrDtoOffer){
         return;
     };
     //
-    m_ptrDTOAgent = AgentProcessor::getInstance().getAgentByID(m_ptrDtoOffer->getAgentId());
+    m_ptrDtoAgent = AgentProcessor::getInstance().getAgentByID(m_ptrDtoOffer->getAgentId());
     //
-    if (nullptr == m_ptrDTOAgent){
+    if (nullptr == m_ptrDtoAgent){
         return;
     };
     //
@@ -98,6 +110,7 @@ void DlgEditViewOffer::createOfferWidgets(){
     m_LblnsertOffer.setMinimumWidth(i_left_side_max_width);
     m_OfferEdit.setMinimumWidth(i_left_side_max_width);
     m_OfferEdit.setPlainText(m_ptrDtoOffer->getDescription());
+    connect(&m_OfferEdit, SIGNAL(textChanged()), this, SLOT(onChangeDescription()));
 
     //m_OfferEdit.setContextMenuPolicy(Qt::CustomContextMenu);
     //connect(&m_OfferEdit, &QPlainTextEdit::copyAvailable, this, &DlgNewOffer::onSelectText);
@@ -107,6 +120,7 @@ void DlgEditViewOffer::createOfferWidgets(){
     m_LblnsertComment.setMinimumWidth(i_left_side_max_width);
     m_CommentEdit.setMinimumWidth(i_left_side_max_width);
     m_CommentEdit.setPlainText(m_ptrDtoOffer->getComments());
+    connect(&m_CommentEdit, SIGNAL(textChanged()), this, SLOT(onChangeComment()));
     //
     m_LblOfferInfo.setText("Offer info");
     m_LblOfferInfo.setMinimumWidth(300);
@@ -120,6 +134,7 @@ void DlgEditViewOffer::createOfferWidgets(){
     m_EditOfferCore.setMinimumWidth(m_iMinEditWidth);
     m_EditOfferCore.setMaximumWidth(m_iMaxElementWidth);
     m_EditOfferCore.setText(m_ptrDtoOffer->getPositionTitle());
+    connect(&m_EditOfferCore, SIGNAL(textChanged(const QString &)), this, SLOT(onChangePositionTitle()));
     //
     m_ButtonAcceptOfferCore.setText("Accept selection");
     m_ButtonAcceptOfferCore.setMinimumWidth(m_iMinButtonWidth);
@@ -132,6 +147,8 @@ void DlgEditViewOffer::createOfferWidgets(){
     m_ComboCountry.setMinimumWidth(m_iMinEditWidth);
     m_ComboCountry.setMaximumWidth(m_iMaxElementWidth);
     fillCountryCombo();
+    connect(&m_ComboCountry, SIGNAL(currentIndexChanged(int)), this, SLOT(onChangeCountry()));
+
     //..
     //create town country line
     m_LblTown.setText("Town");
@@ -141,6 +158,7 @@ void DlgEditViewOffer::createOfferWidgets(){
     m_EditTown.setMinimumWidth(m_iMinEditWidth);
     m_EditTown.setMaximumWidth(m_iMaxElementWidth);
     m_EditTown.setText(TownProcessor::getInstance().getTownNameByID(m_ptrDtoOffer->getTownId()));
+    connect(&m_EditTown, SIGNAL(textChanged(const QString &)), this, SLOT(onChangeTown()));
     //..
     m_ButtonAcceptTown.setText("Accept selection");
     m_ButtonAcceptTown.setMinimumWidth(m_iMinButtonWidth);
@@ -154,6 +172,7 @@ void DlgEditViewOffer::createOfferWidgets(){
     m_EditSkills.setMinimumWidth(m_iMinEditWidth);
     m_EditSkills.setMaximumWidth(m_iMaxElementWidth);
     fillSkillList();
+    connect(&m_EditSkills, SIGNAL(textChanged(const QString &)), this, SLOT(onChangeSkillsList()));
     //..
     m_ButtonAcceptSkills.setText("Add selection ");
     m_ButtonAcceptSkills.setMinimumWidth(m_iMinButtonWidth);
@@ -168,6 +187,7 @@ void DlgEditViewOffer::createOfferWidgets(){
     m_EditRate.setMaximumWidth(40);
     m_EditRate.setAlignment(Qt::AlignRight);
     m_EditRate.setText(QString("%1").arg(m_ptrDtoOffer->getRate()));
+    connect(&m_EditRate, SIGNAL(textChanged(const QString &)), this, SLOT(onChangeRate()));
     //
     m_LblStatus.setText("Status");
     m_LblStatus.setMinimumWidth(m_iMinLabelWidth);
@@ -175,6 +195,7 @@ void DlgEditViewOffer::createOfferWidgets(){
     m_ComboStatus.setMinimumWidth(m_iMinEditWidth);
     m_ComboStatus.setMaximumWidth(m_iMaxElementWidth);
     fillStatusCombo();
+    connect(&m_ComboStatus, SIGNAL(currentIndexChanged(int)), this, SLOT(onChangeStatus()));
     //
     m_LblAttractivity.setText("Attractivity");
     m_LblAttractivity.setMinimumWidth(m_iMinLabelWidth);
@@ -182,6 +203,7 @@ void DlgEditViewOffer::createOfferWidgets(){
     m_ComboAttractivity.setMinimumWidth(m_iMinEditWidth);
     m_ComboAttractivity.setMaximumWidth(m_iMaxElementWidth);
     fillAttractivityCombo();
+    connect(&m_ComboAttractivity, SIGNAL(currentIndexChanged(int)), this, SLOT(onChangeAttractivity()));
     //
 }
 
@@ -253,14 +275,14 @@ void  DlgEditViewOffer::createAgentWidgets(){
     //..
     m_LblAgentNameValue.setMinimumWidth(m_iMinEditWidth);
     m_LblAgentNameValue.setMaximumWidth(m_iMaxElementWidth);
-    m_LblAgentNameValue.setText(m_ptrDTOAgent->getName());
+    m_LblAgentNameValue.setText(m_ptrDtoAgent->getName());
     //
     m_LblAgentEmail.setText("E-mail");
     m_LblAgentEmail.setMinimumWidth(m_iMinLabelWidth);
     //..
     m_LblAgentEmailValue.setMinimumWidth(m_iMinEditWidth);
     m_LblAgentEmailValue.setMaximumWidth(m_iMaxElementWidth);
-    QString str_email = QString("<a href='mailto:%1?subject=%2'>%3</a>").arg(m_ptrDTOAgent->getEMail()).arg(m_ptrDtoOffer->getPositionTitle()).arg(m_ptrDTOAgent->getEMail());
+    QString str_email = QString("<a href='mailto:%1?subject=%2'>%3</a>").arg(m_ptrDtoAgent->getEMail()).arg(m_ptrDtoOffer->getPositionTitle()).arg(m_ptrDtoAgent->getEMail());
     m_LblAgentEmailValue.setText(str_email);
     m_LblAgentEmailValue.setOpenExternalLinks(true);
     //..
@@ -269,27 +291,27 @@ void  DlgEditViewOffer::createAgentWidgets(){
     //..
     m_LblAgentPhone1Value.setMinimumWidth(m_iMinEditWidth);
     m_LblAgentPhone1Value.setMaximumWidth(m_iMaxElementWidth);
-    m_LblAgentPhone1Value.setText(m_ptrDTOAgent->getPhone1());
+    m_LblAgentPhone1Value.setText(m_ptrDtoAgent->getPhone1());
     //
     m_LblAgentPhone2.setText("Phone 2");
     m_LblAgentPhone2.setMinimumWidth(m_iMinLabelWidth);
     //..
     m_LblAgentPhone2Value.setMinimumWidth(m_iMinEditWidth);
     m_LblAgentPhone2Value.setMaximumWidth(m_iMaxElementWidth);
-    m_LblAgentPhone2Value.setText(m_ptrDTOAgent->getPhone2());
+    m_LblAgentPhone2Value.setText(m_ptrDtoAgent->getPhone2());
     //
     m_LblAgencyName.setText("Agency");
     m_LblAgencyName.setMinimumWidth(m_iMinLabelWidth);
     //..
     m_LblAgencyNameValue.setMinimumWidth(m_iMinEditWidth);
     m_LblAgencyNameValue.setMaximumWidth(m_iMaxElementWidth);
-    m_LblAgencyNameValue.setText(AgencyProcessor::getInstance().getAgencyNameByID(m_ptrDTOAgent->getAgencyId()));
+    m_LblAgencyNameValue.setText(AgencyProcessor::getInstance().getAgencyNameByID(m_ptrDtoAgent->getAgencyId()));
     //
     m_LblAgentRank.setText("Rank");
     m_LblAgentRank.setMinimumWidth(m_iMinLabelWidth);
     m_LblAgentRank.setMaximumWidth(m_iMaxElementWidth);
     //..
-    m_LblAgentRankValue.setText(Configuration::getInstance().getAgentRankAsString(static_cast<AGENT_RANK>(m_ptrDTOAgent->getRank())));
+    m_LblAgentRankValue.setText(Configuration::getInstance().getAgentRankAsString(static_cast<AGENT_RANK>(m_ptrDtoAgent->getRank())));
     m_LblAgentRankValue.setMinimumWidth(m_iMinButtonWidth);
     m_LblAgentRankValue.setMaximumWidth(m_iMaxElementWidth);
 }
@@ -318,9 +340,10 @@ void DlgEditViewOffer::fillCountryCombo(){
 
 void DlgEditViewOffer::createControlButtons(){
     //
-    m_ButtonSaveOffer.setText("Update offer ");
-    m_ButtonSaveOffer.setMinimumWidth(m_iMinButtonWidth);
-    //connect(&m_ButtonSaveOffer, &QPushButton::released, this, &DlgNewOffer::onClickBtnSaveOffer);
+    m_ButtonUpdateOffer.setText("Update offer ");
+    m_ButtonUpdateOffer.setMinimumWidth(m_iMinButtonWidth);
+    m_ButtonUpdateOffer.setEnabled(false);
+    connect(&m_ButtonUpdateOffer, &QPushButton::released, this, &DlgEditViewOffer::onClickBtnUpdateOffer);
     //
     m_ButtonClose.setText("Close window");
     //connect(&m_ButtonClose, &QPushButton::released, this, &DlgNewOffer::close);
@@ -405,8 +428,216 @@ void DlgEditViewOffer::addWidgetsToLayout(){
     //------------------------------------------------------------------------------
     //
     i_row++;
-    m_MainLayout.addWidget(&m_ButtonSaveOffer,i_row,1,1,3);
+    m_MainLayout.addWidget(&m_ButtonUpdateOffer,i_row,1,1,3);
     //
     i_row++;
     m_MainLayout.addWidget(&m_ButtonClose,i_row,1,1,3);
+}
+
+void DlgEditViewOffer::onChangeDescription(){
+    m_bChangeDescription = true;
+    m_ButtonUpdateOffer.setEnabled(true);
+}
+
+void DlgEditViewOffer::onChangeComment(){
+    m_bChangeComment = true;
+    m_ButtonUpdateOffer.setEnabled(true);
+}
+
+void DlgEditViewOffer::onChangePositionTitle(){
+    m_bChangePositionTitle = true;
+    m_ButtonUpdateOffer.setEnabled(true);
+}
+
+void DlgEditViewOffer::onChangeCountry(){
+    m_bChangeCountry = true;
+    m_ButtonUpdateOffer.setEnabled(true);
+}
+
+void DlgEditViewOffer::onChangeTown(){
+    m_bChangeTown = true;
+    m_ButtonUpdateOffer.setEnabled(true);
+}
+
+void DlgEditViewOffer::onChangeSkillsList(){
+    m_bChangeSkillsList = true;
+    m_ButtonUpdateOffer.setEnabled(true);
+}
+
+void DlgEditViewOffer::onChangeRate(){
+    m_bChangeRate = true;
+    m_ButtonUpdateOffer.setEnabled(true);
+}
+
+void DlgEditViewOffer::onChangeStatus(){
+    m_bChangeStatus = true;
+    m_ButtonUpdateOffer.setEnabled(true);
+}
+
+void DlgEditViewOffer::onChangeAttractivity(){
+    m_bChangeAttractivity = true;
+    m_ButtonUpdateOffer.setEnabled(true);
+}
+
+void DlgEditViewOffer::onClickBtnUpdateOffer(){
+    if(false == isSomethingChanged()){
+        QMessageBox box;
+        box.setStandardButtons( QMessageBox::Ok);
+        box.setText("Nothing has been changed");
+        box.exec();
+        return;
+    };
+    //
+    updateDesctiption();
+    updateComment();
+    updatePositionTitle();
+    updateCountry();
+    updateTown();
+    updateSkillList();
+    updateRate();
+    updateStatus();
+    updateAttractivity();
+/*
+
+*/
+    //
+    return;
+}
+
+void DlgEditViewOffer::updateAttractivity(){
+    if(true == m_bChangeAttractivity){
+        const int i_new_attractivity = m_ComboAttractivity.currentData().toInt();
+        if (i_new_attractivity != m_ptrDtoOffer->getAttractivity()){
+            OfferProcessor::getInstance().updateAttractivity(m_ptrDtoOffer->getId(),i_new_attractivity);
+        };
+    };
+}
+
+void DlgEditViewOffer::updateStatus(){
+    if(true == m_bChangeStatus){
+        const int i_new_status = m_ComboStatus.currentData().toInt();
+        if (i_new_status != m_ptrDtoOffer->getStatusId()){
+            OfferProcessor::getInstance().updateOfferStatus(m_ptrDtoOffer->getId(), i_new_status);
+        };
+    };
+}
+
+void DlgEditViewOffer::updateRate(){
+    if(true == m_bChangeRate){
+        const int i_rate = m_EditRate.text().toInt();
+        if(i_rate != m_ptrDtoOffer->getRate()){
+            OfferProcessor::getInstance().updateRate(m_ptrDtoOffer->getId(), i_rate);
+        };
+    };
+}
+
+void DlgEditViewOffer::updateSkillList(){
+    if(true == m_bChangeSkillsList){
+        const QString str_skill_list_row = m_EditSkills.text().trimmed();
+        SkillsList skills_list_old = OfferSkillProcesor::getInstance().getSkillsList(m_ptrDtoOffer->getId());
+        QStringList skill_list_new_str = str_skill_list_row.split(",", QString::SkipEmptyParts);
+        //
+        SkillsList skills_list_new;
+        for(const auto& i : skill_list_new_str){
+            const int i_skill_id = SkillProcessor::getInstance().add(i);
+            skills_list_new.push_back(i_skill_id);
+        };
+        //
+        const int i_skill_list_new_size = skills_list_new.size();
+        const int i_skill_list_old_size = skills_list_old .size();
+        //
+        bool b_need_to_replace = false;
+        //
+        if (i_skill_list_new_size == i_skill_list_old_size){
+            for (int i=0; i<skills_list_new.size(); ++i){
+                bool b_skill_found = false;
+                for (int j=0; j<skills_list_old.size(); ++j){
+                    if (skills_list_new[i] == skills_list_old[j]){
+                        b_skill_found = true;
+                        break;
+                    };
+                };
+                if(false == b_skill_found){
+                    b_need_to_replace = true;
+                    break;
+                };
+            };
+        }else{ //new and old list is not the same size
+            OfferSkillProcesor::getInstance().replaceSkillsList(m_ptrDtoOffer->getId(), skills_list_new);
+            return;
+        };
+        //
+        if(true == b_need_to_replace){
+            OfferSkillProcesor::getInstance().replaceSkillsList(m_ptrDtoOffer->getId(), skills_list_new);
+        };
+    }
+};
+
+void DlgEditViewOffer::updateTown(){
+    if(true == m_bChangeTown){
+        const int i_town_id = TownProcessor::getInstance().add(m_EditTown.text().trimmed());
+        if (i_town_id != m_ptrDtoOffer->getTownId()){
+            OfferProcessor::getInstance().updateTown(m_ptrDtoOffer->getId(), i_town_id);
+        };
+    };
+}
+
+void DlgEditViewOffer::updateCountry(){
+    if(true == m_bChangeCountry){
+        const int i_country_id  = m_ComboCountry.currentData(Qt::UserRole).toInt();
+        if(i_country_id != m_ptrDtoOffer->getCountryId()){
+            OfferProcessor::getInstance().updateCountry(m_ptrDtoOffer->getId(), i_country_id);
+        };
+    };
+}
+
+void DlgEditViewOffer::updatePositionTitle(){
+    if(true == m_bChangePositionTitle){
+        const QString str_pos_title_text = m_EditOfferCore.text();
+        //
+        if(m_ptrDtoOffer->getPositionTitle().compare(str_pos_title_text,Qt::CaseInsensitive) !=0){
+            OfferProcessor::getInstance().updatePositionTitle(m_ptrDtoOffer->getId(), str_pos_title_text);
+        };
+    };
+}
+
+void DlgEditViewOffer::updateDesctiption(){
+    if(true == m_bChangeDescription){
+        QString str_offer_text = m_OfferEdit.toPlainText();
+        if (str_offer_text.length() > 2000){
+            str_offer_text = str_offer_text.mid(MAX_TEXT_LENGTH);
+        };
+        //
+        if(m_ptrDtoOffer->getDescription().compare(str_offer_text,Qt::CaseInsensitive) !=0){
+            OfferProcessor::getInstance().updateDescription(m_ptrDtoOffer->getId(), str_offer_text);
+        };
+    };
+}
+
+void DlgEditViewOffer::updateComment(){
+    if(true == m_bChangeComment){
+        QString str_comment_text = m_CommentEdit.toPlainText();
+        if (str_comment_text.length() > 2000){
+            str_comment_text = str_comment_text.mid(MAX_TEXT_LENGTH);
+        };
+        //
+        if(m_ptrDtoOffer->getComments().compare(str_comment_text,Qt::CaseInsensitive) !=0){
+            OfferProcessor::getInstance().updateComment(m_ptrDtoOffer->getId(), str_comment_text);
+        };
+    };
+}
+
+bool DlgEditViewOffer::isSomethingChanged() const{
+    if( (true == m_bChangeDescription)      ||
+        (true == m_bChangeComment)          ||
+        (true == m_bChangePositionTitle)    ||
+        (true == m_bChangeCountry)          ||
+        (true == m_bChangeTown)             ||
+        (true == m_bChangeSkillsList)       ||
+        (true == m_bChangeRate)             ||
+        (true == m_bChangeStatus)           ||
+        (true == m_bChangeAttractivity)){
+        return true;
+    };
+    return false;
 }

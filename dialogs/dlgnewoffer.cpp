@@ -186,6 +186,7 @@ void  DlgNewOffer::createOfferWidgets(){
     m_EditRate.setMinimumWidth(30);
     m_EditRate.setMaximumWidth(40);
     m_EditRate.setAlignment(Qt::AlignRight);
+    m_EditRate.setText("0"); //usially rate on start is unknown
     //
     m_LblStatus.setText("Status");
     m_LblStatus.setMinimumWidth(m_iMinLabelWidth);
@@ -623,8 +624,17 @@ void DlgNewOffer::saveOffer(){
     m_dtoOffer.setAgentId(m_dtoAgent.getId());
     m_dtoOffer.setCreationDate(QDate::currentDate());
     m_dtoOffer.setPositionTitle(m_EditOfferCore.text());
-    m_dtoOffer.setDescription(m_OfferEdit.toPlainText());
-    m_dtoOffer.setComments(m_CommentEdit.toPlainText());
+    QString str_offer_text = m_OfferEdit.toPlainText();
+    if (str_offer_text.length() > 2000){
+        str_offer_text = str_offer_text.mid(MAX_TEXT_LENGTH);
+    };
+    m_dtoOffer.setDescription(str_offer_text);
+    //
+    QString str_comment_text = m_CommentEdit.toPlainText();
+    if (str_comment_text.length() > 2000){
+        str_comment_text = str_comment_text.mid(MAX_TEXT_LENGTH);
+    };
+    m_dtoOffer.setComments(str_comment_text);
     m_dtoOffer.setCountryId(i_country_id);
     m_dtoOffer.setTownId(i_town_id);
     //m_dtoOffer.setSkillsListIDs(skill_list_ids);

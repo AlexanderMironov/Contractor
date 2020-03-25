@@ -24,7 +24,8 @@ bool OfferSkillProcesor::init(){
 }
 
 void OfferSkillProcesor::add(int i_offer_id, const SkillsList& skill_list){
-    for (int i = 0; i < skill_list.size(); ++i){
+    const int i_skill_list_size = skill_list.size();
+    for (int i = 0; i < i_skill_list_size; i++){
         if (isExist(i_offer_id,skill_list[i]) == true){
             continue; // already exist;
         };
@@ -159,5 +160,18 @@ bool OfferSkillProcesor::removeOffer(int i_offer_id){
         return false;
     };
     //
+
+    for (int i = 0; i < m_vStorage.size(); ++i){
+        if(m_vStorage[i]->getOfferId() == i_offer_id){
+            m_vStorage.remove(i);
+            i = 0;
+        };
+    };
+    //
     return true;
+}
+
+bool OfferSkillProcesor::replaceSkillsList(int i_offer_id, const SkillsList& skill_list){
+    removeOffer(i_offer_id);
+    add(i_offer_id,skill_list);
 }

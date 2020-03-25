@@ -161,19 +161,9 @@ QTableWidgetItem* OffersTable::makeCellRate(OfferBaseDTO* ptr_dto){
 }
 
 QTableWidgetItem* OffersTable::makeCellSkills(int ui_row_num, OfferBaseDTO* ptr_dto){
-    QString str_res_skills;
-    const SkillsList&  skill_list_ids = OfferSkillProcesor::getInstance().getSkillsList(ptr_dto->getId());
+    QString str_res_skills = getSkillsListAsString(ptr_dto);
     //
-    for (int i = 0; i < skill_list_ids.size(); ++i){
-        QString str_skill = SkillProcessor::getInstance().getSkillNameById(skill_list_ids[i]);
-        if (str_res_skills.length() > 0){
-            str_res_skills += SKILLS_SEPARATOR;
-            str_res_skills += " ";
-        };
-        str_res_skills += str_skill;
-    };
-    //
-    QTableWidgetItem*   ptr_item_skills = new  QTableWidgetItem(str_res_skills);
+    QTableWidgetItem*  ptr_item_skills = new  QTableWidgetItem(str_res_skills);
     ptr_item_skills->setFlags( Qt::ItemIsEnabled |Qt::ItemIsSelectable );
     ptr_item_skills->setTextAlignment(Qt::AlignLeft|Qt::AlignVCenter);
     return ptr_item_skills;
@@ -351,7 +341,6 @@ void OffersTable::updateStatus (unsigned int ui_row){
     const QVariant var_status = prt_item_status->currentData();
     //
     OfferProcessor::getInstance().updateOfferStatus(i_record_id, var_status.toInt());
-    return;
 }
 
 void OffersTable::onEditCurrentOffer(){
@@ -365,7 +354,78 @@ void OffersTable::onEditCurrentOffer(){
     DlgEditViewOffer dlg;
     dlg.init(job_offer_id);
     dlg.exec();
+    //todo:update line if it was changed
+    if (dlg.isSomethingChanged() == true){
+        updateRow(i_row);
+    }
+}
+/*
+todo: not finished yet
+*/
+void OffersTable::updateRow(int i_row_num){
+/*
+    QTableWidgetItem* ptr_item_attract  = makeCellAttractity(ui_row_num, ptr_dto);
+
+*/
+    const int i_offer_id = getRecordIdByRowNum(i_row_num);
+    OfferBaseDTO* ptr_offer = OfferProcessor::getInstance().getOfferById(i_offer_id);
+    if (nullptr == ptr_offer){
+        return;
+    };
     //
+    QTableWidgetItem* ptr_title = this->item(i_row_num, COL_TITLE);
+    if(ptr_title){
+        ptr_title->setText(ptr_offer->getPositionTitle());
+    };
+    //
+    QTableWidgetItem* ptr_skills = this->item(i_row_num, COL_SKILLS);
+    if(ptr_skills){
+        QString str_res_skills = getSkillsListAsString(ptr_offer);
+        ptr_skills->setText(str_res_skills);
+    };
+    //
+    QTableWidgetItem* ptr_country = this->item(i_row_num, COL_COUNTRY);
+    if(ptr_country){
+        ptr_country->setText(CountryProcessor::getInstance().getCountryNameByID(ptr_offer->getCountryId()));
+        ptr_country->setData(Qt::UserRole,QVariant(ptr_offer->getCountryId()));
+    };
+    //
+    QTableWidgetItem* ptr_town = this->item(i_row_num, COL_TOWN);
+    if(ptr_town){
+        ptr_town->setText(TownProcessor::getInstance().getTownNameByID(ptr_offer->getTownId()));
+        ptr_town->setData(Qt::UserRole,QVariant(ptr_offer->getTownId()));
+    };
+    //
+    QTableWidgetItem* ptr_rate = this->item(i_row_num, COL_RATE);
+    if(ptr_rate){
+        ptr_rate->setText(QString("%1").arg(ptr_offer->getRate()));
+    };
+    //
+    QComboBox*  ptr_item_status = dynamic_cast<QComboBox*>(QTableWidget::cellWidget(i_row_num, COL_STATUS));
+    for(int i = 0; i < ptr_item_status->count(); i++){
+        const int i_current_status = ptr_item_status->itemData(i,Qt::UserRole).toInt();
+        if(i_current_status == ptr_offer->getStatusId()){
+            if(i == ptr_item_status->currentIndex()){
+                break; //nothing changed
+            }else{
+                ptr_item_status->setCurrentIndex(i);
+                break; //done
+            };
+        };
+    };
+    //
+    QComboBox*  ptr_item_attractivity = dynamic_cast<QComboBox*>(QTableWidget::cellWidget(i_row_num, COL_ATTRACTIVITY));
+    for(int i = 0; i < ptr_item_attractivity->count(); i++){
+        const int i_current_attractivity = ptr_item_attractivity->itemData(i,Qt::UserRole).toInt();
+        if(i_current_attractivity == ptr_offer->getAttractivity()){
+            if(i == ptr_item_attractivity->currentIndex()){
+                break; //nothing changed
+            }else{
+                ptr_item_attractivity->setCurrentIndex(i);
+                break; //done
+            };
+        };
+    };
 }
 
 void OffersTable::onDeleteCurrentOffer(){
@@ -506,4 +566,20 @@ int OffersTable::getRecordIdByRowNum(int i_row_num){
     const QVariant var_record_id = ptr_item_date->data(Qt::UserRole);
     const int i_record_id = var_record_id.toInt();
     return i_record_id;
+}
+
+QString OffersTable::getSkillsListAsString(OfferBaseDTO* ptr_dto) const{
+    QString str_res_skills;
+    const SkillsList&  skill_list_ids = OfferSkillProcesor::getInstance().getSkillsList(ptr_dto->getId());
+    //
+    for (int i = 0; i < skill_list_ids.size(); ++i){
+        QString str_skill = SkillProcessor::getInstance().getSkillNameById(skill_list_ids[i]);
+        if (str_res_skills.length() > 0){
+            str_res_skills += SKILLS_SEPARATOR;
+            str_res_skills += " ";
+        };
+        str_res_skills += str_skill;
+    };
+    //
+    return str_res_skills;
 }

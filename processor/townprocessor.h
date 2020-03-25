@@ -18,7 +18,7 @@ class TownProcessor : public QObject
 public:
         static TownProcessor&       getInstance();
         bool                        init();
-        int                         add(const QString& str_country_name);
+        int                         add(const QString& str_town_name);
         QString                     getTownNameByID(int i_id) const;
         const TownStorage&          getStorage() const;
 signals:

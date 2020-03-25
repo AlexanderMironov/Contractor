@@ -25,20 +25,20 @@ bool TownProcessor::init(){
     return b_res;
 }
 
-int TownProcessor::add(const QString& str_country_name){
+int TownProcessor::add(const QString& str_town_name){
     //search existing
     TownStorage::const_iterator i = m_mapStorage.constBegin();
     //
     while (i != m_mapStorage.constEnd()) {
 
         TownDTO* ptr_town = i.value();
-        if (ptr_town->getName().compare(str_country_name,Qt::CaseInsensitive) == 0){
+        if (ptr_town->getName().compare(str_town_name,Qt::CaseInsensitive) == 0){
             return ptr_town->getId();
         };
         i++;
     };
     //if not exists - add new one.
-    int i_res = insertIntoDB(str_country_name);
+    int i_res = insertIntoDB(str_town_name);
     //
     return i_res;
 }
