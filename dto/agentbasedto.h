@@ -33,6 +33,8 @@ public:
     //
     int             getRank() const;
     void            setRank(int i_rank);
+    //
+    void            reset();
 
 private:
 

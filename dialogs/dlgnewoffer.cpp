@@ -696,10 +696,13 @@ void DlgNewOffer::clearFields(){
     m_ComboCountry.setCurrentIndex(-1);
     m_EditTown.setText(str_empty_txt);
     m_EditSkills.setText(str_empty_txt);
-    m_EditRate.setText(str_empty_txt);
+    m_EditRate.setText("0");
     m_EditAgentName.setText(str_empty_txt);
     m_EditAgentEmail.setText(str_empty_txt);
     m_EditAgentPhone1.setText(str_empty_txt);
     m_EditAgentPhone2.setText(str_empty_txt);
     m_EditAgencyName.setText(str_empty_txt);
+    m_dtoOffer.reset();
+    m_dtoAgent.reset();
+
 }

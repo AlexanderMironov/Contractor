@@ -539,7 +539,7 @@ void DlgEditViewOffer::updateSkillList(){
         //
         SkillsList skills_list_new;
         for(const auto& i : skill_list_new_str){
-            const int i_skill_id = SkillProcessor::getInstance().add(i);
+            const int i_skill_id = SkillProcessor::getInstance().add(i.trimmed());
             skills_list_new.push_back(i_skill_id);
         };
         //

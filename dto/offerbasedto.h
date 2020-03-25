@@ -47,6 +47,8 @@ public:
     //
     int                 getAttractivity() const;
     void                setAttractivity(int i_attractivity);
+    //
+    void                reset();
 
 private:
     int                 m_iId;

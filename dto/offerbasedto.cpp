@@ -3,13 +3,7 @@
 
 OfferBaseDTO::OfferBaseDTO()
 {
-    m_iId           = VALUE_UNDEFINED;
-    m_iCountryId    = VALUE_UNDEFINED;
-    m_iCountryId    = VALUE_UNDEFINED;
-    m_iRate         = 0;
-    m_iStatusId     = VALUE_UNDEFINED;
-    m_iAgentId      = VALUE_UNDEFINED;
-    m_iAttractivity = VALUE_UNDEFINED;
+    reset();
 }
 
 int OfferBaseDTO::getId() const{
@@ -97,4 +91,17 @@ int OfferBaseDTO::getAttractivity() const{
 
 void OfferBaseDTO::setAttractivity(int i_attractivity){
     m_iAttractivity = i_attractivity;
+}
+
+void OfferBaseDTO::reset(){
+    m_iId           = VALUE_UNDEFINED;
+    m_strPositionTitle = "";
+    m_strDescription = "";
+    m_strComments = "";
+    m_iCountryId    = VALUE_UNDEFINED;
+    m_iTownId = VALUE_UNDEFINED;
+    m_iRate         = 0;
+    m_iStatusId     = VALUE_UNDEFINED;
+    m_iAgentId      = VALUE_UNDEFINED;
+    m_iAttractivity = VALUE_UNDEFINED;
 }

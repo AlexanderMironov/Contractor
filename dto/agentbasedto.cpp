@@ -5,9 +5,7 @@
 
 AgentBaseDTO::AgentBaseDTO()
 {
-    m_iAgencyId = VALUE_UNDEFINED;
-    m_iId = VALUE_UNDEFINED;
-    m_iRank = AGENT_RANK::RankUnknown;
+
 }
 
 int AgentBaseDTO::getId() const{
@@ -82,4 +80,16 @@ int  AgentBaseDTO::getRank() const{
 
 void AgentBaseDTO::setRank(int i_rank){
     m_iRank = i_rank;
+}
+
+void AgentBaseDTO::reset(){
+    m_iId = VALUE_UNDEFINED;
+    m_strName="";
+    m_strEMail="";
+    m_strPhone1="";
+    m_strPhone2="";
+    m_strWebProfile="";
+    m_strDescription="";
+    m_iAgencyId = VALUE_UNDEFINED;
+    m_iRank = AGENT_RANK::RankUnknown;
 }
