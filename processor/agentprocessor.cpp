@@ -44,7 +44,7 @@ int AgentProcessor::insertIntoDB(AgentBaseDTO* ptr_agent_base_info_dto){
     //
     QSqlQuery qry(*ptr_db);
     //
-    QString str_insert_string = QString("INSERT INTO agents_tbl (name, e_mail, phone_1, phone_2, id_agency, level) values (:NAME, :EMAIL, :PHONE1, :PHONE2, :ID_AGENCY, :LEVEL);");
+    QString str_insert_string = QString("INSERT INTO agents_tbl (name, description, e_mail, phone_1, phone_2, id_agency, level, web_profile) values (:NAME, :DESCRIPTION, :EMAIL, :PHONE1, :PHONE2, :ID_AGENCY, :LEVEL, :WEB);");
     //
     if( !qry.prepare( str_insert_string ) )
     {
@@ -52,17 +52,19 @@ int AgentProcessor::insertIntoDB(AgentBaseDTO* ptr_agent_base_info_dto){
         return VALUE_UNDEFINED;
     };
     //
-    qry.bindValue(":NAME",      ptr_agent_base_info_dto->getName());
-    qry.bindValue(":EMAIL",     ptr_agent_base_info_dto->getEMail());
-    qry.bindValue(":PHONE1",    ptr_agent_base_info_dto->getPhone1());
-    qry.bindValue(":PHONE2",    ptr_agent_base_info_dto->getPhone2());
-    qry.bindValue(":ID_AGENCY", ptr_agent_base_info_dto->getAgencyId());
-    qry.bindValue(":LEVEL",     ptr_agent_base_info_dto->getRank());
+    qry.bindValue(":NAME",          ptr_agent_base_info_dto->getName());
+    qry.bindValue(":DESCRIPTION",   ptr_agent_base_info_dto->getDescription());
+    qry.bindValue(":EMAIL",         ptr_agent_base_info_dto->getEMail());
+    qry.bindValue(":PHONE1",        ptr_agent_base_info_dto->getPhone1());
+    qry.bindValue(":PHONE2",        ptr_agent_base_info_dto->getPhone2());
+    qry.bindValue(":ID_AGENCY",     ptr_agent_base_info_dto->getAgencyId());
+    qry.bindValue(":LEVEL",         ptr_agent_base_info_dto->getRank());
+    qry.bindValue(":WEB",           ptr_agent_base_info_dto->getWebProfile());
     //
     if( !qry.exec() )
     {
         QMessageBox::critical(nullptr, "Error", qry.lastError().text(), QMessageBox::Ok);
-        return -1;
+        return VALUE_UNDEFINED;
     };
     //
     int i_last_id = qry.lastInsertId().toInt();
@@ -72,7 +74,7 @@ int AgentProcessor::insertIntoDB(AgentBaseDTO* ptr_agent_base_info_dto){
                          ptr_agent_base_info_dto->getEMail(),
                          ptr_agent_base_info_dto->getPhone1(),
                          ptr_agent_base_info_dto->getPhone2(),
-                         "", //description
+                         ptr_agent_base_info_dto->getDescription(),
                          ptr_agent_base_info_dto->getAgencyId(),
                          VALUE_UNDEFINED,
                          ptr_agent_base_info_dto->getWebProfile());
@@ -115,15 +117,15 @@ bool AgentProcessor::readAllFromDB(){
     //
     while( qry.next() )
     {
-        addNewValueToStorage(qry.value(0).toInt(),
-                             qry.value(1).toString(),
-                             qry.value(2).toString(),
-                             qry.value(3).toString(),
-                             qry.value(4).toString(),
-                             qry.value(5).toString(),
-                             qry.value(6).toInt(),
-                             qry.value(7).toInt(),
-                             qry.value(8).toString());
+        addNewValueToStorage(qry.value(0).toInt(),      //id
+                             qry.value(1).toString(),   //name
+                             qry.value(2).toString(),   //e-mail
+                             qry.value(3).toString(),   //phone_1
+                             qry.value(4).toString(),   //phone_2
+                             qry.value(5).toString(),   //description
+                             qry.value(6).toInt(),      //id_agency
+                             qry.value(7).toInt(),      //level
+                             qry.value(8).toString());  //web_profile
     };
     //
     return b_res;
@@ -184,6 +186,68 @@ bool AgentProcessor::updateRank(int i_agent_id, int i_rank){
     return true;
 }
 
+bool AgentProcessor::updateName(int i_agent_id, const QString& str_name){
+    DBAcccessSafe dbAccess;
+    QSqlDatabase* ptr_db =  dbAccess.getDB();
+    if (nullptr == ptr_db){
+        return false;
+    };
+    //
+    QSqlQuery qry(*ptr_db);
+    //
+    const QString str_update_string = QString("UPDATE agents_tbl SET name = '%1' WHERE id = %2;").arg(str_name).arg(i_agent_id);
+    //
+    if ( !qry.prepare( str_update_string  ) )
+    {
+        QMessageBox::critical(nullptr, "Error prepare", str_update_string, QMessageBox::Ok);
+        return false;
+    };
+    //
+    if ( !qry.exec() )
+    {
+        QMessageBox::critical(nullptr, "Error exec", str_update_string + "\n" + qry.lastError().text(), QMessageBox::Ok);
+        return false;
+    };
+    //
+    AgentBaseDTO* ptr_agent = getAgentByID(i_agent_id);
+    if (nullptr != ptr_agent){
+        ptr_agent->setName(str_name);
+    };
+    //
+    return true;
+}
+
+bool AgentProcessor::updateDecription(int i_agent_id, const QString& str_description){
+    DBAcccessSafe dbAccess;
+    QSqlDatabase* ptr_db =  dbAccess.getDB();
+    if (nullptr == ptr_db){
+        return false;
+    };
+    //
+    QSqlQuery qry(*ptr_db);
+    //
+    const QString str_update_string = QString("UPDATE agents_tbl SET description = '%1' WHERE id = %2;").arg(str_description).arg(i_agent_id);
+    //
+    if ( !qry.prepare( str_update_string  ) )
+    {
+        QMessageBox::critical(nullptr, "Error prepare", str_update_string, QMessageBox::Ok);
+        return false;
+    };
+    //
+    if ( !qry.exec() )
+    {
+        QMessageBox::critical(nullptr, "Error exec", str_update_string + "\n" + qry.lastError().text(), QMessageBox::Ok);
+        return false;
+    };
+    //
+    AgentBaseDTO* ptr_agent = getAgentByID(i_agent_id);
+    if (nullptr != ptr_agent){
+        ptr_agent->setDescription(str_description);
+    };
+    //
+    return true;
+}
+
 bool AgentProcessor::updatePhone(int i_agent_id, const QString& phone_number, PHONE_NUM en_phone_num){
     DBAcccessSafe dbAccess;
     QSqlDatabase* ptr_db =  dbAccess.getDB();
@@ -230,6 +294,40 @@ bool AgentProcessor::updatePhone(int i_agent_id, const QString& phone_number, PH
     return true;
 }
 
+bool AgentProcessor::updateEmail(int i_agent_id, const QString& str_email){
+    DBAcccessSafe dbAccess;
+    QSqlDatabase* ptr_db =  dbAccess.getDB();
+    if (nullptr == ptr_db){
+        return false;
+    };
+    //
+    QSqlQuery qry(*ptr_db);
+    //
+    const QString str_update_string = QString("UPDATE agents_tbl SET e_mail = '%1' WHERE id = %2;").arg(str_email).arg(i_agent_id);
+    //
+    if ( !qry.prepare( str_update_string  ) )
+    {
+        QMessageBox::critical(nullptr, "Error prepare", str_update_string, QMessageBox::Ok);
+        return false;
+    };
+    //
+    if ( !qry.exec() )
+    {
+        QMessageBox::critical(nullptr, "Error exec", str_update_string + "\n" + qry.lastError().text(), QMessageBox::Ok);
+        return false;
+    };
+    //
+    AgentBaseDTO* ptr_agent = getAgentByID(i_agent_id);
+    if (nullptr != ptr_agent){
+        m_mapStorage.remove(ptr_agent->getEMail()); //remove old key e-mail
+        ptr_agent->setEMail(str_email);             //update  e-mail
+        m_mapStorage.insert(str_email, ptr_agent);  //insert new value with the new key in the storage
+    }
+    //
+    return true;
+}
+
+
 bool AgentProcessor::updateWebProfile(int i_agent_id, const QString& web_profile){
     DBAcccessSafe dbAccess;
     QSqlDatabase* ptr_db =  dbAccess.getDB();
@@ -259,6 +357,16 @@ bool AgentProcessor::updateWebProfile(int i_agent_id, const QString& web_profile
     }
     //
     return true;
+}
+
+AgentBaseDTO* AgentProcessor::getAgentByEmail(const QString& str_email){
+    AgentBaseDTO* ptr_agent = nullptr;
+    AgentStorage::iterator i = m_mapStorage.find(str_email);
+    if (i != m_mapStorage.constEnd()){
+        ptr_agent = i.value();
+    };
+    //
+    return ptr_agent;
 }
 
 AgentBaseDTO* AgentProcessor::getAgentByID(int i_id) const{

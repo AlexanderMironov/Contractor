@@ -4,6 +4,8 @@
 #include <QMessageBox>
 #include <QMenu>
 #include <QMouseEvent>
+#include <QDesktopServices>
+#include <QUrl>
 //
 #include "commondef.h"
 #include "graficcontainers/agentstable.h"
@@ -19,14 +21,18 @@
 //
 #include "dto/statusdto.h"
 #include "processor/statusprocessor.h"
+//
+#include "dialogs/dlgnewagent.h"
+
 
 AgentsTable::AgentsTable(QWidget *parent):QTableWidget(parent)
 {
     m_bFillTableModeOn = false;
     setHeaderParams();
-    //m_mnuContainer.init(this);
+    m_mnuContainer.init(this);
     bindSignalsAndSlots();
     showTable();
+
 }
 
 AgentsTable::~AgentsTable(){
@@ -61,6 +67,10 @@ void AgentsTable::setHeaderParams(){
 }
 
 void AgentsTable::showTable(){
+    //
+    m_iLastSortOrderName = VALUE_UNDEFINED;
+    m_iLastSortOrderAgency = VALUE_UNDEFINED;
+    //
     this->setRowCount(0); //reset the rable;
     //
     const AgentStorage& agents_storage = AgentProcessor::getInstance().getStorage();
@@ -108,7 +118,7 @@ void AgentsTable::fillDataRow (int ui_row_num, AgentBaseDTO* ptr_dto){
 
 QTableWidgetItem* AgentsTable::makeCellName(AgentBaseDTO* ptr_dto){
     QTableWidgetItem*   ptr_item_title  = new  QTableWidgetItem( ptr_dto->getName());
-    ptr_item_title->setFlags( Qt::ItemIsEnabled |Qt::ItemIsSelectable );
+    ptr_item_title->setFlags( Qt::ItemIsEnabled /*|Qt::ItemIsSelectable */);
     QVariant id_object( ptr_dto->getId() );
     ptr_item_title->setData(Qt::UserRole, id_object);
     return ptr_item_title;
@@ -151,26 +161,30 @@ QTableWidgetItem* AgentsTable::makeCellEmail(AgentBaseDTO* ptr_dto){
     originalFont.setUnderline(true);
     ptr_item_title->setFont(originalFont);
     //
-    ptr_item_title->setFlags( Qt::ItemIsEnabled |Qt::ItemIsSelectable );
+    ptr_item_title->setFlags( Qt::ItemIsEnabled /* |Qt::ItemIsSelectable */);
     return ptr_item_title;
 }
 
 QTableWidgetItem* AgentsTable::makeCellPhone_1(AgentBaseDTO* ptr_dto){
     QTableWidgetItem*   ptr_item_title  = new  QTableWidgetItem( ptr_dto->getPhone1());
-    ptr_item_title->setFlags( Qt::ItemIsEnabled |Qt::ItemIsSelectable|Qt::ItemIsEditable);
+    ptr_item_title->setFlags( Qt::ItemIsEnabled |/*Qt::ItemIsSelectable|*/Qt::ItemIsEditable);
     return ptr_item_title;
 }
 
 QTableWidgetItem* AgentsTable::makeCellPhone_2(AgentBaseDTO* ptr_dto){
     QTableWidgetItem*   ptr_item_title  = new  QTableWidgetItem( ptr_dto->getPhone2());
-    ptr_item_title->setFlags( Qt::ItemIsEnabled |Qt::ItemIsSelectable|Qt::ItemIsEditable);
+    ptr_item_title->setFlags( Qt::ItemIsEnabled |/*Qt::ItemIsSelectable|*/Qt::ItemIsEditable);
     return ptr_item_title;
 }
 
 QTableWidgetItem* AgentsTable::makeCellWebProfile(AgentBaseDTO* ptr_dto){
-    QTableWidgetItem*   ptr_item_title  = new  QTableWidgetItem( ptr_dto->getWebProfile());
-    ptr_item_title->setFlags( Qt::ItemIsEnabled |Qt::ItemIsSelectable |Qt::ItemIsEditable);
-    return ptr_item_title;
+    QTableWidgetItem*   ptr_item_web_profile  = new  QTableWidgetItem( ptr_dto->getWebProfile());
+    ptr_item_web_profile->setFlags( Qt::ItemIsEnabled /*|Qt::ItemIsSelectable |Qt::ItemIsEditable*/);
+    QFont originalFont = ptr_item_web_profile->font();
+    originalFont.setUnderline(true);
+    ptr_item_web_profile->setFont(originalFont);
+    ptr_item_web_profile->setForeground(QBrush(QColor(0, 0, 255)));
+    return ptr_item_web_profile;
 }
 
 QTableWidgetItem* AgentsTable::makeCellAgency(AgentBaseDTO* ptr_dto){
@@ -178,12 +192,53 @@ QTableWidgetItem* AgentsTable::makeCellAgency(AgentBaseDTO* ptr_dto){
     str_name = AgencyProcessor::getInstance().getAgencyNameByID(ptr_dto->getAgencyId());
     //
     QTableWidgetItem*  ptr_item_agency = new  QTableWidgetItem(str_name);
-    ptr_item_agency->setFlags( Qt::ItemIsEnabled |Qt::ItemIsSelectable );
+    ptr_item_agency->setFlags( Qt::ItemIsEnabled /*|Qt::ItemIsSelectable */);
     return ptr_item_agency;
 }
 
 void AgentsTable::bindSignalsAndSlots(){
      QObject::connect(this,  SIGNAL(itemChanged(QTableWidgetItem*)), this, SLOT(onChangeItem(QTableWidgetItem*)));
+     QObject::connect(this,  SIGNAL(itemDoubleClicked(QTableWidgetItem*)), this, SLOT(onDoubleClick(QTableWidgetItem*)));
+     //
+     QHeaderView *header = qobject_cast<QTableView *>(this)->horizontalHeader();
+     QObject::connect(header, SIGNAL(sectionClicked(int)), this, SLOT(onClickHeader(int)));
+}
+
+void AgentsTable::onClickHeader(int i_logical_index){
+    switch (i_logical_index){
+    case COL_NAME:
+        setNewSortOrderName();
+        this->sortByColumn(COL_NAME,static_cast<Qt::SortOrder>(m_iLastSortOrderName));
+        break;
+    case COL_AGENCY:
+        setNewSortOrderAgency();
+        this->sortByColumn(COL_AGENCY,static_cast<Qt::SortOrder>(m_iLastSortOrderAgency));
+        break;
+    }
+}
+
+void AgentsTable::setNewSortOrderName(){
+    if(VALUE_UNDEFINED == m_iLastSortOrderName){
+        m_iLastSortOrderName = Qt::AscendingOrder;
+    }else if(Qt::AscendingOrder == m_iLastSortOrderName){
+        m_iLastSortOrderName = Qt::DescendingOrder;
+    }else if (Qt::DescendingOrder == m_iLastSortOrderName){
+        m_iLastSortOrderName = Qt::AscendingOrder;
+    };
+    //
+    m_iLastSortOrderAgency = VALUE_UNDEFINED;
+}
+
+void AgentsTable::setNewSortOrderAgency(){
+    if(VALUE_UNDEFINED == m_iLastSortOrderAgency){
+        m_iLastSortOrderAgency = Qt::AscendingOrder;
+    }else if(Qt::AscendingOrder == m_iLastSortOrderAgency){
+        m_iLastSortOrderAgency = Qt::DescendingOrder;
+    }else if (Qt::DescendingOrder == m_iLastSortOrderAgency){
+        m_iLastSortOrderAgency = Qt::AscendingOrder;
+    };
+    //
+    m_iLastSortOrderName = VALUE_UNDEFINED;
 }
 
 void AgentsTable::onChangeItem(QTableWidgetItem* item)
@@ -230,8 +285,21 @@ void AgentsTable::mouseReleaseEvent (QMouseEvent *event)
     //
     if ( btn == Qt::RightButton )
     {
-       // showPopupMenu ();
+       showPopupMenu();
     };
+}
+
+void AgentsTable::showPopupMenu(){
+    QMenu popup_menu(this);
+    //
+    const int i_row = this->currentRow();
+    const int i_column = this->currentColumn();
+    //
+    bool b_enable_edit = (-1 != i_row) && (-1 != i_column);
+    //
+    m_mnuContainer.fillPopupMenu(&popup_menu,b_enable_edit);
+    //
+    popup_menu.exec(QCursor::pos());
 }
 
 int AgentsTable::getRecordIdByRowNum(int i_row_num){
@@ -251,6 +319,67 @@ void AgentsTable::onCurrentAgentChanged(int i_agent_id){
     };
 }
 
+void  AgentsTable::onShowEditAgent(){
+    //
+    const int i_row = this->currentRow();
+    if (i_row < 0 ){
+        return;
+    };
+    //
+    const int i_agent_id = getRecordIdByRowNum(i_row);
+    //
+    DlgNewAgent dlg;
+    dlg.init(i_agent_id);
+    dlg.exec();
+    if (dlg.isSomethingChanged() == true){
+        refreshRow(i_row,i_agent_id);
+        if (dlg.isNameOrDescriptionChanged() == true){
+            emit changeAgentDescriptionName(i_agent_id);
+        };
+    };
+}
+
+void  AgentsTable::onCreateAgent(){
+    DlgNewAgent dlg;
+    dlg.init();
+    dlg.exec();
+    if (dlg.getAgentId() != VALUE_UNDEFINED){
+        this->showTable();
+    };
+}
+
+int AgentsTable::refreshRow(int i_row_id, int i_agent_id){
+    AgentBaseDTO* ptr_agent = AgentProcessor::getInstance().getAgentByID(i_agent_id);
+    m_bFillTableModeOn = true;
+    //COL_NAME
+    QTableWidgetItem* ptr_item_name =  this->item(i_row_id,COL_NAME);
+    ptr_item_name->setText(ptr_agent->getName());
+    //COL_RANK
+    QComboBox* combo =static_cast<QComboBox*> (QTableWidget::cellWidget(i_row_id, COL_RANK));
+    //
+    for (int i = 0; i < combo->count(); ++i){
+        QVariant current_rank = combo->itemData(i,Qt::UserRole);
+        if (current_rank.toInt() == ptr_agent->getRank()){
+            combo->setCurrentIndex(i);
+            break;
+        };
+    };
+    //COL_EMAIL
+    QTableWidgetItem* ptr_item_email =  this->item(i_row_id,COL_EMAIL);
+    ptr_item_email->setText(ptr_agent->getEMail());
+    //COL_PHONE_1
+    QTableWidgetItem* ptr_item_phone_1 =  this->item(i_row_id,COL_PHONE_1);
+    ptr_item_phone_1->setText(ptr_agent->getPhone1());
+    //COL_PHONE_2
+    QTableWidgetItem* ptr_item_phone_2 =  this->item(i_row_id,COL_PHONE_2);
+    ptr_item_phone_2->setText(ptr_agent->getPhone2());
+    //COL_WEB_PROFILE
+    QTableWidgetItem* ptr_item_web_profile =  this->item(i_row_id,COL_WEB_PROFILE);
+    ptr_item_web_profile->setText(ptr_agent->getWebProfile());
+    //
+    m_bFillTableModeOn = false;
+}
+
 void AgentsTable::onRankChanged (int){
     if (true == m_bFillTableModeOn){
         return;
@@ -268,7 +397,7 @@ void AgentsTable::onRankChanged (int){
     };
     const int i_agent_id = getRecordIdByRowNum(i_current_row);
     //
-    QComboBox* combo =static_cast<QComboBox*> (QTableWidget::cellWidget(i_current_row, COL_RANK));
+    QComboBox* combo = static_cast<QComboBox*> (QTableWidget::cellWidget(i_current_row, COL_RANK));
     const QString str_combo_text = combo->currentText();
     const QVariant variant_rank = combo->currentData(Qt::UserRole);
     if (str_combo_text.length() == 0){
@@ -285,4 +414,22 @@ void AgentsTable::onRankChanged (int){
     };
     //
     AgentProcessor::getInstance().updateRank(i_agent_id, variant_rank.toInt());
+}
+
+void AgentsTable::onDoubleClick(QTableWidgetItem* item){
+    if(nullptr == item){
+        return;
+    };
+    //
+    if(COL_EMAIL == item->column()){
+        QString str_email = item->text();
+        QString str_pass = QString("mailto:%1").arg(str_email);
+        //
+        QDesktopServices::openUrl(QUrl(str_pass));
+    }else if(COL_WEB_PROFILE == item->column()){
+        QString str_url = item->text();
+        QDesktopServices::openUrl(QUrl(str_url));
+    }else if(COL_NAME == item->column()){
+        onShowEditAgent();
+    };
 }

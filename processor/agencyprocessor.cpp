@@ -64,7 +64,7 @@ int AgencyProcessor::insertIntoDB(const QString& str_agency_name){
     if( !qry.exec() )
     {
         QMessageBox::critical(nullptr, "Error", qry.lastError().text(), QMessageBox::Ok);
-        return -1;
+        return VALUE_UNDEFINED;
     };
     //
     int i_last_id = qry.lastInsertId().toInt();

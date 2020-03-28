@@ -45,14 +45,12 @@ void GraficContainerListAgent::init(QTabWidget* ptr_tab){
 }
 
 void GraficContainerListAgent::bindSignalsAndSlots(){
-//    QObject::connect(m_ptrTblOffersTable, SIGNAL(needNewOfferDlg()), this, SLOT(onShowNewOfferDlg()));
-
     DlgNewOffer* ptr_dlg = GraficContainerListOffers::getInstance().getDlgNewOffer();
     if(nullptr != ptr_dlg){
       QObject::connect(ptr_dlg, SIGNAL(addedNewOffer()), m_ptrTblAgentsTable, SLOT(showTable()));
     };
-
-//
+    //
+    //
     //todo: also update agents table here
 }
 
@@ -64,8 +62,6 @@ DlgNewOffer* GraficContainerListAgent::getDlgNewOffer(){
     return &m_dlgNewOffer;
 }
 */
-/*
-void GraficContainerListAgent::onShowNewOfferDlg(){
-    m_dlgNewOffer.exec();
+void GraficContainerListAgent::onShowNewAgentDlg(){
+    m_ptrTblAgentsTable->onCreateAgent();
 }
-*/

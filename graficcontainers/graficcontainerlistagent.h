@@ -24,7 +24,7 @@ private:
 signals:
 
 public slots:
-    //void onShowNewOfferDlg();
+    void onShowNewAgentDlg();
 
 private:
     QTabWidget* m_ptrMainTab;

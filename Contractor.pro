@@ -58,7 +58,9 @@ SOURCES += \
     graficcontainers/graficcontainerlistagent.cpp \
     graficcontainers/agentstable.cpp \
     dialogs/dlgmanagecountries.cpp \
-    dialogs/dlgeditviewoffer.cpp
+    dialogs/dlgeditviewoffer.cpp \
+    dialogs/dlgnewagent.cpp \
+    menucontainers/agentstablemenu.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -96,7 +98,9 @@ HEADERS += \
     graficcontainers/agentstable.h \
     dto/agentrank.h \
     dialogs/dlgmanagecountries.h \
-    dialogs/dlgeditviewoffer.h
+    dialogs/dlgeditviewoffer.h \
+    dialogs/dlgnewagent.h \
+    menucontainers/agentstablemenu.h
 
 FORMS += \
         mainwindow.ui

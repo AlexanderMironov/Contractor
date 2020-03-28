@@ -138,7 +138,7 @@ QTableWidgetItem* OffersTable::makeCellDate (OfferBaseDTO* ptr_dto)
 {
     QTableWidgetItem*   ptr_item_date   = new  QTableWidgetItem( ptr_dto->getCreationDate().toString("dd-MM-yyyy"));
     //
-    ptr_item_date->setFlags( Qt::ItemIsEnabled |Qt::ItemIsSelectable );
+    ptr_item_date->setFlags( Qt::ItemIsEnabled /*|Qt::ItemIsSelectable */);
     QVariant id_object( ptr_dto->getId() );
     ptr_item_date->setData(Qt::UserRole, id_object);
     ptr_item_date->setTextAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
@@ -147,7 +147,7 @@ QTableWidgetItem* OffersTable::makeCellDate (OfferBaseDTO* ptr_dto)
 
 QTableWidgetItem* OffersTable::makeCellTitle(OfferBaseDTO* ptr_dto){
     QTableWidgetItem*   ptr_item_title  = new  QTableWidgetItem( ptr_dto->getPositionTitle());
-    ptr_item_title->setFlags( Qt::ItemIsEnabled |Qt::ItemIsSelectable );
+    ptr_item_title->setFlags( Qt::ItemIsEnabled /*|Qt::ItemIsSelectable */);
     ptr_item_title->setToolTip(ptr_dto->getPositionTitle());
     return ptr_item_title;
 }
@@ -155,7 +155,7 @@ QTableWidgetItem* OffersTable::makeCellTitle(OfferBaseDTO* ptr_dto){
 QTableWidgetItem* OffersTable::makeCellRate(OfferBaseDTO* ptr_dto){
     const QString str_rate = QString("%1").arg(ptr_dto->getRate());
     QTableWidgetItem*   ptr_item_rate  = new  QTableWidgetItem(str_rate);
-    ptr_item_rate->setFlags( Qt::ItemIsEnabled |Qt::ItemIsSelectable| Qt::ItemIsEditable);
+    ptr_item_rate->setFlags( Qt::ItemIsEnabled |/*Qt::ItemIsSelectable|*/ Qt::ItemIsEditable);
     ptr_item_rate->setTextAlignment(Qt::AlignRight|Qt::AlignVCenter);
     return ptr_item_rate;
 }
@@ -164,7 +164,7 @@ QTableWidgetItem* OffersTable::makeCellSkills(int ui_row_num, OfferBaseDTO* ptr_
     QString str_res_skills = getSkillsListAsString(ptr_dto);
     //
     QTableWidgetItem*  ptr_item_skills = new  QTableWidgetItem(str_res_skills);
-    ptr_item_skills->setFlags( Qt::ItemIsEnabled |Qt::ItemIsSelectable );
+    ptr_item_skills->setFlags( Qt::ItemIsEnabled/* |Qt::ItemIsSelectable */);
     ptr_item_skills->setTextAlignment(Qt::AlignLeft|Qt::AlignVCenter);
     return ptr_item_skills;
 }
@@ -173,7 +173,7 @@ QTableWidgetItem* OffersTable::makeCellCountry(OfferBaseDTO* ptr_dto){
     const QString str_country = CountryProcessor::getInstance().getCountryNameByID(ptr_dto->getCountryId());
     QTableWidgetItem*   ptr_item_country = new  QTableWidgetItem(str_country);
     ptr_item_country->setData(Qt::UserRole, ptr_dto->getCountryId());
-    ptr_item_country->setFlags( Qt::ItemIsEnabled |Qt::ItemIsSelectable );
+    ptr_item_country->setFlags( Qt::ItemIsEnabled /*|Qt::ItemIsSelectable */);
     ptr_item_country->setTextAlignment(Qt::AlignLeft|Qt::AlignVCenter);
     return ptr_item_country;
 }
@@ -181,7 +181,7 @@ QTableWidgetItem* OffersTable::makeCellCountry(OfferBaseDTO* ptr_dto){
 QTableWidgetItem* OffersTable::makeCellTown(OfferBaseDTO* ptr_dto){
     const QString str_town = TownProcessor::getInstance().getTownNameByID(ptr_dto->getTownId());
     QTableWidgetItem*   ptr_item_country = new  QTableWidgetItem(str_town);
-    ptr_item_country->setFlags( Qt::ItemIsEnabled |Qt::ItemIsSelectable );
+    ptr_item_country->setFlags( Qt::ItemIsEnabled/* |Qt::ItemIsSelectable */);
     ptr_item_country->setTextAlignment(Qt::AlignLeft|Qt::AlignVCenter);
     return ptr_item_country;
 }
@@ -204,7 +204,7 @@ QTableWidgetItem* OffersTable::makeCellAgent(OfferBaseDTO* ptr_dto){
     //
     ptr_item_agent->setText(str_ret);
     ptr_item_agent->setData(Qt::UserRole, QVariant(ptr_dto->getAgentId()));
-    ptr_item_agent->setFlags( Qt::ItemIsEnabled |Qt::ItemIsSelectable );
+    ptr_item_agent->setFlags( Qt::ItemIsEnabled /*|Qt::ItemIsSelectable */);
     return ptr_item_agent;
 }
 
@@ -217,7 +217,7 @@ QTableWidgetItem* OffersTable::makeCellAgency(OfferBaseDTO* ptr_dto){
     };
     //
     QTableWidgetItem*  ptr_item_agency = new  QTableWidgetItem(str_name);
-    ptr_item_agency->setFlags( Qt::ItemIsEnabled |Qt::ItemIsSelectable );
+    ptr_item_agency->setFlags( Qt::ItemIsEnabled /*|Qt::ItemIsSelectable */);
     return ptr_item_agency;
 }
 
@@ -359,14 +359,9 @@ void OffersTable::onEditCurrentOffer(){
         updateRow(i_row);
     }
 }
-/*
-todo: not finished yet
-*/
-void OffersTable::updateRow(int i_row_num){
-/*
-    QTableWidgetItem* ptr_item_attract  = makeCellAttractity(ui_row_num, ptr_dto);
 
-*/
+void OffersTable::updateRow(int i_row_num){
+
     const int i_offer_id = getRecordIdByRowNum(i_row_num);
     OfferBaseDTO* ptr_offer = OfferProcessor::getInstance().getOfferById(i_offer_id);
     if (nullptr == ptr_offer){
@@ -459,6 +454,34 @@ void OffersTable::onDeleteCurrentOffer(){
 void OffersTable::bindSignalsAndSlots(){
      QObject::connect(this,  SIGNAL(itemChanged(QTableWidgetItem*)), this, SLOT(onChangeItem(QTableWidgetItem*)));
      QObject::connect(this,  SIGNAL(currentCellChanged(int, int, int, int)), this, SLOT(onCurrentCellChanged(int, int, int, int)));
+     QObject::connect(this,  SIGNAL(itemDoubleClicked(QTableWidgetItem*)), this, SLOT(onDoubleClick(QTableWidgetItem*)));
+}
+
+void OffersTable::onChangeAgentName(int i_agent_id){
+    m_bFillTableModeOn = true;
+    //
+    AgentBaseDTO* ptr_agent = AgentProcessor::getInstance().getAgentByID(i_agent_id);
+    if(nullptr == ptr_agent){
+        return;
+    };
+
+    for (int i_row = 0; i_row < this->rowCount(); i_row++){
+        QTableWidgetItem* ptr_agent_name_item = this->item(i_row, COL_AGENT);
+        if(nullptr == ptr_agent_name_item){
+            continue;
+        };
+        //
+        if(ptr_agent_name_item->data(Qt::UserRole).toInt() == ptr_agent->getId()){
+            ptr_agent_name_item->setText(ptr_agent->getName());
+            if (ptr_agent->getDescription().length() > 0){
+                ptr_agent_name_item->setToolTip(ptr_agent->getDescription());
+            }else{
+                ptr_agent_name_item->setToolTip("Description not available");
+            };
+        };
+    };
+    //
+    m_bFillTableModeOn = false;
 }
 
 void OffersTable::onChangeCountryName(int i_country_id){
@@ -558,6 +581,16 @@ void OffersTable::mouseReleaseEvent (QMouseEvent *event)
     if ( btn == Qt::RightButton )
     {
         showPopupMenu ();
+    };
+}
+
+void OffersTable::onDoubleClick(QTableWidgetItem* item){
+    if(nullptr == item){
+        return;
+    };
+    //
+    if(COL_TITLE == item->column()){
+        onEditCurrentOffer();
     };
 }
 

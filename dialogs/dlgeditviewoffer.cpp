@@ -41,6 +41,7 @@ void DlgEditViewOffer::init(int i_offer_id){
     };
     //
     m_bOfferUpdated = false;
+    m_bOfferChanged = false;
     //
     m_bChangeDescription = false;
     m_bChangeComment = false;
@@ -346,7 +347,7 @@ void DlgEditViewOffer::createControlButtons(){
     connect(&m_ButtonUpdateOffer, &QPushButton::released, this, &DlgEditViewOffer::onClickBtnUpdateOffer);
     //
     m_ButtonClose.setText("Close window");
-    //connect(&m_ButtonClose, &QPushButton::released, this, &DlgNewOffer::close);
+    connect(&m_ButtonClose, &QPushButton::released, this, &DlgEditViewOffer::close);
 }
 
 void DlgEditViewOffer::addWidgetsToLayout(){
@@ -436,46 +437,55 @@ void DlgEditViewOffer::addWidgetsToLayout(){
 
 void DlgEditViewOffer::onChangeDescription(){
     m_bChangeDescription = true;
+    m_bOfferChanged = true;
     m_ButtonUpdateOffer.setEnabled(true);
 }
 
 void DlgEditViewOffer::onChangeComment(){
     m_bChangeComment = true;
+    m_bOfferChanged = true;
     m_ButtonUpdateOffer.setEnabled(true);
 }
 
 void DlgEditViewOffer::onChangePositionTitle(){
     m_bChangePositionTitle = true;
+    m_bOfferChanged = true;
     m_ButtonUpdateOffer.setEnabled(true);
 }
 
 void DlgEditViewOffer::onChangeCountry(){
     m_bChangeCountry = true;
+    m_bOfferChanged = true;
     m_ButtonUpdateOffer.setEnabled(true);
 }
 
 void DlgEditViewOffer::onChangeTown(){
     m_bChangeTown = true;
+    m_bOfferChanged = true;
     m_ButtonUpdateOffer.setEnabled(true);
 }
 
 void DlgEditViewOffer::onChangeSkillsList(){
     m_bChangeSkillsList = true;
+    m_bOfferChanged = true;
     m_ButtonUpdateOffer.setEnabled(true);
 }
 
 void DlgEditViewOffer::onChangeRate(){
     m_bChangeRate = true;
+    m_bOfferChanged = true;
     m_ButtonUpdateOffer.setEnabled(true);
 }
 
 void DlgEditViewOffer::onChangeStatus(){
     m_bChangeStatus = true;
+    m_bOfferChanged = true;
     m_ButtonUpdateOffer.setEnabled(true);
 }
 
 void DlgEditViewOffer::onChangeAttractivity(){
     m_bChangeAttractivity = true;
+    m_bOfferChanged = true;
     m_ButtonUpdateOffer.setEnabled(true);
 }
 
@@ -497,6 +507,8 @@ void DlgEditViewOffer::onClickBtnUpdateOffer(){
     updateRate();
     updateStatus();
     updateAttractivity();
+    //
+    m_bOfferUpdated = true;
 /*
 
 */
@@ -640,4 +652,21 @@ bool DlgEditViewOffer::isSomethingChanged() const{
         return true;
     };
     return false;
+}
+
+void DlgEditViewOffer::closeEvent(QCloseEvent *event){
+    //
+    if ((m_bOfferUpdated == false) && (m_bOfferChanged == true)){
+        QString str_msg = "Job description not saved. Do you want to close window?";
+        QMessageBox box;
+        box.setStandardButtons( QMessageBox::Yes|QMessageBox::No );
+        box.setText(str_msg);
+        const int ret = box.exec();
+        if (ret != QMessageBox::Yes){
+            event->ignore();
+            return;
+        };
+    };
+    //
+    event->accept();
 }

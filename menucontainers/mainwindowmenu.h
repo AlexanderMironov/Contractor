@@ -2,9 +2,9 @@
 #define MAINWINDOWMENU_H
 
 #include <QAction>
+#include <QMenu>
 //
 class MainWindow;
-class QMenu;
 
 class MainWindowMenu
 {
@@ -17,8 +17,10 @@ private:
 private:
     MainWindow* m_ptrMainWindow;
     QMenu*      m_ptrFileMenu;
+    QMenu       m_mnuAdd;
     //
     QAction     actionCreateNewOffer;
+    QAction     actionCreateNewAgent;
     QAction     actionCountriesOperation;
 
 };

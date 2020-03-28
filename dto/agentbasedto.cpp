@@ -5,7 +5,7 @@
 
 AgentBaseDTO::AgentBaseDTO()
 {
-
+    reset();
 }
 
 int AgentBaseDTO::getId() const{

@@ -41,6 +41,9 @@ private slots:
     void            onChangeStatus();
     void            onChangeAttractivity();
 
+protected:
+    void closeEvent (QCloseEvent *event);
+
 private:
     void            setDlgSizes();
     void            setElementSizes();
@@ -146,6 +149,7 @@ private:
     AgentBaseDTO*   m_ptrDtoAgent;
     //
     bool            m_bOfferUpdated;
+    bool            m_bOfferChanged;
     //
     bool            m_bChangeDescription;
     bool            m_bChangeComment;

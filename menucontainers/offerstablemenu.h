@@ -19,7 +19,7 @@ public:
 
 private:
     OffersTable*        m_ptrParentWindow;
-
+    //
     QAction             m_actionShowNewOfferDlg;
     QAction             m_actionDeleteCurrentOffer;
     QAction             m_actionEditCurrentOffer;

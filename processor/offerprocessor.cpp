@@ -27,10 +27,9 @@ bool OfferProcessor::init(){
 }
 
 int OfferProcessor::add(OfferBaseDTO* pos_description){
-    int i_insert_id = VALUE_UNDEFINED;
     //
     if(nullptr == pos_description){
-        return i_insert_id;
+        return VALUE_UNDEFINED;
     };
     //
     //search existing
@@ -40,7 +39,7 @@ int OfferProcessor::add(OfferBaseDTO* pos_description){
         return pos_description->getId(); //already exists;
     };
     //if not exists - add new one.
-    i_insert_id = insertIntoDB(pos_description);
+    int i_insert_id = insertIntoDB(pos_description);
     return i_insert_id;
 }
 
@@ -77,7 +76,7 @@ int OfferProcessor::insertIntoDB(OfferBaseDTO* pos_description){
     if( !qry.exec() )
     {
         QMessageBox::critical(nullptr, "Error", qry.lastError().text(), QMessageBox::Ok);
-        return -1;
+        return VALUE_UNDEFINED;
     };
     //
     int i_last_id = qry.lastInsertId().toInt();

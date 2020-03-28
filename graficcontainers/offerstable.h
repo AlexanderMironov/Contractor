@@ -29,6 +29,7 @@ public slots:
     void    onDeleteCurrentOffer();
     void    onEditCurrentOffer();
     void    onChangeCountryName(int i_country_id);
+    void    onChangeAgentName(int i_agent_id);
 
 
 private slots:
@@ -36,6 +37,7 @@ private slots:
     void            attractivityChanged(int i_index);
     void            onChangeItem (QTableWidgetItem * item);
     void            onCurrentCellChanged(int currentRow, int currentColumn, int previousRow, int previousColumn);
+    void            onDoubleClick(QTableWidgetItem* item);
 
 
 protected:

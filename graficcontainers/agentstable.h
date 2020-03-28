@@ -5,7 +5,7 @@
 #include <QTableWidget>
 #include <QAction>
 //
-#include "menucontainers/offerstablemenu.h"
+#include "menucontainers/agentstablemenu.h"
 //
 class AgentBaseDTO;
 class QMouseEvent;
@@ -19,19 +19,21 @@ public:
     ~AgentsTable();
 
 signals:
-//    void needNewOfferDlg();
+    void changeAgentDescriptionName(int i_agent_id);
 
 public slots:
     void    showTable();
     void    onCurrentAgentChanged(int i_agent_id);
-//    void    onShowNewOfferDlg();
-//    void    onDeleteCurrentOffer();
+    void    onShowEditAgent();
+    void    onCreateAgent();
 
 
 private slots:
 //    void            attractivityChanged(int i_index);
     void            onChangeItem (QTableWidgetItem * item);
     void            onRankChanged (int i_index);
+    void            onDoubleClick(QTableWidgetItem* item);
+    void            onClickHeader(int i_logical_index);
 
 
 protected:
@@ -56,6 +58,9 @@ private:
     void                fillDataRow (int ui_row_num, AgentBaseDTO* ptr_agent);
     void                showPopupMenu();
     int                 getRecordIdByRowNum(int i_row_num);
+    int                 refreshRow(int i_row_id, int i_agent_id);
+    void                setNewSortOrderName();
+    void                setNewSortOrderAgency();
     //
     QTableWidgetItem*   makeCellName (AgentBaseDTO* ptr_agent);
     QTableWidgetItem*   makeCellRank(int i_row_num, AgentBaseDTO* ptr_agent);
@@ -65,7 +70,11 @@ private:
     QTableWidgetItem*   makeCellWebProfile(AgentBaseDTO* ptr_agent);
     QTableWidgetItem*   makeCellAgency(AgentBaseDTO* ptr_agent);
     //
-    //AgentsTableMenu     m_mnuContainer;
+    AgentsTableMenu     m_mnuContainer;
+    //
+    int                 m_iLastSortOrderName;
+    int                 m_iLastSortOrderAgency;
+
     //
     bool    m_bFillTableModeOn;
 

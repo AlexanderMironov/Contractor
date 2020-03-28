@@ -24,10 +24,14 @@ public:
     int                     add(AgentBaseDTO* ptr_agent_base_info_dto);
     bool                    init();
     AgentBaseDTO*           getAgentByID(int i_id) const;
+    AgentBaseDTO*           getAgentByEmail(const QString& str_email);
     const AgentStorage&     getStorage() const;
     bool                    updateRank(int i_agent_id, int i_rank);
     bool                    updateWebProfile(int i_agent_id, const QString& web_profile);
     bool                    updatePhone(int i_agent_id, const QString& phone_number, PHONE_NUM en_phone_num);
+    bool                    updateDecription(int i_agent_id, const QString& str_description);
+    bool                    updateName(int i_agent_id, const QString& str_name);
+    bool                    updateEmail(int i_agent_id, const QString& str_email);
 private:
     explicit                AgentProcessor(QObject *parent = nullptr);
     int                     insertIntoDB(AgentBaseDTO* ptr_agent_base_info_dto);

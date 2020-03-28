@@ -4,11 +4,7 @@
 #include <QDialog>
 #include <QObject>
 //
-#include <QGridLayout>
-#include <QPlainTextEdit>
-#include <QLabel>
-#include <QLineEdit>
-#include <QPushButton>
+
 #include <QComboBox>
 #include <QAction>
 #include <QCloseEvent>
@@ -17,7 +13,12 @@
 #include "dto/offerbasedto.h"
 #include "dto/agentbasedto.h"
 //
-
+class QLabel;
+class QLineEdit;
+class QComboBox;
+class QPushButton;
+class QPlainTextEdit;
+class QGridLayout;
 //
 class DlgNewOffer : public QDialog
 {
@@ -33,7 +34,7 @@ public slots:
 private slots:
     void        onSelectText(bool b_selected);
     void        onRequestUserMenu();
-    void        onClickBtnAcceptPositionDescription();
+    void        onClickBtnAcceptPositionTitle();
     void        onClickBtnAcceptTown();
     void        onClickBtnAcceptSkills();
     void        onClickBtnAcceptAgentName();
@@ -64,8 +65,8 @@ private:
     void        addWidgetsToLayout();
     QString     getSelectedPartOfOffer() const;
 
-    void        saveAgentInfo();
-    void        saveOffer();
+    bool        saveAgentInfo();
+    bool        saveOffer();
     void        clearFields();
 
 private:
@@ -75,69 +76,69 @@ private:
     int             m_iMaxElementWidth;
     int             m_iMaxLabelHeight;
     //
-    QGridLayout     m_MainLayout;
+    QGridLayout*    m_ptrMainLayout;
     //
-    QLabel          m_LblnsertOffer;
-    QPlainTextEdit  m_OfferEdit;
-    QLabel          m_LblOfferInfo;
+    QLabel*          m_ptrLblnsertOffer;
+    QPlainTextEdit*  m_ptrOfferEdit;
+    QLabel*          m_ptrLblOfferInfo;
     //
-    QLabel          m_LblOfferCore;
-    QLineEdit       m_EditOfferCore;
-    QPushButton     m_ButtonAcceptOfferCore;
+    QLabel*         m_ptrLblPositonTitle;
+    QLineEdit*      m_ptrEditPositonTitle;
+    QPushButton*    m_ptrButtonAcceptPositonTitle;
     //
-    QLabel          m_LblCountry;
-    QComboBox       m_ComboCountry;
+    QLabel*         m_ptrLblCountry;
+    QComboBox*      m_ptrComboCountry;
     //
-    QLabel          m_LblTown;
-    QLineEdit       m_EditTown;
-    QPushButton     m_ButtonAcceptTown;
+    QLabel*         m_ptrLblTown;
+    QLineEdit*      m_ptrEditTown;
+    QPushButton*    m_ptrButtonAcceptTown;
     //
-    QLabel          m_LblSkills;
-    QLineEdit       m_EditSkills;
-    QPushButton     m_ButtonAcceptSkills;
+    QLabel*         m_ptrLblSkills;
+    QLineEdit*      m_ptrEditSkills;
+    QPushButton*    m_ptrButtonAcceptSkills;
     //
-    QLabel          m_LblRate;
-    QLineEdit       m_EditRate;
+    QLabel*         m_ptrLblRate;
+    QLineEdit*      m_ptrEditRate;
     //
-    QLabel          m_LblStatus;
-    QComboBox       m_ComboStatus;
+    QLabel*         m_ptrLblStatus;
+    QComboBox*      m_ptrComboStatus;
     //
-    QLabel          m_LblAttractivity;
-    QComboBox       m_ComboAttractivity;
+    QLabel*         m_ptrLblAttractivity;
+    QComboBox*      m_ptrComboAttractivity;
     //-------------------------------
     QSpacerItem*    m_ptrSpacer;
-    QLabel          m_LblnsertComment;
-    QPlainTextEdit  m_CommentEdit;
-    QLabel          m_LblAgentInfo;
+    QLabel*         m_ptrLblnsertComment;
+    QPlainTextEdit* m_ptrCommentEdit;
+    QLabel*         m_ptrLblAgentInfo;
     //
-    QLabel          m_LblAgentName;
-    QLineEdit       m_EditAgentName;
-    QPushButton     m_ButtonAcceptAgentName;
+    QLabel*         m_ptrLblAgentName;
+    QLineEdit*      m_ptrEditAgentName;
+    QPushButton*    m_ptrButtonAcceptAgentName;
     //
-    QLabel          m_LblAgentEmail;
-    QLineEdit       m_EditAgentEmail;
-    QPushButton     m_ButtonAcceptAgentEmail;
+    QLabel*         m_ptrLblAgentEmail;
+    QLineEdit*      m_ptrEditAgentEmail;
+    QPushButton*    m_ptrButtonAcceptAgentEmail;
     //
-    QLabel          m_LblAgentPhone1;
-    QLineEdit       m_EditAgentPhone1;
-    QPushButton     m_ButtonAcceptAgentPhone1;
+    QLabel*         m_ptrLblAgentPhone1;
+    QLineEdit*      m_ptrEditAgentPhone1;
+    QPushButton*    m_ptrButtonAcceptAgentPhone1;
     //
-    QLabel          m_LblAgentPhone2;
-    QLineEdit       m_EditAgentPhone2;
-    QPushButton     m_ButtonAcceptAgentPhone2;
+    QLabel*         m_ptrLblAgentPhone2;
+    QLineEdit*      m_ptrEditAgentPhone2;
+    QPushButton*    m_ptrButtonAcceptAgentPhone2;
     //
-    QLabel          m_LblAgencyName;
-    QLineEdit       m_EditAgencyName;
-    QPushButton     m_ButtonAcceptAgencyName;
+    QLabel*         m_ptrLblAgencyName;
+    QLineEdit*      m_ptrEditAgencyName;
+    QPushButton*    m_ptrButtonAcceptAgencyName;
     //
-    QLabel          m_LblAgentRank;
-    QComboBox       m_ComboAgentRank;
+    QLabel*         m_ptrLblAgentRank;
+    QComboBox*      m_ptrComboAgentRank;
     //
-    QPushButton     m_ButtonScan;
+    QPushButton*    m_ptrButtonScan;
     //
-    QPushButton     m_ButtonSaveOffer;
+    QPushButton*    m_ptrButtonSaveOffer;
     //
-    QPushButton     m_ButtonClose;
+    QPushButton*    m_ptrButtonClose;
     //
     QAction         m_actionAcceptOfferCore;
     QAction         m_actionAcceptCountry;
@@ -156,6 +157,5 @@ private:
     //
     bool            m_bOfferSaved;
 };
-
 
 #endif // DLGNEWOFFER_H

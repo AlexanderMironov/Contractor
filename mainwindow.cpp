@@ -38,7 +38,10 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(&m_dlgManageCountries, SIGNAL( modifyCountry(int)), ptr_dlg_new_offer, SLOT(onAddNewCountry()));
     //
     connect(&m_dlgManageCountries, SIGNAL( modifyCountry(int)), ptr_offers_tab, SLOT(onChangeCountryName(int)));
+    //for parallel moving on agent table
     connect(ptr_offers_tab, SIGNAL(currentAgentChanged(int)), ptr_agents_tab, SLOT(onCurrentAgentChanged(int)));
+    //for update agent name in the offer table
+    connect(ptr_agents_tab, SIGNAL(changeAgentDescriptionName(int)), ptr_offers_tab, SLOT(onChangeAgentName(int)));
 }
 
 MainWindow::~MainWindow()
