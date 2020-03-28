@@ -28,7 +28,10 @@ void DlgManageCountries::init(){
     addWidgetsToLayout();
     //
     this->setMinimumWidth(400);
+    this->setMaximumWidth(400);
+    //
     this->setMinimumHeight(200);
+    this->setMaximumHeight(200);
     m_bFillModeOn = false;
 }
 
