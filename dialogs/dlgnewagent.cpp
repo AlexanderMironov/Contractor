@@ -177,7 +177,6 @@ void DlgNewAgent::createGraficElements(){
     m_ptrEditPhone2->setMinimumWidth(m_iMinEditWidth);
     m_ptrEditPhone2->setMaximumWidth(m_iMaxElementWidth);
     connect(m_ptrEditPhone2, SIGNAL(textChanged(const QString &)), this, SLOT(onChangePhone2()));
-
     //
     m_ptrLblWebProfile = new QLabel();
     m_ptrLblWebProfile->setText("Web profile");
@@ -237,6 +236,9 @@ void DlgNewAgent::createGraficElements(){
     m_ptrButtonClose->setMinimumWidth(m_iMinButtonWidth);
     m_ptrButtonClose->setEnabled(true);
     connect(m_ptrButtonClose, &QPushButton::released, this, &DlgNewAgent::close);
+    //
+    m_ptrEditStatusBar = new QLineEdit();
+    m_ptrEditStatusBar->setEnabled(false);
 }
 
 void DlgNewAgent::fillInitialData(){
@@ -293,7 +295,7 @@ void DlgNewAgent::addWidgetsToLayout(){
     m_ptrMainLayout->addWidget(m_ptrLblDescription,i_row,0,1,1);
     //
     i_row++;
-    m_ptrMainLayout->addWidget(m_ptrEditDescription,i_row,0,9,1);
+    m_ptrMainLayout->addWidget(m_ptrEditDescription,i_row,0,10,1);
     //
     m_ptrMainLayout->addWidget(m_ptrLblName,i_row,1,1,1);
     m_ptrMainLayout->addWidget(m_ptrEditName,i_row,2,1,1);
@@ -330,6 +332,9 @@ void DlgNewAgent::addWidgetsToLayout(){
     //
     i_row++;
     m_ptrMainLayout->addWidget(m_ptrButtonClose,i_row,1,1,2);
+    //
+    i_row++;
+    m_ptrMainLayout->addWidget(m_ptrEditStatusBar,i_row,0,1,3);
 }
 
 void DlgNewAgent::onChangeDescription(){
@@ -408,6 +413,7 @@ void DlgNewAgent::onClickBtnUpdateSaveOffer(){
         this->close();
     }else{
         updateAgent();
+        m_ptrEditStatusBar->setText("Agent info updated");
     };
 }
 

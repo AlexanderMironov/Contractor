@@ -73,6 +73,7 @@ void DlgEditViewOffer::init(int i_offer_id){
     setMenuAction();
     //
     createWidgets();
+    m_EditStatusBar.setEnabled(false);
     addWidgetsToLayout();
 }
 
@@ -433,6 +434,9 @@ void DlgEditViewOffer::addWidgetsToLayout(){
     //
     i_row++;
     m_MainLayout.addWidget(&m_ButtonClose,i_row,1,1,3);
+    //
+    i_row++;
+    m_MainLayout.addWidget(&m_EditStatusBar,i_row,0,1,4);
 }
 
 void DlgEditViewOffer::onChangeDescription(){
@@ -507,6 +511,8 @@ void DlgEditViewOffer::onClickBtnUpdateOffer(){
     updateRate();
     updateStatus();
     updateAttractivity();
+    //
+    m_EditStatusBar.setText("Offer updated");
     //
     m_bOfferUpdated = true;
 /*

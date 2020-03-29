@@ -133,6 +133,8 @@ private:
     //
     QPushButton     m_ButtonClose;
     //
+    QLineEdit       m_EditStatusBar;
+    //
     QAction         m_actionAcceptOfferCore;
     QAction         m_actionAcceptCountry;
     QAction         m_actionAcceptTown;

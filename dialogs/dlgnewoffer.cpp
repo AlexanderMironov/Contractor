@@ -42,7 +42,7 @@ DlgNewOffer::DlgNewOffer(QWidget *parent) :
 }
 
 DlgNewOffer::~DlgNewOffer(){
-
+    delete m_ptrMainLayout;
 }
 
 void DlgNewOffer::init(){
@@ -112,6 +112,9 @@ void DlgNewOffer::createWidgets(){
     createOfferWidgets();
     createAgentWidgets();
     createControlButtons();
+    //
+    m_ptrEditStatusBar = new QLineEdit();
+    m_ptrEditStatusBar->setEnabled(false);
 }
 
 void DlgNewOffer::onAddNewCountry(){
@@ -488,6 +491,9 @@ void DlgNewOffer::addWidgetsToLayout(){
     //
     i_row++;
     m_ptrMainLayout->addWidget(m_ptrButtonClose,i_row,1,1,3);
+    //
+    i_row++;
+    m_ptrMainLayout->addWidget(m_ptrEditStatusBar,i_row,0,1,4);
 }
 
 void  DlgNewOffer::onSelectText(bool b_selected){
@@ -626,6 +632,8 @@ void  DlgNewOffer::onClickBtnScan(){
     };
     //
     m_ptrEditTown->setText(scaner.getTownName());
+    //
+    m_ptrEditStatusBar->setText("Offer scanned");
 }
 
 void  DlgNewOffer::onClickBtnSaveOffer(){

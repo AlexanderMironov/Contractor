@@ -561,7 +561,7 @@ void OffersTable::onCreateOffer(){
     DlgNewOffer dlgNewOffer;
     dlgNewOffer.init();
     dlgNewOffer.exec();
-    //todo
+    //
     if(dlgNewOffer.isbOfferSaved() == true){
         this->showTable();
         //

@@ -95,6 +95,8 @@ private:
     QPushButton*     m_ptrButtonUpdateSaveOffer;
     QPushButton*     m_ptrButtonClose;
     //
+    QLineEdit*       m_ptrEditStatusBar;
+    //
     bool            m_bFillModeOn;
     //
     bool            m_bDataChanged;
