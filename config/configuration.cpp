@@ -179,6 +179,7 @@ bool Configuration::getAttractivity(QSettings *ptr_settings){
     if (false == b_res){
         return false;
     };
+    return true;
 }
 
 QString Configuration::getConfigFullPath(){
