@@ -371,13 +371,22 @@ void OffersTable::updateRow(int i_row_num){
     //
     QTableWidgetItem* ptr_title = this->item(i_row_num, COL_TITLE);
     if(ptr_title){
-        ptr_title->setText(ptr_offer->getPositionTitle());
+        if(ptr_offer->getPositionTitle().isEmpty() == false){
+            ptr_title->setText(ptr_offer->getPositionTitle());
+        }else{
+            ptr_title->setText("");
+        };
+
     };
     //
     QTableWidgetItem* ptr_skills = this->item(i_row_num, COL_SKILLS);
     if(ptr_skills){
         QString str_res_skills = getSkillsListAsString(ptr_offer);
-        ptr_skills->setText(str_res_skills);
+        if(str_res_skills.isEmpty() == false){
+            ptr_skills->setText(str_res_skills);
+        }else{
+            ptr_skills->setText("");
+        };
     };
     //
     QTableWidgetItem* ptr_country = this->item(i_row_num, COL_COUNTRY);
@@ -398,27 +407,31 @@ void OffersTable::updateRow(int i_row_num){
     };
     //
     QComboBox*  ptr_item_status = dynamic_cast<QComboBox*>(QTableWidget::cellWidget(i_row_num, COL_STATUS));
-    for(int i = 0; i < ptr_item_status->count(); i++){
-        const int i_current_status = ptr_item_status->itemData(i,Qt::UserRole).toInt();
-        if(i_current_status == ptr_offer->getStatusId()){
-            if(i == ptr_item_status->currentIndex()){
-                break; //nothing changed
-            }else{
-                ptr_item_status->setCurrentIndex(i);
-                break; //done
+    if(nullptr != ptr_item_status){
+        for(int i = 0; i < ptr_item_status->count(); i++){
+            const int i_current_status = ptr_item_status->itemData(i,Qt::UserRole).toInt();
+            if(i_current_status == ptr_offer->getStatusId()){
+                if(i == ptr_item_status->currentIndex()){
+                    break; //nothing changed
+                }else{
+                    ptr_item_status->setCurrentIndex(i);
+                    break; //done
+                };
             };
         };
     };
     //
     QComboBox*  ptr_item_attractivity = dynamic_cast<QComboBox*>(QTableWidget::cellWidget(i_row_num, COL_ATTRACTIVITY));
-    for(int i = 0; i < ptr_item_attractivity->count(); i++){
-        const int i_current_attractivity = ptr_item_attractivity->itemData(i,Qt::UserRole).toInt();
-        if(i_current_attractivity == ptr_offer->getAttractivity()){
-            if(i == ptr_item_attractivity->currentIndex()){
-                break; //nothing changed
-            }else{
-                ptr_item_attractivity->setCurrentIndex(i);
-                break; //done
+    if(nullptr != ptr_item_attractivity){
+        for(int i = 0; i < ptr_item_attractivity->count(); i++){
+            const int i_current_attractivity = ptr_item_attractivity->itemData(i,Qt::UserRole).toInt();
+            if(i_current_attractivity == ptr_offer->getAttractivity()){
+                if(i == ptr_item_attractivity->currentIndex()){
+                    break; //nothing changed
+                }else{
+                    ptr_item_attractivity->setCurrentIndex(i);
+                    break; //done
+                };
             };
         };
     };
