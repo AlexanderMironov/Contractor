@@ -18,7 +18,7 @@ void OffersTableMenu::init(OffersTable* pt_main_window){
     //
     m_actionShowNewOfferDlg.setText("Add new offer");
     m_actionShowNewOfferDlg.setEnabled(true);
-    QObject::connect(&m_actionShowNewOfferDlg, SIGNAL(triggered()), m_ptrParentWindow, SLOT(onShowNewOfferDlg()));
+    QObject::connect(&m_actionShowNewOfferDlg, SIGNAL(triggered()), m_ptrParentWindow, SLOT(onCreateOffer()));
     //
     m_actionDeleteCurrentOffer.setText("Delete current offer");
     m_actionDeleteCurrentOffer.setEnabled(true);

@@ -19,13 +19,13 @@ public:
     ~OffersTable();
 
 signals:
-    void needNewOfferDlg();
     void currentAgentChanged(int i_agent_id);
+    void agentAdded();
 
 public slots:
 
     void    showTable();
-    void    onShowNewOfferDlg();
+    void    onCreateOffer();
     void    onDeleteCurrentOffer();
     void    onEditCurrentOffer();
     void    onChangeCountryName(int i_country_id);

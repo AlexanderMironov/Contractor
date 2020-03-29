@@ -16,7 +16,6 @@ public:
     static GraficContainerListOffers& getInstance();
     //
     void                init(QTabWidget* ptr_tab);
-    DlgNewOffer*        getDlgNewOffer();
     OffersTable*        getOffersTab();
 
 private:
@@ -26,15 +25,11 @@ private:
 signals:
 
 public slots:
-    void onShowNewOfferDlg();
 
 private:
     QTabWidget* m_ptrMainTab;
     //
     OffersTable* m_ptrTblOffersTable;
-    //
-    DlgNewOffer m_dlgNewOffer;
-
 };
 
 #endif // GRAFICCONTAINERLISTOFFERS_H

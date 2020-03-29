@@ -28,6 +28,8 @@ public:
     DlgNewOffer(QWidget *parent = nullptr);
     ~DlgNewOffer();
     void init();
+    bool isbOfferSaved() const;
+    bool isNewAgentAdded();
 
 public slots:
 
@@ -48,7 +50,6 @@ private slots:
 
 
 signals:
-    void        addedNewOffer();
 
 protected:
     void closeEvent (QCloseEvent *event);
@@ -156,6 +157,7 @@ private:
     AgentBaseDTO    m_dtoAgent;
     //
     bool            m_bOfferSaved;
+    bool            m_bAgentAdded;
 };
 
 #endif // DLGNEWOFFER_H

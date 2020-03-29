@@ -36,6 +36,7 @@ DlgNewOffer::DlgNewOffer(QWidget *parent) :
     QDialog(parent)
 {
     m_bOfferSaved = false;
+    m_bAgentAdded = false;
     this->setWindowTitle("Create new job offer");
     m_ptrMainLayout = nullptr;
 }
@@ -52,9 +53,9 @@ void DlgNewOffer::init(){
     setDlgSizes();
     setElementSizes();
     setDlgLayout();
+    createWidgets();
     setMenuAction();
     //
-    createWidgets();
     addWidgetsToLayout();
 }
 
@@ -608,6 +609,7 @@ void  DlgNewOffer::onClickBtnScan(){
     if (scaner.getAgentEmail().length() > 0){
         //for prevent double saving operations
         m_dtoAgent.setId(scaner.getAgentId());
+        m_bAgentAdded = false;
         //for visualisation
         m_ptrEditAgentEmail->setText(scaner.getAgentEmail());
         m_ptrEditAgentName->setText(scaner.getAgentName());
@@ -665,7 +667,6 @@ void  DlgNewOffer::onClickBtnSaveOffer(){
     const bool b_agent_info_saved = saveAgentInfo();
     if (true == b_agent_info_saved){
         if (saveOffer() == true){
-            emit addedNewOffer();
             this->close();
         };
     };
@@ -719,7 +720,18 @@ bool DlgNewOffer::saveAgentInfo(){
         return true; //agent and agency already found by scaner
     };
     //
+    //agent was not founded by scaner (user did not make scan) but exists in the database, no reason to add it twice
+    AgentBaseDTO* ptr_agent = AgentProcessor::getInstance().getAgentByEmail(m_ptrEditAgentEmail->text());
+    if (nullptr != ptr_agent){
+        m_bAgentAdded = false;
+        m_dtoAgent.setId(ptr_agent->getId());
+        return true;
+    };
+    //
     int i_agency_id = AgencyProcessor::getInstance().add(m_ptrEditAgencyName->text().trimmed());
+    if(VALUE_UNDEFINED == i_agency_id){
+        return false; //can not add new agency to database
+    }
     //
     m_dtoAgent.setName(m_ptrEditAgentName->text());
     m_dtoAgent.setEMail( m_ptrEditAgentEmail->text());
@@ -732,9 +744,10 @@ bool DlgNewOffer::saveAgentInfo(){
     int id = AgentProcessor::getInstance().add(&m_dtoAgent);
     if(VALUE_UNDEFINED != id){
         m_dtoAgent.setId(id);
+        m_bAgentAdded = true;
         return true;
     };
-    //
+    //new agent was not added to the database, we can not save offer
     return false;
 }
 
@@ -754,6 +767,14 @@ void DlgNewOffer::closeEvent(QCloseEvent *event){
     event->accept();
 }
 
+bool DlgNewOffer::isbOfferSaved() const{
+    return m_bOfferSaved;
+}
+
+bool DlgNewOffer::isNewAgentAdded(){
+    return m_bAgentAdded;
+}
+
 void DlgNewOffer::clearFields(){
     const QString str_empty_txt = "";
     m_ptrOfferEdit->setPlainText(str_empty_txt);
@@ -769,5 +790,4 @@ void DlgNewOffer::clearFields(){
     m_ptrEditAgencyName->setText(str_empty_txt);
     m_dtoOffer.reset();
     m_dtoAgent.reset();
-
 }

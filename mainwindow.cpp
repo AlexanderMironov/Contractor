@@ -29,19 +29,16 @@ MainWindow::MainWindow(QWidget *parent) :
     m_mnuContainer.init(this);
     m_dlgManageCountries.init();
     //
-    DlgNewOffer* ptr_dlg_new_offer = GraficContainerListOffers::getInstance().getDlgNewOffer();
     OffersTable* ptr_offers_tab =  GraficContainerListOffers::getInstance().getOffersTab();
-    //
     AgentsTable* ptr_agents_tab = GraficContainerListAgent::getInstance().getAgentsTab();
-    //
-    connect(&m_dlgManageCountries, SIGNAL(createNewCountry()), ptr_dlg_new_offer, SLOT(onAddNewCountry()));
-    connect(&m_dlgManageCountries, SIGNAL( modifyCountry(int)), ptr_dlg_new_offer, SLOT(onAddNewCountry()));
     //
     connect(&m_dlgManageCountries, SIGNAL( modifyCountry(int)), ptr_offers_tab, SLOT(onChangeCountryName(int)));
     //for parallel moving on agent table
     connect(ptr_offers_tab, SIGNAL(currentAgentChanged(int)), ptr_agents_tab, SLOT(onCurrentAgentChanged(int)));
     //for update agent name in the offer table
     connect(ptr_agents_tab, SIGNAL(changeAgentDescriptionName(int)), ptr_offers_tab, SLOT(onChangeAgentName(int)));
+    //for update agent table when new agen created during creating of noe offer
+    connect(ptr_offers_tab, SIGNAL(agentAdded()), ptr_agents_tab, SLOT(showTable()));
 }
 
 MainWindow::~MainWindow()

@@ -5,6 +5,8 @@
 #include "mainwindow.h"
 #include "graficcontainers/graficcontainerlistoffers.h"
 #include "graficcontainers/graficcontainerlistagent.h"
+#include "graficcontainers/offerstable.h"
+#include "graficcontainers/agentstable.h"
 
 MainWindowMenu::MainWindowMenu()
 {
@@ -35,13 +37,14 @@ void MainWindowMenu::init(MainWindow* pt_main_window){
 void MainWindowMenu::createActionNewOffer(){
     actionCreateNewOffer.setText("Job offer");
     actionCreateNewOffer.setEnabled(true);
-    GraficContainerListOffers& offer_container = GraficContainerListOffers::getInstance();
-    QObject::connect(&actionCreateNewOffer, &QAction::triggered, &offer_container, &GraficContainerListOffers::onShowNewOfferDlg);
+    //
+    OffersTable* ptr_offer_table = GraficContainerListOffers::getInstance().getOffersTab();
+    QObject::connect(&actionCreateNewOffer, &QAction::triggered, ptr_offer_table, &OffersTable::onCreateOffer);
     //
     actionCreateNewAgent.setText("Agent");
     actionCreateNewAgent.setEnabled(true);
-    GraficContainerListAgent& agent_container = GraficContainerListAgent::getInstance();
-    QObject::connect(&actionCreateNewAgent, &QAction::triggered, &agent_container, &GraficContainerListAgent::onShowNewAgentDlg);
+    AgentsTable* ptr_agent_table = GraficContainerListAgent::getInstance().getAgentsTab();
+    QObject::connect(&actionCreateNewAgent, &QAction::triggered, ptr_agent_table, &AgentsTable::onCreateAgent);
     //
     actionCountriesOperation.setText("Manage countries");
     actionCountriesOperation.setEnabled(true);

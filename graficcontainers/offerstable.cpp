@@ -33,6 +33,7 @@
 #include "processor/offerskillprocesor.h"
 //
 #include "dialogs/dlgeditviewoffer.h"
+#include "dialogs/dlgnewoffer.h"
 
 OffersTable::OffersTable(QWidget *parent):QTableWidget(parent)
 {
@@ -556,8 +557,18 @@ void OffersTable::onCurrentCellChanged(int currentRow, int currentColumn, int pr
     };
 }
 
-void OffersTable::onShowNewOfferDlg(){
-    emit needNewOfferDlg();
+void OffersTable::onCreateOffer(){
+    DlgNewOffer dlgNewOffer;
+    dlgNewOffer.init();
+    dlgNewOffer.exec();
+    //todo
+    if(dlgNewOffer.isbOfferSaved() == true){
+        this->showTable();
+        //
+        if(dlgNewOffer.isNewAgentAdded()){
+            emit agentAdded();
+        };
+    };
 }
 
 void OffersTable::showPopupMenu(){
