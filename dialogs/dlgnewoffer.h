@@ -144,7 +144,6 @@ private:
     QLineEdit*      m_ptrEditStatusBar;
     //
     QAction         m_actionAcceptOfferCore;
-    QAction         m_actionAcceptCountry;
     QAction         m_actionAcceptTown;
     QAction         m_actionAcceptSkills;
     QAction         m_actionAcceptAgentName;

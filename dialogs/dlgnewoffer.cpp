@@ -62,8 +62,6 @@ void DlgNewOffer::init(){
 void DlgNewOffer::setMenuAction(){
     m_actionAcceptOfferCore.setText("Set position title");
     connect(&m_actionAcceptOfferCore,   SIGNAL(triggered()), this, SLOT(onClickBtnAcceptPositionTitle()));
-    m_actionAcceptCountry.setText("Set country");
-    connect(&m_actionAcceptCountry,    SIGNAL(triggered()), this, SLOT(onClickBtnAcceptCountry()));
     m_actionAcceptTown.setText("Set town");
     connect(&m_actionAcceptTown,     SIGNAL(triggered()), this, SLOT(onClickBtnAcceptTown()));
     m_actionAcceptSkills.setText("Add skill");
@@ -523,7 +521,6 @@ void  DlgNewOffer::onRequestUserMenu(){
         popup_menu.addAction(&m_actionScan);
     }else{
         popup_menu.addAction(&m_actionAcceptOfferCore);
-        popup_menu.addAction(&m_actionAcceptCountry);
         popup_menu.addAction(&m_actionAcceptTown);
         popup_menu.addAction(&m_actionAcceptSkills);
         popup_menu.addSeparator();
@@ -550,7 +547,11 @@ void DlgNewOffer::onClickBtnAcceptPositionTitle(){
     m_ptrEditPositonTitle->setText(this->getSelectedPartOfOffer());
     m_bOfferSaved = false;
 }
+/*
+void DlgNewOffer::onClickBtnAcceptCountry(){
 
+}
+*/
 void DlgNewOffer::onClickBtnAcceptTown(){
     m_ptrEditTown->setText(this->getSelectedPartOfOffer());
     m_bOfferSaved = false;
