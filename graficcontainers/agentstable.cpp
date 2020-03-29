@@ -353,29 +353,57 @@ int AgentsTable::refreshRow(int i_row_id, int i_agent_id){
     m_bFillTableModeOn = true;
     //COL_NAME
     QTableWidgetItem* ptr_item_name =  this->item(i_row_id,COL_NAME);
-    ptr_item_name->setText(ptr_agent->getName());
+    if(nullptr != ptr_item_name ){
+        ptr_item_name->setText(ptr_agent->getName());
+    };
     //COL_RANK
     QComboBox* combo =static_cast<QComboBox*> (QTableWidget::cellWidget(i_row_id, COL_RANK));
     //
-    for (int i = 0; i < combo->count(); ++i){
-        QVariant current_rank = combo->itemData(i,Qt::UserRole);
-        if (current_rank.toInt() == ptr_agent->getRank()){
-            combo->setCurrentIndex(i);
-            break;
+    if (nullptr != combo){
+        for (int i = 0; i < combo->count(); ++i){
+            QVariant current_rank = combo->itemData(i,Qt::UserRole);
+            if (current_rank.toInt() == ptr_agent->getRank()){
+                if (i != combo->currentIndex()){
+                    combo->setCurrentIndex(i);
+                };
+                break;
+            };
         };
     };
+    //
     //COL_EMAIL
     QTableWidgetItem* ptr_item_email =  this->item(i_row_id,COL_EMAIL);
-    ptr_item_email->setText(ptr_agent->getEMail());
+    if(nullptr != ptr_item_email){
+        ptr_item_email->setText(ptr_agent->getEMail());
+    };
     //COL_PHONE_1
     QTableWidgetItem* ptr_item_phone_1 =  this->item(i_row_id,COL_PHONE_1);
-    ptr_item_phone_1->setText(ptr_agent->getPhone1());
+    if(nullptr != ptr_item_phone_1){
+        if(ptr_agent->getPhone1().isEmpty() == false){
+            ptr_item_phone_1->setText(ptr_agent->getPhone1());
+        }else{
+            ptr_item_phone_1->setText("");
+        };
+    };
     //COL_PHONE_2
     QTableWidgetItem* ptr_item_phone_2 =  this->item(i_row_id,COL_PHONE_2);
-    ptr_item_phone_2->setText(ptr_agent->getPhone2());
+    if(nullptr != ptr_item_phone_2){
+        if(ptr_agent->getPhone2().isEmpty() == false){
+            ptr_item_phone_2->setText(ptr_agent->getPhone2());
+        }else{
+            ptr_item_phone_2->setText("");
+        };
+    };
+
     //COL_WEB_PROFILE
-    QTableWidgetItem* ptr_item_web_profile =  this->item(i_row_id,COL_WEB_PROFILE);
-    ptr_item_web_profile->setText(ptr_agent->getWebProfile());
+    QTableWidgetItem* ptr_item_web_profile = this->item(i_row_id,COL_WEB_PROFILE);
+    if(nullptr != ptr_item_web_profile){
+        if(ptr_agent->getWebProfile().isEmpty() == false){
+            ptr_item_web_profile->setText(ptr_agent->getWebProfile());
+        }else{
+            ptr_item_web_profile->setText("");
+        };
+    };
     //
     m_bFillTableModeOn = false;
 }
