@@ -439,7 +439,7 @@ void DlgNewAgent::saveAgent(){
     //
     m_iAgentId = AgentProcessor::getInstance().add(&agent_dto);
     //
-    m_bDataChanged = true;
+    m_bDataChanged = false;
 }
 
 int DlgNewAgent::saveAgency(const QString& str_agency_name){
