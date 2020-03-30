@@ -7,8 +7,6 @@
 #include <QDesktopServices>
 #include <QUrl>
 //
-#include <QTextStream>
-//
 #include "commondef.h"
 #include "graficcontainers/agentstable.h"
 //
@@ -119,7 +117,7 @@ void AgentsTable::fillDataRow (int ui_row_num, AgentBaseDTO* ptr_dto){
 }
 
 QTableWidgetItem* AgentsTable::makeCellName(AgentBaseDTO* ptr_dto){
-    QTableWidgetItem*   ptr_item_title  = new  QTableWidgetItem( ptr_dto->getName());
+    QTableWidgetItem*  ptr_item_title  = new  QTableWidgetItem( ptr_dto->getName());
     ptr_item_title->setFlags( Qt::ItemIsEnabled /*|Qt::ItemIsSelectable */);
     QVariant id_object( ptr_dto->getId() );
     ptr_item_title->setData(Qt::UserRole, id_object);
@@ -351,7 +349,6 @@ void  AgentsTable::onCreateAgent(){
 }
 
 void AgentsTable::refreshRow(int i_row_id, int i_agent_id){
-    QTextStream str(stdout);
     //
     AgentBaseDTO* ptr_agent = AgentProcessor::getInstance().getAgentByID(i_agent_id);
     if(nullptr == ptr_agent){

@@ -222,6 +222,7 @@ void DlgNewAgent::createGraficElements(){
     m_ptrButtonCheckEmail = new QPushButton();
     m_ptrButtonCheckEmail->setText("Check e-mail");
     m_ptrButtonCheckEmail->setMinimumWidth(m_iMinButtonWidth);
+    m_ptrButtonCheckEmail->setMinimumHeight(m_iMinButtonHeight);
     m_ptrButtonCheckEmail->setEnabled(false);
     connect(m_ptrButtonCheckEmail, &QPushButton::released, this, &DlgNewAgent::onClickBtnCheckEmail);
     //
@@ -229,12 +230,14 @@ void DlgNewAgent::createGraficElements(){
     m_ptrButtonUpdateSaveOffer->setText("Save new agent");
     m_ptrButtonUpdateSaveOffer->setMinimumWidth(m_iMinButtonWidth);
     m_ptrButtonUpdateSaveOffer->setEnabled(false);
+    m_ptrButtonUpdateSaveOffer->setMinimumHeight(m_iMinButtonHeight);
     connect(m_ptrButtonUpdateSaveOffer, &QPushButton::released, this, &DlgNewAgent::onClickBtnUpdateSaveOffer);
     //
     m_ptrButtonClose = new QPushButton();
     m_ptrButtonClose->setText("Close");
     m_ptrButtonClose->setMinimumWidth(m_iMinButtonWidth);
     m_ptrButtonClose->setEnabled(true);
+    m_ptrButtonClose->setMinimumHeight(m_iMinButtonHeight);
     connect(m_ptrButtonClose, &QPushButton::released, this, &DlgNewAgent::close);
     //
     m_ptrEditStatusBar = new QLineEdit();
@@ -269,7 +272,7 @@ void DlgNewAgent::fillInitialData(){
 }
 
 void DlgNewAgent::setDlgSizes(){
-    const int i_height = 300;
+    const int i_height = 350;
     //
     this->setMinimumHeight(i_height);
     this->setMaximumHeight(i_height);
@@ -282,6 +285,7 @@ void DlgNewAgent::setDlgSizes(){
     m_iMinEditWidth     = 80;
     //
     m_iMinButtonWidth = m_iMinLabelWidth + m_iMinEditWidth;
+    m_iMinButtonHeight = 25;
 }
 
 void DlgNewAgent::setDlgLayout(){

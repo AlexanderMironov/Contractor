@@ -9,6 +9,7 @@
 #include "dto/agentrank.h"
 
 class QSettings;
+class QTextStream;
 
 class Configuration
 {
@@ -65,7 +66,8 @@ private:
     //
     QString m_str_DefaultExportPath;
     QString m_str_DefaultImportPath;
-
+    //
+    QTextStream* m_ptrOut;
 
 };
 

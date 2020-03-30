@@ -3,6 +3,7 @@
 #include <QCoreApplication>
 #include <QFileInfo>
 #include <QDebug>
+#include <QTextStream>
 //
 #include "configuration.h"
 #include "config/configbasefunctionality.h"
@@ -14,12 +15,19 @@ QString Configuration::CONFIG_FILE_NAME ="contractor.cfg";
 Configuration::Configuration()
 {
     m_ptrSettings = nullptr;
+    m_ptrOut = new QTextStream(stdout);
+
 }
 
 Configuration::~Configuration(){
     if (nullptr != m_ptrSettings)
     {
         delete m_ptrSettings;
+    };
+    //
+    if (nullptr != m_ptrOut)
+    {
+        delete m_ptrOut;
     };
 }
 
@@ -37,6 +45,7 @@ bool Configuration::init(){
     const QString config_file_name = Configuration::getConfigFullPath();
     //
     if (ConfigBaseFunctionality::isConfigFileExists(config_file_name) == false){
+        (*m_ptrOut)<<"configuration file "<<config_file_name<<" does not exists"<<endl;
         return false;
     };
     //
@@ -44,21 +53,25 @@ bool Configuration::init(){
     //
     bool b_res = getDBSettings(m_ptrSettings);
     if (false == b_res){
+        (*m_ptrOut)<<"can not read database settings from config"<<endl;
         return false;
     };
     //
     b_res = getAttractivity(m_ptrSettings);
     if (false == b_res){
+        (*m_ptrOut)<<"can not read attractivity settings from config"<<endl;
         return false;
     };
     //
     b_res = getAgentRank(m_ptrSettings);
     if (false == b_res){
+        (*m_ptrOut)<<"can not read agent ranks settings from config"<<endl;
         return false;
     };
     //
     b_res = getPaths(m_ptrSettings);
     if (false == b_res){
+        (*m_ptrOut)<<"can not read section [PATHS] from config"<<endl;
         return false;
     };
     //

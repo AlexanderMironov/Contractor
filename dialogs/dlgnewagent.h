@@ -64,6 +64,7 @@ private:
     int             m_iMaxLabelHeight;
     int             m_iMinEditWidth;
     int             m_iMinButtonWidth;
+    int             m_iMinButtonHeight;
     //
     QGridLayout*     m_ptrMainLayout;
     //
