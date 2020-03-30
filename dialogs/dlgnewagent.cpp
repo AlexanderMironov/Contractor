@@ -435,7 +435,8 @@ void DlgNewAgent::saveAgent(){
     agent_dto.setPhone1(m_ptrEditPhone1->text().trimmed());
     agent_dto.setPhone2(m_ptrEditPhone2->text().trimmed());
     agent_dto.setWebProfile(m_ptrEditWebProfile->text().trimmed());
-    agent_dto.setRank(m_ptrcomboRank->currentData().toInt());
+    const int i_rank = m_ptrcomboRank->currentData().toInt();
+    agent_dto.setRank(i_rank);
     //
     m_iAgentId = AgentProcessor::getInstance().add(&agent_dto);
     //

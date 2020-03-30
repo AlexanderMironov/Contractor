@@ -76,7 +76,7 @@ int AgentProcessor::insertIntoDB(AgentBaseDTO* ptr_agent_base_info_dto){
                          ptr_agent_base_info_dto->getPhone2(),
                          ptr_agent_base_info_dto->getDescription(),
                          ptr_agent_base_info_dto->getAgencyId(),
-                         VALUE_UNDEFINED,
+                         ptr_agent_base_info_dto->getRank(),
                          ptr_agent_base_info_dto->getWebProfile());
     //
     return i_last_id;
