@@ -58,7 +58,7 @@ private:
     void                fillDataRow (int ui_row_num, AgentBaseDTO* ptr_agent);
     void                showPopupMenu();
     int                 getRecordIdByRowNum(int i_row_num);
-    int                 refreshRow(int i_row_id, int i_agent_id);
+    void                refreshRow(int i_row_id, int i_agent_id);
     void                setNewSortOrderName();
     void                setNewSortOrderAgency();
     //

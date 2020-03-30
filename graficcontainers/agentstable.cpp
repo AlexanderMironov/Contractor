@@ -7,6 +7,8 @@
 #include <QDesktopServices>
 #include <QUrl>
 //
+#include <QTextStream>
+//
 #include "commondef.h"
 #include "graficcontainers/agentstable.h"
 //
@@ -348,8 +350,14 @@ void  AgentsTable::onCreateAgent(){
     };
 }
 
-int AgentsTable::refreshRow(int i_row_id, int i_agent_id){
+void AgentsTable::refreshRow(int i_row_id, int i_agent_id){
+    QTextStream str(stdout);
+    //
     AgentBaseDTO* ptr_agent = AgentProcessor::getInstance().getAgentByID(i_agent_id);
+    if(nullptr == ptr_agent){
+        return;
+    };
+    //
     m_bFillTableModeOn = true;
     //COL_NAME
     QTableWidgetItem* ptr_item_name =  this->item(i_row_id,COL_NAME);
