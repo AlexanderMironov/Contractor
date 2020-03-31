@@ -4,12 +4,20 @@
 #include <QDialog>
 #include <QObject>
 //
+#include <QGridLayout>
+#include <QLabel>
+#include <QLineEdit>
+#include <QPlainTextEdit>
+#include <QComboBox>
+#include <QPushButton>
+/*
 class   QGridLayout;
 class   QLabel;
 class   QPlainTextEdit;
 class   QLineEdit;
 class   QComboBox;
 class   QPushButton;
+*/
 
 
 class DlgNewAgent : public QDialog
@@ -66,37 +74,37 @@ private:
     int             m_iMinButtonWidth;
     int             m_iMinButtonHeight;
     //
-    QGridLayout*     m_ptrMainLayout;
+    QGridLayout      m_MainLayout;
     //
-    QLabel*          m_ptrLblDescription;
-    QPlainTextEdit*  m_ptrEditDescription;
+    QLabel           m_LblDescription;
+    QPlainTextEdit   m_EditDescription;
     //
-    QLabel*          m_ptrLblName;
-    QLineEdit*       m_ptrEditName;
+    QLabel           m_LblName;
+    QLineEdit        m_EditName;
     //
-    QLabel*          m_ptrLblEmail;
-    QLineEdit*       m_ptrEditEmail;
+    QLabel           m_LblEmail;
+    QLineEdit        m_EditEmail;
     //
-    QLabel*          m_ptrLblPhone1;
-    QLineEdit*       m_ptrEditPhone1;
+    QLabel           m_LblPhone1;
+    QLineEdit        m_EditPhone1;
     //
-    QLabel*          m_ptrLblPhone2;
-    QLineEdit*       m_ptrEditPhone2;
+    QLabel           m_LblPhone2;
+    QLineEdit        m_EditPhone2;
     //
-    QLabel*          m_ptrLblWebProfile;
-    QLineEdit*       m_ptrEditWebProfile;
+    QLabel           m_LblWebProfile;
+    QLineEdit        m_EditWebProfile;
     //
-    QLabel*          m_ptrLblAgency;
-    QLineEdit*       m_ptrEditAgency;
+    QLabel           m_LblAgency;
+    QLineEdit        m_EditAgency;
     //
-    QLabel*          m_ptrLblRank;
-    QComboBox*       m_ptrcomboRank;
+    QLabel           m_LblRank;
+    QComboBox        m_comboRank;
     //
-    QPushButton*     m_ptrButtonCheckEmail;
-    QPushButton*     m_ptrButtonUpdateSaveOffer;
-    QPushButton*     m_ptrButtonClose;
+    QPushButton      m_ButtonCheckEmail;
+    QPushButton      m_ButtonUpdateSaveOffer;
+    QPushButton      m_ButtonClose;
     //
-    QLineEdit*       m_ptrEditStatusBar;
+    QLineEdit        m_EditStatusBar;
     //
     bool            m_bFillModeOn;
     //
