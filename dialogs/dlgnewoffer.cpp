@@ -3,12 +3,6 @@
 #include <QMenu>
 #include <QAction>
 //
-#include <QGridLayout>
-#include <QLabel>
-#include <QLineEdit>
-#include <QPushButton>
-#include <QPlainTextEdit>
-//
 #include "dlgnewoffer.h"
 #include "commondef.h"
 //
@@ -33,22 +27,88 @@
 #include "config/configuration.h"
 
 DlgNewOffer::DlgNewOffer(QWidget *parent) :
-    QDialog(parent)
+    QDialog(parent),
+    m_Spacer(100,325)
 {
     m_bOfferSaved = false;
     m_bAgentAdded = false;
     this->setWindowTitle("Create new job offer");
-    m_ptrMainLayout = nullptr;
+    //m_MainLayout = nullptr;
 }
 
 DlgNewOffer::~DlgNewOffer(){
-    delete m_ptrMainLayout;
+    detachElements();
+}
+
+void DlgNewOffer::detachElements()
+{
+    m_MainLayout.removeWidget(&m_LblnsertOffer);
+    m_MainLayout.removeWidget(&m_OfferEdit);
+    m_MainLayout.removeWidget(&m_LblOfferInfo);
+    //
+    m_MainLayout.removeWidget(&m_LblPositonTitle);
+    m_MainLayout.removeWidget(&m_EditPositonTitle);
+    m_MainLayout.removeWidget(&m_ButtonAcceptPositonTitle);
+    //
+    m_MainLayout.removeWidget(&m_LblCountry);
+    m_MainLayout.removeWidget(&m_ComboCountry);
+    //
+    m_MainLayout.removeWidget(&m_LblTown);
+    m_MainLayout.removeWidget(&m_EditTown);
+    m_MainLayout.removeWidget(&m_ButtonAcceptTown);
+    //
+    m_MainLayout.removeWidget(&m_LblSkills);
+    m_MainLayout.removeWidget(&m_EditSkills);
+    m_MainLayout.removeWidget(&m_ButtonAcceptSkills);
+    m_MainLayout.removeWidget(&m_LblRate);
+    m_MainLayout.removeWidget(&m_EditRate);
+    //
+    m_MainLayout.removeWidget(&m_LblStatus);
+    m_MainLayout.removeWidget(&m_ComboStatus);
+    //
+    m_MainLayout.removeWidget(&m_LblAttractivity);
+    m_MainLayout.removeWidget(&m_ComboAttractivity);
+    m_MainLayout.removeItem(&m_Spacer);
+    m_MainLayout.removeWidget(&m_LblnsertComment);
+    m_MainLayout.removeWidget(&m_CommentEdit);
+    m_MainLayout.removeWidget(&m_LblAgentInfo);
+    //
+    m_MainLayout.removeWidget(&m_LblAgentName);
+    m_MainLayout.removeWidget(&m_EditAgentName);
+    m_MainLayout.removeWidget(&m_ButtonAcceptAgentName);
+    //
+    m_MainLayout.removeWidget(&m_LblAgentEmail);
+    m_MainLayout.removeWidget(&m_EditAgentEmail);
+    m_MainLayout.removeWidget(&m_ButtonAcceptAgentEmail);
+    //
+    m_MainLayout.removeWidget(&m_LblAgentPhone1);
+    m_MainLayout.removeWidget(&m_EditAgentPhone1);
+    m_MainLayout.removeWidget(&m_ButtonAcceptAgentPhone1);
+    //
+    m_MainLayout.removeWidget(&m_LblAgentPhone2);
+    m_MainLayout.removeWidget(&m_EditAgentPhone2);
+    m_MainLayout.removeWidget(&m_ButtonAcceptAgentPhone2);
+    //
+    m_MainLayout.removeWidget(&m_LblAgencyName);
+    m_MainLayout.removeWidget(&m_EditAgencyName);
+    m_MainLayout.removeWidget(&m_ButtonAcceptAgencyName);
+    //
+    m_MainLayout.removeWidget(&m_LblAgentRank);
+    m_MainLayout.removeWidget(&m_ComboAgentRank);
+    //
+    m_MainLayout.removeWidget(&m_ButtonScan);
+    //
+    m_MainLayout.removeWidget(&m_ButtonSaveOffer);
+    //
+    m_MainLayout.removeWidget(&m_ButtonClose);
 }
 
 void DlgNewOffer::init(){
-    if(nullptr != m_ptrMainLayout){
+/*
+    if(nullptr != m_MainLayout){
         return; //already done
     };
+*/
     //
     setDlgSizes();
     setElementSizes();
@@ -82,12 +142,12 @@ void DlgNewOffer::setMenuAction(){
     connect(&m_actionScan, SIGNAL(triggered()), this, SLOT(onClickBtnScan()));
     //
     m_actionPaste.setText("Paste");
-    connect(&m_actionPaste, SIGNAL(triggered()), m_ptrOfferEdit, SLOT(paste()));
+    connect(&m_actionPaste, SIGNAL(triggered()), &m_OfferEdit, SLOT(paste()));
 }
 
 void DlgNewOffer::setDlgLayout(){
-    m_ptrMainLayout = new QGridLayout();
-    this->setLayout(m_ptrMainLayout);
+    //m_MainLayout = new QGridLayout();
+    this->setLayout(&m_MainLayout);
 }
 
 void DlgNewOffer::setDlgSizes(){
@@ -111,262 +171,263 @@ void DlgNewOffer::createWidgets(){
     createAgentWidgets();
     createControlButtons();
     //
-    m_ptrEditStatusBar = new QLineEdit();
-    m_ptrEditStatusBar->setEnabled(false);
+    //m_EditStatusBar = new QLineEdit();
+    m_EditStatusBar.setEnabled(false);
 }
 
 void DlgNewOffer::onAddNewCountry(){
 
-    m_ptrComboCountry->clear();
+    m_ComboCountry.clear();
     //
     const CountryStorage&  country_storage = CountryProcessor::getInstance().getStorage();
     CountryStorage::const_iterator i = country_storage.constBegin();
     while(i != country_storage.constEnd()){
         CountryDTO* ptr_country = i.value();
-        m_ptrComboCountry->addItem(ptr_country->getName(), QVariant(ptr_country->getId()));
+        m_ComboCountry.addItem(ptr_country->getName(), QVariant(ptr_country->getId()));
         i++;
     };
 }
 
+
 void  DlgNewOffer::createOfferWidgets(){
     const int i_left_side_max_width = 700;
-    m_ptrLblnsertOffer = new QLabel();
-    m_ptrLblnsertOffer->setText("Insert job offer:");
-    m_ptrLblnsertOffer->setMinimumWidth(i_left_side_max_width);
-    m_ptrOfferEdit = new QPlainTextEdit();
-    m_ptrOfferEdit->setMinimumWidth(i_left_side_max_width);
-    m_ptrOfferEdit->setContextMenuPolicy(Qt::CustomContextMenu);
-    connect(m_ptrOfferEdit, &QPlainTextEdit::copyAvailable, this, &DlgNewOffer::onSelectText);
-    connect(m_ptrOfferEdit, &QWidget::customContextMenuRequested, this, &DlgNewOffer::onRequestUserMenu);
+    //m_LblnsertOffer = new QLabel();
+    m_LblnsertOffer.setText("Insert job offer:");
+    m_LblnsertOffer.setMinimumWidth(i_left_side_max_width);
+    //m_OfferEdit = new QPlainTextEdit();
+    m_OfferEdit.setMinimumWidth(i_left_side_max_width);
+    m_OfferEdit.setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(&m_OfferEdit, &QPlainTextEdit::copyAvailable, this, &DlgNewOffer::onSelectText);
+    connect(&m_OfferEdit, &QWidget::customContextMenuRequested, this, &DlgNewOffer::onRequestUserMenu);
     //
-    m_ptrLblnsertComment = new QLabel();
-    m_ptrLblnsertComment->setText("Insert comments:");
-    m_ptrLblnsertComment->setMinimumWidth(i_left_side_max_width);
-    m_ptrCommentEdit = new QPlainTextEdit();
-    m_ptrCommentEdit->setMinimumWidth(i_left_side_max_width);
+    //m_LblnsertComment = new QLabel();
+    m_LblnsertComment.setText("Insert comments:");
+    m_LblnsertComment.setMinimumWidth(i_left_side_max_width);
+   // m_CommentEdit = new QPlainTextEdit();
+    m_CommentEdit.setMinimumWidth(i_left_side_max_width);
     //
-    m_ptrLblOfferInfo = new QLabel();
-    m_ptrLblOfferInfo->setText("Offer info");
-    m_ptrLblOfferInfo->setMinimumWidth(300);
-    m_ptrLblOfferInfo->setMaximumWidth(m_iMaxElementWidth);
-    m_ptrLblOfferInfo->setMaximumHeight(m_iMaxLabelHeight);
-    m_ptrLblOfferInfo->setAlignment(Qt::AlignLeft);
+    //m_LblOfferInfo = new QLabel();
+    m_LblOfferInfo.setText("Offer info");
+    m_LblOfferInfo.setMinimumWidth(300);
+    m_LblOfferInfo.setMaximumWidth(m_iMaxElementWidth);
+    m_LblOfferInfo.setMaximumHeight(m_iMaxLabelHeight);
+    m_LblOfferInfo.setAlignment(Qt::AlignLeft);
     //create offer core
-    m_ptrLblPositonTitle = new QLabel();
-    m_ptrLblPositonTitle->setText("Position title");
-    m_ptrLblPositonTitle->setMinimumWidth(m_iMinLabelWidth);
+    //m_LblPositonTitle = new QLabel();
+    m_LblPositonTitle.setText("Position title");
+    m_LblPositonTitle.setMinimumWidth(m_iMinLabelWidth);
     //..
-    m_ptrEditPositonTitle = new QLineEdit();
-    m_ptrEditPositonTitle->setMinimumWidth(m_iMinEditWidth);
-    m_ptrEditPositonTitle->setMaximumWidth(m_iMaxElementWidth);
-    m_ptrEditPositonTitle->setToolTip("Position name 'C++ Developer' for example");
+   // m_EditPositonTitle = new QLineEdit();
+    m_EditPositonTitle.setMinimumWidth(m_iMinEditWidth);
+    m_EditPositonTitle.setMaximumWidth(m_iMaxElementWidth);
+    m_EditPositonTitle.setToolTip("Position name 'C++ Developer' for example");
     //
-    m_ptrButtonAcceptPositonTitle = new QPushButton();
-    m_ptrButtonAcceptPositonTitle->setText("Accept selection");
-    m_ptrButtonAcceptPositonTitle->setMinimumWidth(m_iMinButtonWidth);
-    m_ptrButtonAcceptPositonTitle->setEnabled(false);
-    connect(m_ptrButtonAcceptPositonTitle, &QPushButton::released, this, &DlgNewOffer::onClickBtnAcceptPositionTitle);
+    //m_ButtonAcceptPositonTitle = new QPushButton();
+    m_ButtonAcceptPositonTitle.setText("Accept selection");
+    m_ButtonAcceptPositonTitle.setMinimumWidth(m_iMinButtonWidth);
+    m_ButtonAcceptPositonTitle.setEnabled(false);
+    connect(&m_ButtonAcceptPositonTitle, &QPushButton::released, this, &DlgNewOffer::onClickBtnAcceptPositionTitle);
     //create offer country  line
-    m_ptrLblCountry = new QLabel();
-    m_ptrLblCountry->setText("Country");
-    m_ptrLblCountry->setMinimumWidth(m_iMinLabelWidth);
+    //m_LblCountry = new QLabel();
+    m_LblCountry.setText("Country");
+    m_LblCountry.setMinimumWidth(m_iMinLabelWidth);
     //..
-    m_ptrComboCountry = new QComboBox();
-    m_ptrComboCountry->setToolTip("Coose country of job offer");
-    m_ptrComboCountry->setMinimumWidth(m_iMinEditWidth);
-    m_ptrComboCountry->setMaximumWidth(m_iMaxElementWidth);
+    //m_ComboCountry = new QComboBox();
+    m_ComboCountry.setToolTip("Coose country of job offer");
+    m_ComboCountry.setMinimumWidth(m_iMinEditWidth);
+    m_ComboCountry.setMaximumWidth(m_iMaxElementWidth);
     onAddNewCountry();
     //..
     //create town country line
-    m_ptrLblTown = new QLabel();
-    m_ptrLblTown->setText("Town");
-    m_ptrLblTown->setMinimumWidth(m_iMinLabelWidth);
+    //m_LblTown = new QLabel();
+    m_LblTown.setText("Town");
+    m_LblTown.setMinimumWidth(m_iMinLabelWidth);
     //..
-    m_ptrEditTown  = new QLineEdit();
-    m_ptrEditTown->setToolTip("Town country name");
-    m_ptrEditTown->setMinimumWidth(m_iMinEditWidth);
-    m_ptrEditTown->setMaximumWidth(m_iMaxElementWidth);
+    //m_EditTown  = new QLineEdit();
+    m_EditTown.setToolTip("Town country name");
+    m_EditTown.setMinimumWidth(m_iMinEditWidth);
+    m_EditTown.setMaximumWidth(m_iMaxElementWidth);
     //..
-    m_ptrButtonAcceptTown = new QPushButton();
-    m_ptrButtonAcceptTown->setText("Accept selection");
-    m_ptrButtonAcceptTown->setMinimumWidth(m_iMinButtonWidth);
-    connect(m_ptrButtonAcceptTown, &QPushButton::released, this, &DlgNewOffer::onClickBtnAcceptTown);
-    m_ptrButtonAcceptTown->setEnabled(false);
+    //m_ButtonAcceptTown = new QPushButton();
+    m_ButtonAcceptTown.setText("Accept selection");
+    m_ButtonAcceptTown.setMinimumWidth(m_iMinButtonWidth);
+    connect(&m_ButtonAcceptTown, &QPushButton::released, this, &DlgNewOffer::onClickBtnAcceptTown);
+    m_ButtonAcceptTown.setEnabled(false);
     //
-    m_ptrLblSkills  = new QLabel();
-    m_ptrLblSkills->setText("Skills");
-    m_ptrLblSkills->setMinimumWidth(m_iMinLabelWidth);
+    //m_LblSkills  = new QLabel();
+    m_LblSkills.setText("Skills");
+    m_LblSkills.setMinimumWidth(m_iMinLabelWidth);
     //..
-    m_ptrEditSkills = new QLineEdit();
-    m_ptrEditSkills->setToolTip("Example:Java, C++, Qt...");
-    m_ptrEditSkills->setMinimumWidth(m_iMinEditWidth);
-    m_ptrEditSkills->setMaximumWidth(m_iMaxElementWidth);
+    //m_EditSkills = new QLineEdit();
+    m_EditSkills.setToolTip("Example:Java, C++, Qt...");
+    m_EditSkills.setMinimumWidth(m_iMinEditWidth);
+    m_EditSkills.setMaximumWidth(m_iMaxElementWidth);
     //..
-    m_ptrButtonAcceptSkills = new QPushButton();
-    m_ptrButtonAcceptSkills->setText("Add selection ");
-    m_ptrButtonAcceptSkills->setMinimumWidth(m_iMinButtonWidth);
-    connect(m_ptrButtonAcceptSkills, &QPushButton::released, this, &DlgNewOffer::onClickBtnAcceptSkills);
-    m_ptrButtonAcceptSkills->setEnabled(false);
+    //m_ButtonAcceptSkills = new QPushButton();
+    m_ButtonAcceptSkills.setText("Add selection ");
+    m_ButtonAcceptSkills.setMinimumWidth(m_iMinButtonWidth);
+    connect(&m_ButtonAcceptSkills, &QPushButton::released, this, &DlgNewOffer::onClickBtnAcceptSkills);
+    m_ButtonAcceptSkills.setEnabled(false);
     //
-    m_ptrLblRate = new QLabel();
-    m_ptrLblRate->setText("Rate");
-    m_ptrLblRate->setMinimumWidth(m_iMinLabelWidth);
+    //m_LblRate = new QLabel();
+    m_LblRate.setText("Rate");
+    m_LblRate.setMinimumWidth(m_iMinLabelWidth);
     //..
-    m_ptrEditRate = new QLineEdit();
-    m_ptrEditRate->setToolTip("add estimated rate for this position");
-    m_ptrEditRate->setMinimumWidth(30);
-    m_ptrEditRate->setMaximumWidth(40);
-    m_ptrEditRate->setAlignment(Qt::AlignRight);
-    m_ptrEditRate->setText("0"); //usially rate on start is unknown
+    //m_EditRate = new QLineEdit();
+    m_EditRate.setToolTip("add estimated rate for this position");
+    m_EditRate.setMinimumWidth(30);
+    m_EditRate.setMaximumWidth(40);
+    m_EditRate.setAlignment(Qt::AlignRight);
+    m_EditRate.setText("0"); //usially rate on start is unknown
     //
-    m_ptrLblStatus = new QLabel();
-    m_ptrLblStatus->setText("Status");
-    m_ptrLblStatus->setMinimumWidth(m_iMinLabelWidth);
+    //m_LblStatus = new QLabel();
+    m_LblStatus.setText("Status");
+    m_LblStatus.setMinimumWidth(m_iMinLabelWidth);
     //..
-    m_ptrComboStatus = new QComboBox();
-    m_ptrComboStatus->setMinimumWidth(m_iMinEditWidth);
-    m_ptrComboStatus->setMaximumWidth(m_iMaxElementWidth);
+    //m_ComboStatus = new QComboBox();
+    m_ComboStatus.setMinimumWidth(m_iMinEditWidth);
+    m_ComboStatus.setMaximumWidth(m_iMaxElementWidth);
     //
     const StatusStorage& status_list = StatusProcessor::getInstance().getStorage();
     for (const auto& i : status_list){
         const int i_key = i->getId();
         const QString& str_status = i->getName();
-        m_ptrComboStatus->addItem(str_status, QVariant(i_key));
+        m_ComboStatus.addItem(str_status, QVariant(i_key));
     };
     //
-    m_ptrLblAttractivity = new QLabel();
-    m_ptrLblAttractivity->setText("Attractivity");
-    m_ptrLblAttractivity->setMinimumWidth(m_iMinLabelWidth);
+    //m_LblAttractivity = new QLabel();
+    m_LblAttractivity.setText("Attractivity");
+    m_LblAttractivity.setMinimumWidth(m_iMinLabelWidth);
     //
-    m_ptrComboAttractivity = new QComboBox();
-    m_ptrComboAttractivity->setMinimumWidth(m_iMinEditWidth);
-    m_ptrComboAttractivity->setMaximumWidth(m_iMaxElementWidth);
+   // m_ComboAttractivity = new QComboBox();
+    m_ComboAttractivity.setMinimumWidth(m_iMinEditWidth);
+    m_ComboAttractivity.setMaximumWidth(m_iMaxElementWidth);
     //
-    m_ptrComboAttractivity->addItem(Configuration::getInstance().getAttractivityAsString(ATTRACTIVITY_UNKNOWN), QVariant(static_cast<int>(ATTRACTIVITY_UNKNOWN)));
-    m_ptrComboAttractivity->addItem(Configuration::getInstance().getAttractivityAsString(ATTRACTIVITY_LOW), QVariant(static_cast<int>(ATTRACTIVITY_LOW)));
-    m_ptrComboAttractivity->addItem(Configuration::getInstance().getAttractivityAsString(ATTRACTIVITY_STANDARD), QVariant(static_cast<int>(ATTRACTIVITY_STANDARD)));
-    m_ptrComboAttractivity->addItem(Configuration::getInstance().getAttractivityAsString(ATTRACTIVITY_HIGH), QVariant(static_cast<int>(ATTRACTIVITY_HIGH)));
-    m_ptrComboAttractivity->addItem(Configuration::getInstance().getAttractivityAsString(ATTRACTIVITY_VERY_HIGH), QVariant(static_cast<int>(ATTRACTIVITY_VERY_HIGH)));
-    m_ptrComboAttractivity->setCurrentIndex(2); //standard
+    m_ComboAttractivity.addItem(Configuration::getInstance().getAttractivityAsString(ATTRACTIVITY_UNKNOWN), QVariant(static_cast<int>(ATTRACTIVITY_UNKNOWN)));
+    m_ComboAttractivity.addItem(Configuration::getInstance().getAttractivityAsString(ATTRACTIVITY_LOW), QVariant(static_cast<int>(ATTRACTIVITY_LOW)));
+    m_ComboAttractivity.addItem(Configuration::getInstance().getAttractivityAsString(ATTRACTIVITY_STANDARD), QVariant(static_cast<int>(ATTRACTIVITY_STANDARD)));
+    m_ComboAttractivity.addItem(Configuration::getInstance().getAttractivityAsString(ATTRACTIVITY_HIGH), QVariant(static_cast<int>(ATTRACTIVITY_HIGH)));
+    m_ComboAttractivity.addItem(Configuration::getInstance().getAttractivityAsString(ATTRACTIVITY_VERY_HIGH), QVariant(static_cast<int>(ATTRACTIVITY_VERY_HIGH)));
+    m_ComboAttractivity.setCurrentIndex(2); //standard
 }
 
 void  DlgNewOffer::createAgentWidgets(){
-    m_ptrSpacer = new QSpacerItem(100,325);
+    //m_Spacer = new QSpacerItem(100,325);
     //
-    m_ptrLblAgentInfo = new QLabel();
-    m_ptrLblAgentInfo->setText("Agent info");
-    m_ptrLblAgentInfo->setMinimumWidth(300);
-    m_ptrLblAgentInfo->setMaximumWidth(m_iMaxElementWidth);
-    m_ptrLblAgentInfo->setMaximumHeight(m_iMaxLabelHeight);
-    m_ptrLblAgentInfo->setAlignment(Qt::AlignLeft);
+    //m_LblAgentInfo = new QLabel();
+    m_LblAgentInfo.setText("Agent info");
+    m_LblAgentInfo.setMinimumWidth(300);
+    m_LblAgentInfo.setMaximumWidth(m_iMaxElementWidth);
+    m_LblAgentInfo.setMaximumHeight(m_iMaxLabelHeight);
+    m_LblAgentInfo.setAlignment(Qt::AlignLeft);
     //
-    m_ptrLblAgentName = new QLabel();
-    m_ptrLblAgentName->setText("Name");
-    m_ptrLblAgentName->setMinimumWidth(m_iMinLabelWidth);
+    //m_LblAgentName = new QLabel();
+    m_LblAgentName.setText("Name");
+    m_LblAgentName.setMinimumWidth(m_iMinLabelWidth);
     //..
-    m_ptrEditAgentName = new QLineEdit();
-    m_ptrEditAgentName->setToolTip("Add name of the contact agent");
-    m_ptrEditAgentName->setMinimumWidth(m_iMinEditWidth);
-    m_ptrEditAgentName->setMaximumWidth(m_iMaxElementWidth);
+    //m_EditAgentName = new QLineEdit();
+    m_EditAgentName.setToolTip("Add name of the contact agent");
+    m_EditAgentName.setMinimumWidth(m_iMinEditWidth);
+    m_EditAgentName.setMaximumWidth(m_iMaxElementWidth);
     //..
-    m_ptrButtonAcceptAgentName = new QPushButton();
-    m_ptrButtonAcceptAgentName->setText("Add selection");
-    m_ptrButtonAcceptAgentName->setMinimumWidth(m_iMinButtonWidth);
-    m_ptrButtonAcceptAgentName->setEnabled(false);
-    connect(m_ptrButtonAcceptAgentName, &QPushButton::released, this, &DlgNewOffer::onClickBtnAcceptAgentName);
+    //m_ButtonAcceptAgentName = new QPushButton();
+    m_ButtonAcceptAgentName.setText("Add selection");
+    m_ButtonAcceptAgentName.setMinimumWidth(m_iMinButtonWidth);
+    m_ButtonAcceptAgentName.setEnabled(false);
+    connect(&m_ButtonAcceptAgentName, &QPushButton::released, this, &DlgNewOffer::onClickBtnAcceptAgentName);
     //
-    m_ptrLblAgentEmail = new QLabel();
-    m_ptrLblAgentEmail->setText("E-mail");
-    m_ptrLblAgentEmail->setMinimumWidth(m_iMinLabelWidth);
+    //m_LblAgentEmail = new QLabel();
+    m_LblAgentEmail.setText("E-mail");
+    m_LblAgentEmail.setMinimumWidth(m_iMinLabelWidth);
     //..
-    m_ptrEditAgentEmail = new QLineEdit();
-    m_ptrEditAgentEmail->setToolTip("Add agent e-mail here");
-    m_ptrEditAgentEmail->setMinimumWidth(m_iMinEditWidth);
-    m_ptrEditAgentEmail->setMaximumWidth(m_iMaxElementWidth);
+    //m_EditAgentEmail = new QLineEdit();
+    m_EditAgentEmail.setToolTip("Add agent e-mail here");
+    m_EditAgentEmail.setMinimumWidth(m_iMinEditWidth);
+    m_EditAgentEmail.setMaximumWidth(m_iMaxElementWidth);
     //..
-    m_ptrButtonAcceptAgentEmail = new QPushButton();
-    m_ptrButtonAcceptAgentEmail->setText("Add selection ");
-    m_ptrButtonAcceptAgentEmail->setMinimumWidth(m_iMinButtonWidth);
-    m_ptrButtonAcceptAgentEmail->setEnabled(false);
-    connect(m_ptrButtonAcceptAgentEmail, &QPushButton::released, this, &DlgNewOffer::onClickBtnAcceptAgentEmail);
+    //m_ButtonAcceptAgentEmail = new QPushButton();
+    m_ButtonAcceptAgentEmail.setText("Add selection ");
+    m_ButtonAcceptAgentEmail.setMinimumWidth(m_iMinButtonWidth);
+    m_ButtonAcceptAgentEmail.setEnabled(false);
+    connect(&m_ButtonAcceptAgentEmail, &QPushButton::released, this, &DlgNewOffer::onClickBtnAcceptAgentEmail);
     //
-    m_ptrLblAgentPhone1 = new QLabel();
-    m_ptrLblAgentPhone1->setText("Phone 1");
-    m_ptrLblAgentPhone1->setMinimumWidth(m_iMinLabelWidth);
+    //m_LblAgentPhone1 = new QLabel();
+    m_LblAgentPhone1.setText("Phone 1");
+    m_LblAgentPhone1.setMinimumWidth(m_iMinLabelWidth);
     //..
-    m_ptrEditAgentPhone1 = new QLineEdit();
-    m_ptrEditAgentPhone1->setToolTip("Add agent phone number here");
-    m_ptrEditAgentPhone1->setMinimumWidth(m_iMinEditWidth);
-    m_ptrEditAgentPhone1->setMaximumWidth(m_iMaxElementWidth);
+    //m_EditAgentPhone1 = new QLineEdit();
+    m_EditAgentPhone1.setToolTip("Add agent phone number here");
+    m_EditAgentPhone1.setMinimumWidth(m_iMinEditWidth);
+    m_EditAgentPhone1.setMaximumWidth(m_iMaxElementWidth);
     //..
-    m_ptrButtonAcceptAgentPhone1 = new QPushButton();
-    m_ptrButtonAcceptAgentPhone1->setText("Add selection ");
-    m_ptrButtonAcceptAgentPhone1->setMinimumWidth(m_iMinButtonWidth);
-    m_ptrButtonAcceptAgentPhone1->setEnabled(false);
-    connect(m_ptrButtonAcceptAgentPhone1, &QPushButton::released, this, &DlgNewOffer::onClickBtnAcceptAgentPhone1);
+    //m_ButtonAcceptAgentPhone1 = new QPushButton();
+    m_ButtonAcceptAgentPhone1.setText("Add selection ");
+    m_ButtonAcceptAgentPhone1.setMinimumWidth(m_iMinButtonWidth);
+    m_ButtonAcceptAgentPhone1.setEnabled(false);
+    connect(&m_ButtonAcceptAgentPhone1, &QPushButton::released, this, &DlgNewOffer::onClickBtnAcceptAgentPhone1);
     //
-    m_ptrLblAgentPhone2 = new QLabel();
-    m_ptrLblAgentPhone2->setText("Phone 2");
-    m_ptrLblAgentPhone2->setMinimumWidth(m_iMinLabelWidth);
+    //m_LblAgentPhone2 = new QLabel();
+    m_LblAgentPhone2.setText("Phone 2");
+    m_LblAgentPhone2.setMinimumWidth(m_iMinLabelWidth);
     //..
-    m_ptrEditAgentPhone2 = new QLineEdit();
-    m_ptrEditAgentPhone2->setToolTip("Add agent phone number here");
-    m_ptrEditAgentPhone2->setMinimumWidth(m_iMinEditWidth);
-    m_ptrEditAgentPhone2->setMaximumWidth(m_iMaxElementWidth);
+   // m_EditAgentPhone2 = new QLineEdit();
+    m_EditAgentPhone2.setToolTip("Add agent phone number here");
+    m_EditAgentPhone2.setMinimumWidth(m_iMinEditWidth);
+    m_EditAgentPhone2.setMaximumWidth(m_iMaxElementWidth);
     //..
-    m_ptrButtonAcceptAgentPhone2 = new QPushButton();
-    m_ptrButtonAcceptAgentPhone2->setText("Add selection ");
-    m_ptrButtonAcceptAgentPhone2->setMinimumWidth(m_iMinButtonWidth);
-    m_ptrButtonAcceptAgentPhone2->setEnabled(false);
-    connect(m_ptrButtonAcceptAgentPhone2, &QPushButton::released, this, &DlgNewOffer::onClickBtnAcceptAgentPhone2);
+    //m_ButtonAcceptAgentPhone2 = new QPushButton();
+    m_ButtonAcceptAgentPhone2.setText("Add selection ");
+    m_ButtonAcceptAgentPhone2.setMinimumWidth(m_iMinButtonWidth);
+    m_ButtonAcceptAgentPhone2.setEnabled(false);
+    connect(&m_ButtonAcceptAgentPhone2, &QPushButton::released, this, &DlgNewOffer::onClickBtnAcceptAgentPhone2);
     //
-    m_ptrLblAgencyName = new QLabel();
-    m_ptrLblAgencyName->setText("Agency");
-    m_ptrLblAgencyName->setMinimumWidth(m_iMinLabelWidth);
+    //m_LblAgencyName = new QLabel();
+    m_LblAgencyName.setText("Agency");
+    m_LblAgencyName.setMinimumWidth(m_iMinLabelWidth);
     //..
-    m_ptrEditAgencyName = new QLineEdit();
-    m_ptrEditAgencyName->setMinimumWidth(m_iMinEditWidth);
-    m_ptrEditAgencyName->setMaximumWidth(m_iMaxElementWidth);
-    m_ptrEditAgencyName->setToolTip("Select agency name");
+    //m_EditAgencyName = new QLineEdit();
+    m_EditAgencyName.setMinimumWidth(m_iMinEditWidth);
+    m_EditAgencyName.setMaximumWidth(m_iMaxElementWidth);
+    m_EditAgencyName.setToolTip("Select agency name");
     //..
-    m_ptrButtonAcceptAgencyName = new QPushButton();
-    m_ptrButtonAcceptAgencyName->setText("Add selection ");
-    m_ptrButtonAcceptAgencyName->setMinimumWidth(m_iMinButtonWidth);
-    m_ptrButtonAcceptAgencyName->setEnabled(false);
-    connect(m_ptrButtonAcceptAgencyName, &QPushButton::released, this, &DlgNewOffer::onClickBtnAcceptAgencyName);
+    //m_ButtonAcceptAgencyName = new QPushButton();
+    m_ButtonAcceptAgencyName.setText("Add selection ");
+    m_ButtonAcceptAgencyName.setMinimumWidth(m_iMinButtonWidth);
+    m_ButtonAcceptAgencyName.setEnabled(false);
+    connect(&m_ButtonAcceptAgencyName, &QPushButton::released, this, &DlgNewOffer::onClickBtnAcceptAgencyName);
     //
-    m_ptrLblAgentRank = new QLabel();
-    m_ptrLblAgentRank->setText("Rank");
-    m_ptrLblAgentRank->setMinimumWidth(m_iMinLabelWidth);
-    m_ptrLblAgentRank->setMaximumWidth(m_iMaxElementWidth);
+    //m_LblAgentRank = new QLabel();
+    m_LblAgentRank.setText("Rank");
+    m_LblAgentRank.setMinimumWidth(m_iMinLabelWidth);
+    m_LblAgentRank.setMaximumWidth(m_iMaxElementWidth);
     //..
-    m_ptrComboAgentRank = new QComboBox();
-    m_ptrComboAgentRank->setMinimumWidth(m_iMinButtonWidth);
-    m_ptrComboAgentRank->setMaximumWidth(m_iMaxElementWidth);
-    m_ptrComboAgentRank->addItem(Configuration::getInstance().getAgentRankAsString(AGENT_RANK::RankUnknown), QVariant(static_cast<int>(AGENT_RANK::RankUnknown)));
-    m_ptrComboAgentRank->addItem(Configuration::getInstance().getAgentRankAsString(AGENT_RANK::RankVeryBad), QVariant(static_cast<int>(AGENT_RANK::RankVeryBad)));
-    m_ptrComboAgentRank->addItem(Configuration::getInstance().getAgentRankAsString(AGENT_RANK::RankBad), QVariant(static_cast<int>(AGENT_RANK::RankBad)));
-    m_ptrComboAgentRank->addItem(Configuration::getInstance().getAgentRankAsString(AGENT_RANK::RankNeutral), QVariant(static_cast<int>(AGENT_RANK::RankNeutral)));
-    m_ptrComboAgentRank->addItem(Configuration::getInstance().getAgentRankAsString(AGENT_RANK::RankGood), QVariant(static_cast<int>(AGENT_RANK::RankGood)));
-    m_ptrComboAgentRank->addItem(Configuration::getInstance().getAgentRankAsString(AGENT_RANK::RankVeryGood), QVariant(static_cast<int>(AGENT_RANK::RankVeryGood)));
-    m_ptrComboAgentRank->setCurrentIndex(0);
+    //m_ComboAgentRank = new QComboBox();
+    m_ComboAgentRank.setMinimumWidth(m_iMinButtonWidth);
+    m_ComboAgentRank.setMaximumWidth(m_iMaxElementWidth);
+    m_ComboAgentRank.addItem(Configuration::getInstance().getAgentRankAsString(AGENT_RANK::RankUnknown), QVariant(static_cast<int>(AGENT_RANK::RankUnknown)));
+    m_ComboAgentRank.addItem(Configuration::getInstance().getAgentRankAsString(AGENT_RANK::RankVeryBad), QVariant(static_cast<int>(AGENT_RANK::RankVeryBad)));
+    m_ComboAgentRank.addItem(Configuration::getInstance().getAgentRankAsString(AGENT_RANK::RankBad), QVariant(static_cast<int>(AGENT_RANK::RankBad)));
+    m_ComboAgentRank.addItem(Configuration::getInstance().getAgentRankAsString(AGENT_RANK::RankNeutral), QVariant(static_cast<int>(AGENT_RANK::RankNeutral)));
+    m_ComboAgentRank.addItem(Configuration::getInstance().getAgentRankAsString(AGENT_RANK::RankGood), QVariant(static_cast<int>(AGENT_RANK::RankGood)));
+    m_ComboAgentRank.addItem(Configuration::getInstance().getAgentRankAsString(AGENT_RANK::RankVeryGood), QVariant(static_cast<int>(AGENT_RANK::RankVeryGood)));
+    m_ComboAgentRank.setCurrentIndex(0);
 }
 
 void  DlgNewOffer::createControlButtons(){
-    m_ptrButtonScan = new QPushButton();
-    m_ptrButtonScan->setText("Scan offer");
-    m_ptrButtonScan->setMinimumWidth(m_iMinButtonWidth);
-    connect(m_ptrButtonScan, &QPushButton::released, this, &DlgNewOffer::onClickBtnScan);
+    //m_ButtonScan = new QPushButton();
+    m_ButtonScan.setText("Scan offer");
+    m_ButtonScan.setMinimumWidth(m_iMinButtonWidth);
+    connect(&m_ButtonScan, &QPushButton::released, this, &DlgNewOffer::onClickBtnScan);
     //
-    m_ptrButtonSaveOffer = new QPushButton();
-    m_ptrButtonSaveOffer->setText("Save offer ");
-    m_ptrButtonSaveOffer->setMinimumWidth(m_iMinButtonWidth);
-    connect(m_ptrButtonSaveOffer, &QPushButton::released, this, &DlgNewOffer::onClickBtnSaveOffer);
+    //m_ButtonSaveOffer = new QPushButton();
+    m_ButtonSaveOffer.setText("Save offer ");
+    m_ButtonSaveOffer.setMinimumWidth(m_iMinButtonWidth);
+    connect(&m_ButtonSaveOffer, &QPushButton::released, this, &DlgNewOffer::onClickBtnSaveOffer);
     //
-    m_ptrButtonClose = new QPushButton();
-    m_ptrButtonClose->setText("Close window");
-    m_ptrButtonClose->setMinimumWidth(m_iMinButtonWidth);
-    connect(m_ptrButtonClose, &QPushButton::released, this, &DlgNewOffer::close);
+    //m_ButtonClose = new QPushButton();
+    m_ButtonClose.setText("Close window");
+    m_ButtonClose.setMinimumWidth(m_iMinButtonWidth);
+    connect(&m_ButtonClose, &QPushButton::released, this, &DlgNewOffer::close);
 }
 
 /*
@@ -403,116 +464,116 @@ void DlgNewOffer::addWidgetsToLayout(){
     //
     int i_row = 0;
     //->addWidget(ptr_widget, row,column,rowSpan,columnSpan, aligment);
-    m_ptrMainLayout->addWidget(m_ptrLblnsertOffer,i_row,0,1,1);
-    m_ptrMainLayout->addWidget(m_ptrLblOfferInfo,i_row,1,1,3);
+    m_MainLayout.addWidget(&m_LblnsertOffer,i_row,0,1,1);
+    m_MainLayout.addWidget(&m_LblOfferInfo,i_row,1,1,3);
     //
     i_row++;
-    m_ptrMainLayout->addWidget(m_ptrOfferEdit,i_row,0,11,1);
+    m_MainLayout.addWidget(&m_OfferEdit,i_row,0,11,1);
     //
-    m_ptrMainLayout->addWidget(m_ptrLblPositonTitle,i_row,1,1,1);
-    m_ptrMainLayout->addWidget(m_ptrEditPositonTitle,i_row,2,1,1);
-    m_ptrMainLayout->addWidget(m_ptrButtonAcceptPositonTitle,i_row,3,1,1);
-    //
-    i_row++;
-    //
-    m_ptrMainLayout->addWidget(m_ptrLblCountry,i_row,1,1,1);
-    m_ptrMainLayout->addWidget(m_ptrComboCountry,i_row,2,1,1);
+    m_MainLayout.addWidget(&m_LblPositonTitle,i_row,1,1,1);
+    m_MainLayout.addWidget(&m_EditPositonTitle,i_row,2,1,1);
+    m_MainLayout.addWidget(&m_ButtonAcceptPositonTitle,i_row,3,1,1);
     //
     i_row++;
     //
-    m_ptrMainLayout->addWidget(m_ptrLblTown,i_row,1,1,1);
-    m_ptrMainLayout->addWidget(m_ptrEditTown,i_row,2,1,1);
-    m_ptrMainLayout->addWidget(m_ptrButtonAcceptTown,i_row,3,1,1);
+    m_MainLayout.addWidget(&m_LblCountry,i_row,1,1,1);
+    m_MainLayout.addWidget(&m_ComboCountry,i_row,2,1,1);
     //
     i_row++;
-    m_ptrMainLayout->addWidget(m_ptrLblSkills,i_row,1,1,1);
-    m_ptrMainLayout->addWidget(m_ptrEditSkills,i_row,2,1,1);
-    m_ptrMainLayout->addWidget(m_ptrButtonAcceptSkills,i_row,3,1,1);
+    //
+    m_MainLayout.addWidget(&m_LblTown,i_row,1,1,1);
+    m_MainLayout.addWidget(&m_EditTown,i_row,2,1,1);
+    m_MainLayout.addWidget(&m_ButtonAcceptTown,i_row,3,1,1);
     //
     i_row++;
-    m_ptrMainLayout->addWidget(m_ptrLblRate,i_row,1,1,1);
-    m_ptrMainLayout->addWidget(m_ptrEditRate,i_row,2,1,1);
+    m_MainLayout.addWidget(&m_LblSkills,i_row,1,1,1);
+    m_MainLayout.addWidget(&m_EditSkills,i_row,2,1,1);
+    m_MainLayout.addWidget(&m_ButtonAcceptSkills,i_row,3,1,1);
     //
     i_row++;
-    m_ptrMainLayout->addWidget(m_ptrLblStatus,i_row,1,1,1);
-    m_ptrMainLayout->addWidget(m_ptrComboStatus,i_row,2,1,1);
+    m_MainLayout.addWidget(&m_LblRate,i_row,1,1,1);
+    m_MainLayout.addWidget(&m_EditRate,i_row,2,1,1);
     //
     i_row++;
-    m_ptrMainLayout->addWidget(m_ptrLblAttractivity,i_row,1,1,1);
-    m_ptrMainLayout->addWidget(m_ptrComboAttractivity,i_row,2,1,1);
+    m_MainLayout.addWidget(&m_LblStatus,i_row,1,1,1);
+    m_MainLayout.addWidget(&m_ComboStatus,i_row,2,1,1);
+    //
+    i_row++;
+    m_MainLayout.addWidget(&m_LblAttractivity,i_row,1,1,1);
+    m_MainLayout.addWidget(&m_ComboAttractivity,i_row,2,1,1);
     //--------------------------------------------------------------------------
     i_row++;
-    m_ptrMainLayout->addItem(m_ptrSpacer,i_row,1,1,1);
+    m_MainLayout.addItem(&m_Spacer,i_row,1,1,1);
     //
     i_row++;
-    m_ptrMainLayout->addWidget(m_ptrLblAgentInfo,i_row,1,1,3);
+    m_MainLayout.addWidget(&m_LblAgentInfo,i_row,1,1,3);
     //
     i_row++;
-    m_ptrMainLayout->addWidget(m_ptrLblAgentName,i_row,1,1,1);
-    m_ptrMainLayout->addWidget(m_ptrEditAgentName,i_row,2,1,1);
-    m_ptrMainLayout->addWidget(m_ptrButtonAcceptAgentName,i_row,3,1,1);
+    m_MainLayout.addWidget(&m_LblAgentName,i_row,1,1,1);
+    m_MainLayout.addWidget(&m_EditAgentName,i_row,2,1,1);
+    m_MainLayout.addWidget(&m_ButtonAcceptAgentName,i_row,3,1,1);
     //
     i_row++;
-    m_ptrMainLayout->addWidget(m_ptrLblAgentEmail,i_row,1,1,1);
-    m_ptrMainLayout->addWidget(m_ptrEditAgentEmail,i_row,2,1,1);
-    m_ptrMainLayout->addWidget(m_ptrButtonAcceptAgentEmail,i_row,3,1,1);
+    m_MainLayout.addWidget(&m_LblAgentEmail,i_row,1,1,1);
+    m_MainLayout.addWidget(&m_EditAgentEmail,i_row,2,1,1);
+    m_MainLayout.addWidget(&m_ButtonAcceptAgentEmail,i_row,3,1,1);
     //
     i_row++;
-    m_ptrMainLayout->addWidget(m_ptrLblnsertComment,i_row,0,1,1);
+    m_MainLayout.addWidget(&m_LblnsertComment,i_row,0,1,1);
     //
-    m_ptrMainLayout->addWidget(m_ptrLblAgentPhone1,i_row,1,1,1);
-    m_ptrMainLayout->addWidget(m_ptrEditAgentPhone1,i_row,2,1,1);
-    m_ptrMainLayout->addWidget(m_ptrButtonAcceptAgentPhone1,i_row,3,1,1);
-    //
-    i_row++;
-    m_ptrMainLayout->addWidget(m_ptrCommentEdit,i_row,0,6,1);
-    //
-    m_ptrMainLayout->addWidget(m_ptrLblAgentPhone2,i_row,1,1,1);
-    m_ptrMainLayout->addWidget(m_ptrEditAgentPhone2,i_row,2,1,1);
-    m_ptrMainLayout->addWidget(m_ptrButtonAcceptAgentPhone2,i_row,3,1,1);
+    m_MainLayout.addWidget(&m_LblAgentPhone1,i_row,1,1,1);
+    m_MainLayout.addWidget(&m_EditAgentPhone1,i_row,2,1,1);
+    m_MainLayout.addWidget(&m_ButtonAcceptAgentPhone1,i_row,3,1,1);
     //
     i_row++;
-    m_ptrMainLayout->addWidget(m_ptrLblAgencyName,i_row,1,1,1);
-    m_ptrMainLayout->addWidget(m_ptrEditAgencyName,i_row,2,1,1);
-    m_ptrMainLayout->addWidget(m_ptrButtonAcceptAgencyName,i_row,3,1,1);
+    m_MainLayout.addWidget(&m_CommentEdit,i_row,0,6,1);
+    //
+    m_MainLayout.addWidget(&m_LblAgentPhone2,i_row,1,1,1);
+    m_MainLayout.addWidget(&m_EditAgentPhone2,i_row,2,1,1);
+    m_MainLayout.addWidget(&m_ButtonAcceptAgentPhone2,i_row,3,1,1);
     //
     i_row++;
-    m_ptrMainLayout->addWidget(m_ptrLblAgentRank,i_row,1,1,1);
-    m_ptrMainLayout->addWidget(m_ptrComboAgentRank,i_row,2,1,1);
+    m_MainLayout.addWidget(&m_LblAgencyName,i_row,1,1,1);
+    m_MainLayout.addWidget(&m_EditAgencyName,i_row,2,1,1);
+    m_MainLayout.addWidget(&m_ButtonAcceptAgencyName,i_row,3,1,1);
+    //
+    i_row++;
+    m_MainLayout.addWidget(&m_LblAgentRank,i_row,1,1,1);
+    m_MainLayout.addWidget(&m_ComboAgentRank,i_row,2,1,1);
     //------------------------------------------------------------------------------
     //
     i_row++;
-    m_ptrMainLayout->addWidget(m_ptrButtonScan,i_row,1,1,3);
+    m_MainLayout.addWidget(&m_ButtonScan,i_row,1,1,3);
     //
     i_row++;
-    m_ptrMainLayout->addWidget(m_ptrButtonSaveOffer,i_row,1,1,3);
+    m_MainLayout.addWidget(&m_ButtonSaveOffer,i_row,1,1,3);
     //
     i_row++;
-    m_ptrMainLayout->addWidget(m_ptrButtonClose,i_row,1,1,3);
+    m_MainLayout.addWidget(&m_ButtonClose,i_row,1,1,3);
     //
     i_row++;
-    m_ptrMainLayout->addWidget(m_ptrEditStatusBar,i_row,0,1,4);
+    m_MainLayout.addWidget(&m_EditStatusBar,i_row,0,1,4);
 }
 
 void  DlgNewOffer::onSelectText(bool b_selected){
-    m_ptrButtonAcceptPositonTitle->setEnabled(b_selected);
-    m_ptrButtonAcceptTown->setEnabled(b_selected);
-    m_ptrButtonAcceptSkills->setEnabled(b_selected);
+    m_ButtonAcceptPositonTitle.setEnabled(b_selected);
+    m_ButtonAcceptTown.setEnabled(b_selected);
+    m_ButtonAcceptSkills.setEnabled(b_selected);
     //
-    m_ptrButtonAcceptAgencyName->setEnabled(b_selected);
-    m_ptrButtonAcceptAgentName->setEnabled(b_selected);
-    m_ptrButtonAcceptAgentEmail->setEnabled(b_selected);
-    m_ptrButtonAcceptAgentPhone1->setEnabled(b_selected);
-    m_ptrButtonAcceptAgentPhone2->setEnabled(b_selected);
-    m_ptrButtonAcceptAgencyName->setEnabled(b_selected);
+    m_ButtonAcceptAgencyName.setEnabled(b_selected);
+    m_ButtonAcceptAgentName.setEnabled(b_selected);
+    m_ButtonAcceptAgentEmail.setEnabled(b_selected);
+    m_ButtonAcceptAgentPhone1.setEnabled(b_selected);
+    m_ButtonAcceptAgentPhone2.setEnabled(b_selected);
+    m_ButtonAcceptAgencyName.setEnabled(b_selected);
 }
 
 void  DlgNewOffer::onRequestUserMenu(){
     QMenu popup_menu(this);
-    bool b_can_paste = m_ptrOfferEdit->canPaste();
+    bool b_can_paste = m_OfferEdit.canPaste();
     m_actionPaste.setEnabled(b_can_paste);
     //
-    const QString str_selected = m_ptrOfferEdit->textCursor().selectedText();
+    const QString str_selected = m_OfferEdit.textCursor().selectedText();
     //
     popup_menu.addAction(&m_actionPaste);
     popup_menu.addSeparator();
@@ -537,14 +598,14 @@ void  DlgNewOffer::onRequestUserMenu(){
 }
 
 QString DlgNewOffer::getSelectedPartOfOffer() const{
-    QString str_selected = m_ptrOfferEdit->textCursor().selectedText();
+    QString str_selected = m_OfferEdit.textCursor().selectedText();
     str_selected = str_selected.normalized(QString::NormalizationForm_D);
     str_selected = str_selected.trimmed();
     return str_selected;
 }
 
 void DlgNewOffer::onClickBtnAcceptPositionTitle(){
-    m_ptrEditPositonTitle->setText(this->getSelectedPartOfOffer());
+    m_EditPositonTitle.setText(this->getSelectedPartOfOffer());
     m_bOfferSaved = false;
 }
 /*
@@ -553,13 +614,13 @@ void DlgNewOffer::onClickBtnAcceptCountry(){
 }
 */
 void DlgNewOffer::onClickBtnAcceptTown(){
-    m_ptrEditTown->setText(this->getSelectedPartOfOffer());
+    m_EditTown.setText(this->getSelectedPartOfOffer());
     m_bOfferSaved = false;
 }
 
 void  DlgNewOffer::onClickBtnAcceptSkills(){
     const QString str_property = this->getSelectedPartOfOffer();
-    const QString str_existing_skills = m_ptrEditSkills->text();
+    const QString str_existing_skills = m_EditSkills.text();
     QString str_full_skills_list;
     //
     if (str_existing_skills.length() > 0){
@@ -567,49 +628,49 @@ void  DlgNewOffer::onClickBtnAcceptSkills(){
     };
     //
     str_full_skills_list +=str_property;
-    m_ptrEditSkills->setText(str_full_skills_list);
+    m_EditSkills.setText(str_full_skills_list);
     m_bOfferSaved = false;
 }
 
 void DlgNewOffer::onClickBtnAcceptAgentName(){
     const QString str_name = this->getSelectedPartOfOffer();
-    m_ptrEditAgentName->setText(str_name);
+    m_EditAgentName.setText(str_name);
     m_bOfferSaved = false;
 }
 
 void DlgNewOffer::onClickBtnAcceptAgentEmail(){
     const QString str_email = this->getSelectedPartOfOffer();
     //todo: check e-mail
-    m_ptrEditAgentEmail->setText(str_email);
+    m_EditAgentEmail.setText(str_email);
     m_bOfferSaved = false;
 }
 
 void DlgNewOffer::onClickBtnAcceptAgentPhone1(){
     //todo: check if it is a phone
-    m_ptrEditAgentPhone1->setText(this->getSelectedPartOfOffer());
+    m_EditAgentPhone1.setText(this->getSelectedPartOfOffer());
     m_bOfferSaved = false;
 }
 
 void DlgNewOffer::onClickBtnAcceptAgentPhone2(){
     //todo: check if it is a phone
-    m_ptrEditAgentPhone2->setText(this->getSelectedPartOfOffer());
+    m_EditAgentPhone2.setText(this->getSelectedPartOfOffer());
     m_bOfferSaved = false;
 }
 
 void DlgNewOffer::onClickBtnAcceptAgencyName(){
-    m_ptrEditAgencyName->setText(this->getSelectedPartOfOffer());
+    m_EditAgencyName.setText(this->getSelectedPartOfOffer());
     m_bOfferSaved = false;
 }
 
 void  DlgNewOffer::onClickBtnScan(){
     OfferScaner scaner;
-    scaner.parse(m_ptrOfferEdit->toPlainText());
+    scaner.parse(m_OfferEdit.toPlainText());
     //
-    m_ptrOfferEdit->setPlainText(scaner.getModifiedText());
-    m_ptrEditSkills->setText(scaner.getSkills());
+    m_OfferEdit.setPlainText(scaner.getModifiedText());
+    m_EditSkills.setText(scaner.getSkills());
     //
     if (scaner.getAgencyName().length() > 0){
-        m_ptrEditAgencyName->setText(scaner.getAgencyName());
+        m_EditAgencyName.setText(scaner.getAgencyName());
         m_dtoAgent.setAgencyId(scaner.getAgentId());
     };
     //
@@ -618,23 +679,23 @@ void  DlgNewOffer::onClickBtnScan(){
         m_dtoAgent.setId(scaner.getAgentId());
         m_bAgentAdded = false;
         //for visualisation
-        m_ptrEditAgentEmail->setText(scaner.getAgentEmail());
-        m_ptrEditAgentName->setText(scaner.getAgentName());
-        m_ptrEditAgentPhone1->setText(scaner.getAgentPhone1());
-        m_ptrEditAgentPhone2->setText(scaner.getAgentPhone2());
+        m_EditAgentEmail.setText(scaner.getAgentEmail());
+        m_EditAgentName.setText(scaner.getAgentName());
+        m_EditAgentPhone1.setText(scaner.getAgentPhone1());
+        m_EditAgentPhone2.setText(scaner.getAgentPhone2());
         //
-        for (int i = 0; i < m_ptrComboAgentRank->count(); ++i){
-            QVariant current_rank = m_ptrComboAgentRank->itemData(i,Qt::UserRole);
+        for (int i = 0; i < m_ComboAgentRank.count(); ++i){
+            QVariant current_rank = m_ComboAgentRank.itemData(i,Qt::UserRole);
             if (current_rank.toInt() == scaner.getAgentRank()){
-                m_ptrComboAgentRank->setCurrentIndex(i);
+                m_ComboAgentRank.setCurrentIndex(i);
                 break;
             };
         };
     };
     //
-    m_ptrEditTown->setText(scaner.getTownName());
+    m_EditTown.setText(scaner.getTownName());
     //
-    m_ptrEditStatusBar->setText("Offer scanned");
+    m_EditStatusBar.setText("Offer scanned");
 }
 
 void  DlgNewOffer::onClickBtnSaveOffer(){
@@ -642,28 +703,28 @@ void  DlgNewOffer::onClickBtnSaveOffer(){
     box.setStandardButtons( QMessageBox::Ok);
     QString str_message_text;
     //
-    if (m_ptrEditPositonTitle->text().isEmpty() == true){
+    if (m_EditPositonTitle.text().isEmpty() == true){
         str_message_text = "Position title can not be empty\n";
     };
     //
-    if(m_ptrComboCountry->currentIndex() == -1){
+    if(m_ComboCountry.currentIndex() == -1){
         str_message_text = str_message_text + "Country can not be empty\n";
     };
     //
-    if(m_ptrEditSkills->text().isEmpty() == true){
+    if(m_EditSkills.text().isEmpty() == true){
         str_message_text = str_message_text + "Skills list can not be empty\n";
     };
     //check agent info
-    if(m_ptrEditAgencyName->text().isEmpty() == true){
+    if(m_EditAgencyName.text().isEmpty() == true){
         str_message_text = str_message_text + "Agent name can not be empty\n";
     };
-    if(m_ptrEditAgentEmail->text().isEmpty() == true){
+    if(m_EditAgentEmail.text().isEmpty() == true){
         str_message_text = str_message_text + "Agent e-mail can not be empty\n";
     };
-    if((m_ptrEditAgentPhone1->text().isEmpty() == true) && (m_ptrEditAgentPhone2->text().isEmpty() == true)){
+    if((m_EditAgentPhone1.text().isEmpty() == true) && (m_EditAgentPhone2.text().isEmpty() == true)){
         str_message_text = str_message_text + "Agent phone can not be empty\n";
     };
-    if(m_ptrEditAgencyName->text().isEmpty() == true){
+    if(m_EditAgencyName.text().isEmpty() == true){
         str_message_text = str_message_text + "Agency name can not be empty\n";
     };
     //
@@ -684,21 +745,21 @@ void  DlgNewOffer::onClickBtnSaveOffer(){
 }
 
 bool DlgNewOffer::saveOffer(){
-    const int           i_country_id    = m_ptrComboCountry->currentData(Qt::UserRole).toInt();
-    const int           i_town_id       = TownProcessor::getInstance().add(m_ptrEditTown->text().trimmed());
-    const QStringList   str_l_skills    =  m_ptrEditSkills->text().split(",", QString::SkipEmptyParts);
+    const int           i_country_id    = m_ComboCountry.currentData(Qt::UserRole).toInt();
+    const int           i_town_id       = TownProcessor::getInstance().add(m_EditTown.text().trimmed());
+    const QStringList   str_l_skills    =  m_EditSkills.text().split(",", QString::SkipEmptyParts);
     const SkillsList    skill_list_ids  = SkillProcessor::getInstance().add(str_l_skills);
     //
     m_dtoOffer.setAgentId(m_dtoAgent.getId());
     m_dtoOffer.setCreationDate(QDate::currentDate());
-    m_dtoOffer.setPositionTitle(m_ptrEditPositonTitle->text());
-    QString str_offer_text = m_ptrOfferEdit->toPlainText();
+    m_dtoOffer.setPositionTitle(m_EditPositonTitle.text());
+    QString str_offer_text = m_OfferEdit.toPlainText();
     if (str_offer_text.length() > 2000){
         str_offer_text = str_offer_text.mid(MAX_TEXT_LENGTH);
     };
     m_dtoOffer.setDescription(str_offer_text);
     //
-    QString str_comment_text = m_ptrCommentEdit->toPlainText();
+    QString str_comment_text = m_CommentEdit.toPlainText();
     if (str_comment_text.length() > 2000){
         str_comment_text = str_comment_text.mid(MAX_TEXT_LENGTH);
     };
@@ -707,11 +768,11 @@ bool DlgNewOffer::saveOffer(){
     m_dtoOffer.setTownId(i_town_id);
     //m_dtoOffer.setSkillsListIDs(skill_list_ids);
     //
-    const QString str_rate = m_ptrEditRate->text();
+    const QString str_rate = m_EditRate.text();
     m_dtoOffer.setRate(str_rate.toInt());
-    const int i_attractivity = m_ptrComboAttractivity->currentData().toInt();
+    const int i_attractivity = m_ComboAttractivity.currentData().toInt();
     m_dtoOffer.setAttractivity(i_attractivity);
-    const int i_status = m_ptrComboStatus->currentData().toInt();
+    const int i_status = m_ComboStatus.currentData().toInt();
     m_dtoOffer.setStatusId(i_status);
     const int i_offer_id = OfferProcessor::getInstance().add(&m_dtoOffer);
 
@@ -730,24 +791,24 @@ bool DlgNewOffer::saveAgentInfo(){
     };
     //
     //agent was not founded by scaner (user did not make scan) but exists in the database, no reason to add it twice
-    AgentBaseDTO* ptr_agent = AgentProcessor::getInstance().getAgentByEmail(m_ptrEditAgentEmail->text());
+    AgentBaseDTO* ptr_agent = AgentProcessor::getInstance().getAgentByEmail(m_EditAgentEmail.text());
     if (nullptr != ptr_agent){
         m_bAgentAdded = false;
         m_dtoAgent.setId(ptr_agent->getId());
         return true;
     };
     //
-    int i_agency_id = AgencyProcessor::getInstance().add(m_ptrEditAgencyName->text().trimmed());
+    int i_agency_id = AgencyProcessor::getInstance().add(m_EditAgencyName.text().trimmed());
     if(VALUE_UNDEFINED == i_agency_id){
         return false; //can not add new agency to database
     }
     //
-    m_dtoAgent.setName(m_ptrEditAgentName->text());
-    m_dtoAgent.setEMail( m_ptrEditAgentEmail->text());
-    m_dtoAgent.setPhone1(m_ptrEditAgentPhone1->text());
-    m_dtoAgent.setPhone2(m_ptrEditAgentPhone2->text());
+    m_dtoAgent.setName(m_EditAgentName.text());
+    m_dtoAgent.setEMail( m_EditAgentEmail.text());
+    m_dtoAgent.setPhone1(m_EditAgentPhone1.text());
+    m_dtoAgent.setPhone2(m_EditAgentPhone2.text());
     m_dtoAgent.setAgencyId(i_agency_id);
-    const QVariant agent_rank = m_ptrComboAgentRank->currentData();
+    const QVariant agent_rank = m_ComboAgentRank.currentData();
     m_dtoAgent.setRank(agent_rank.toInt());
     //
     int id = AgentProcessor::getInstance().add(&m_dtoAgent);
@@ -761,7 +822,7 @@ bool DlgNewOffer::saveAgentInfo(){
 }
 
 void DlgNewOffer::closeEvent(QCloseEvent *event){
-    if((false == m_bOfferSaved) && (m_ptrEditPositonTitle->text().length() > 0)){
+    if((false == m_bOfferSaved) && (m_EditPositonTitle.text().length() > 0)){
         QString str_msg = "Job description not saved. Do you want to close window?";
         QMessageBox box;
         box.setStandardButtons( QMessageBox::Yes|QMessageBox::No );
@@ -786,17 +847,17 @@ bool DlgNewOffer::isNewAgentAdded(){
 
 void DlgNewOffer::clearFields(){
     const QString str_empty_txt = "";
-    m_ptrOfferEdit->setPlainText(str_empty_txt);
-    m_ptrEditPositonTitle->setText(str_empty_txt);
-    m_ptrComboCountry->setCurrentIndex(-1);
-    m_ptrEditTown->setText(str_empty_txt);
-    m_ptrEditSkills->setText(str_empty_txt);
-    m_ptrEditRate->setText("0");
-    m_ptrEditAgentName->setText(str_empty_txt);
-    m_ptrEditAgentEmail->setText(str_empty_txt);
-    m_ptrEditAgentPhone1->setText(str_empty_txt);
-    m_ptrEditAgentPhone2->setText(str_empty_txt);
-    m_ptrEditAgencyName->setText(str_empty_txt);
+    m_OfferEdit.setPlainText(str_empty_txt);
+    m_EditPositonTitle.setText(str_empty_txt);
+    m_ComboCountry.setCurrentIndex(-1);
+    m_EditTown.setText(str_empty_txt);
+    m_EditSkills.setText(str_empty_txt);
+    m_EditRate.setText("0");
+    m_EditAgentName.setText(str_empty_txt);
+    m_EditAgentEmail.setText(str_empty_txt);
+    m_EditAgentPhone1.setText(str_empty_txt);
+    m_EditAgentPhone2.setText(str_empty_txt);
+    m_EditAgencyName.setText(str_empty_txt);
     m_dtoOffer.reset();
     m_dtoAgent.reset();
 }

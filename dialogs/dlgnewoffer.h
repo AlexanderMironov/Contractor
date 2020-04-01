@@ -4,7 +4,11 @@
 #include <QDialog>
 #include <QObject>
 //
-
+#include <QGridLayout>
+#include <QLabel>
+#include <QLineEdit>
+#include <QPushButton>
+#include <QPlainTextEdit>
 #include <QComboBox>
 #include <QAction>
 #include <QCloseEvent>
@@ -46,8 +50,6 @@ private slots:
     void        onClickBtnAcceptAgencyName();
     void        onClickBtnSaveOffer();
     void        onClickBtnScan();
-    void        onAddNewCountry();
-
 
 signals:
 
@@ -65,6 +67,8 @@ private:
     void        createControlButtons();
     void        addWidgetsToLayout();
     QString     getSelectedPartOfOffer() const;
+    void        onAddNewCountry();
+    void        detachElements();
 
     bool        saveAgentInfo();
     bool        saveOffer();
@@ -77,71 +81,71 @@ private:
     int             m_iMaxElementWidth;
     int             m_iMaxLabelHeight;
     //
-    QGridLayout*    m_ptrMainLayout;
+    QGridLayout     m_MainLayout;
     //
-    QLabel*          m_ptrLblnsertOffer;
-    QPlainTextEdit*  m_ptrOfferEdit;
-    QLabel*          m_ptrLblOfferInfo;
+    QLabel           m_LblnsertOffer;
+    QPlainTextEdit   m_OfferEdit;
+    QLabel           m_LblOfferInfo;
     //
-    QLabel*         m_ptrLblPositonTitle;
-    QLineEdit*      m_ptrEditPositonTitle;
-    QPushButton*    m_ptrButtonAcceptPositonTitle;
+    QLabel          m_LblPositonTitle;
+    QLineEdit       m_EditPositonTitle;
+    QPushButton     m_ButtonAcceptPositonTitle;
     //
-    QLabel*         m_ptrLblCountry;
-    QComboBox*      m_ptrComboCountry;
+    QLabel          m_LblCountry;
+    QComboBox       m_ComboCountry;
     //
-    QLabel*         m_ptrLblTown;
-    QLineEdit*      m_ptrEditTown;
-    QPushButton*    m_ptrButtonAcceptTown;
+    QLabel          m_LblTown;
+    QLineEdit       m_EditTown;
+    QPushButton     m_ButtonAcceptTown;
     //
-    QLabel*         m_ptrLblSkills;
-    QLineEdit*      m_ptrEditSkills;
-    QPushButton*    m_ptrButtonAcceptSkills;
+    QLabel          m_LblSkills;
+    QLineEdit       m_EditSkills;
+    QPushButton     m_ButtonAcceptSkills;
     //
-    QLabel*         m_ptrLblRate;
-    QLineEdit*      m_ptrEditRate;
+    QLabel          m_LblRate;
+    QLineEdit      m_EditRate;
     //
-    QLabel*         m_ptrLblStatus;
-    QComboBox*      m_ptrComboStatus;
+    QLabel          m_LblStatus;
+    QComboBox       m_ComboStatus;
     //
-    QLabel*         m_ptrLblAttractivity;
-    QComboBox*      m_ptrComboAttractivity;
+    QLabel          m_LblAttractivity;
+    QComboBox       m_ComboAttractivity;
     //-------------------------------
-    QSpacerItem*    m_ptrSpacer;
-    QLabel*         m_ptrLblnsertComment;
-    QPlainTextEdit* m_ptrCommentEdit;
-    QLabel*         m_ptrLblAgentInfo;
+    QSpacerItem     m_Spacer;
+    QLabel          m_LblnsertComment;
+    QPlainTextEdit  m_CommentEdit;
+    QLabel          m_LblAgentInfo;
     //
-    QLabel*         m_ptrLblAgentName;
-    QLineEdit*      m_ptrEditAgentName;
-    QPushButton*    m_ptrButtonAcceptAgentName;
+    QLabel          m_LblAgentName;
+    QLineEdit       m_EditAgentName;
+    QPushButton     m_ButtonAcceptAgentName;
     //
-    QLabel*         m_ptrLblAgentEmail;
-    QLineEdit*      m_ptrEditAgentEmail;
-    QPushButton*    m_ptrButtonAcceptAgentEmail;
+    QLabel          m_LblAgentEmail;
+    QLineEdit       m_EditAgentEmail;
+    QPushButton     m_ButtonAcceptAgentEmail;
     //
-    QLabel*         m_ptrLblAgentPhone1;
-    QLineEdit*      m_ptrEditAgentPhone1;
-    QPushButton*    m_ptrButtonAcceptAgentPhone1;
+    QLabel          m_LblAgentPhone1;
+    QLineEdit       m_EditAgentPhone1;
+    QPushButton     m_ButtonAcceptAgentPhone1;
     //
-    QLabel*         m_ptrLblAgentPhone2;
-    QLineEdit*      m_ptrEditAgentPhone2;
-    QPushButton*    m_ptrButtonAcceptAgentPhone2;
+    QLabel          m_LblAgentPhone2;
+    QLineEdit       m_EditAgentPhone2;
+    QPushButton     m_ButtonAcceptAgentPhone2;
     //
-    QLabel*         m_ptrLblAgencyName;
-    QLineEdit*      m_ptrEditAgencyName;
-    QPushButton*    m_ptrButtonAcceptAgencyName;
+    QLabel          m_LblAgencyName;
+    QLineEdit       m_EditAgencyName;
+    QPushButton     m_ButtonAcceptAgencyName;
     //
-    QLabel*         m_ptrLblAgentRank;
-    QComboBox*      m_ptrComboAgentRank;
+    QLabel          m_LblAgentRank;
+    QComboBox       m_ComboAgentRank;
     //
-    QPushButton*    m_ptrButtonScan;
+    QPushButton     m_ButtonScan;
     //
-    QPushButton*    m_ptrButtonSaveOffer;
+    QPushButton     m_ButtonSaveOffer;
     //
-    QPushButton*    m_ptrButtonClose;
+    QPushButton     m_ButtonClose;
     //
-    QLineEdit*      m_ptrEditStatusBar;
+    QLineEdit       m_EditStatusBar;
     //
     QAction         m_actionAcceptOfferCore;
     QAction         m_actionAcceptTown;

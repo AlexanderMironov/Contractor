@@ -24,7 +24,7 @@ DlgNewAgent::DlgNewAgent()
 }
 
 DlgNewAgent::~DlgNewAgent(){
-    //detachElements();
+    detachElements();
     //delete m_MainLayout;
 }
 
