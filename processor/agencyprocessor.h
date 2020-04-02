@@ -12,6 +12,7 @@ class AgencyDTO;
 typedef QMap<int, AgencyDTO*> AgencyStorage;
 
 class AgentBaseDTO;
+class LogWriter;
 
 class AgencyProcessor : public QObject
 {
@@ -32,9 +33,11 @@ private:
     int                         insertIntoDB(const QString& str_agency_name);
     bool                        readAllFromDB();
     void                        addNewValueToStorage(int id, const QString& str_name, const QString& str_description);
+    void                        log(const QString& str_message) const;
 
 private:
     AgencyStorage               m_mapStorage;
+    mutable LogWriter*          m_ptrLog;
 
 };
 

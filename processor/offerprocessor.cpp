@@ -9,10 +9,15 @@
 #include "offerskillprocesor.h"
 #include "dto/offerbasedto.h"
 #include "dbsupport/dbacccesssafe.h"
+//
+#include "logger/logwriter.h"
+#include "logger/loggermanager.h"
+#include "config/configdef.h"
+
 
 OfferProcessor::OfferProcessor(QObject *parent) : QObject(parent)
 {
-
+    m_ptrLog = nullptr;
 }
 
 OfferProcessor& OfferProcessor::getInstance(){
@@ -21,8 +26,8 @@ OfferProcessor& OfferProcessor::getInstance(){
 }
 //
 bool OfferProcessor::init(){
+    m_ptrLog = LoggerManager::getInstance().getWriter(LOG_WRITER_NAME);
     bool b_res = readAllFromDB();
-
     return b_res;
 }
 
@@ -58,7 +63,9 @@ int OfferProcessor::insertIntoDB(OfferBaseDTO* pos_description){
     //
     if( !qry.prepare( str_insert_string ) )
     {
-        QMessageBox::critical(nullptr, "Error", str_insert_string, QMessageBox::Ok);
+        const QString str_msg_log = QString("can not prepare request [%1]. Error: [%2]").arg(str_insert_string).arg(qry.lastError().text());
+        log(str_msg_log);
+        QMessageBox::critical(nullptr, "Error", str_msg_log , QMessageBox::Ok);
         return VALUE_UNDEFINED;
     };
     //
@@ -75,7 +82,9 @@ int OfferProcessor::insertIntoDB(OfferBaseDTO* pos_description){
     //
     if( !qry.exec() )
     {
-        QMessageBox::critical(nullptr, "Error", qry.lastError().text(), QMessageBox::Ok);
+        const QString str_msg_log = QString("can not execute request [%1]. Error: [%2]").arg(str_insert_string).arg(qry.lastError().text());
+        log(str_msg_log);
+        QMessageBox::critical(nullptr, "Error", str_msg_log , QMessageBox::Ok);
         return VALUE_UNDEFINED;
     };
     //
@@ -114,14 +123,17 @@ bool OfferProcessor::readAllFromDB(){
     //
     if ( !qry.prepare( str_query ) )
     {
-        QMessageBox::critical(nullptr, "Error", str_query, QMessageBox::Ok);
+        const QString str_msg_log = QString("can not prepare request [%1]. Error: [%2]").arg(str_query).arg(qry.lastError().text());
+        log(str_msg_log);
+        QMessageBox::critical(nullptr, "Error", str_msg_log , QMessageBox::Ok);
         b_res = false;
     };
     //
     if( !qry.exec() )
     {
-        QMessageBox::critical(nullptr, "Error", "Unable to get exec the query\n" + str_query, QMessageBox::Ok);
-        //
+        const QString str_msg_log = QString("can not execute request [%1]. Error: [%2]").arg(str_query).arg(qry.lastError().text());
+        log(str_msg_log);
+        QMessageBox::critical(nullptr, "Error", str_msg_log , QMessageBox::Ok);
         b_res = false;
     };
     //
@@ -188,13 +200,17 @@ bool OfferProcessor::updateTown(int i_offer_id, int i_town_id){
     //
     if ( !qry.prepare( str_update_string  ) )
     {
-        QMessageBox::critical(nullptr, "Error prepare", str_update_string, QMessageBox::Ok);
+        const QString str_msg_log = QString("can not prepare request [%1]. Error: [%2]").arg(str_update_string).arg(qry.lastError().text());
+        log(str_msg_log);
+        QMessageBox::critical(nullptr, "Error", str_msg_log , QMessageBox::Ok);
         return false;
     };
     //
     if ( !qry.exec() )
     {
-        QMessageBox::critical(nullptr, "Error exec", str_update_string + "\n" + qry.lastError().text(), QMessageBox::Ok);
+        const QString str_msg_log = QString("can not execute request [%1]. Error: [%2]").arg(str_update_string).arg(qry.lastError().text());
+        log(str_msg_log);
+        QMessageBox::critical(nullptr, "Error", str_msg_log , QMessageBox::Ok);
         return false;
     };
     //
@@ -220,13 +236,17 @@ bool OfferProcessor::updateCountry(int i_offer_id, int i_country_id){
     //
     if ( !qry.prepare( str_update_string  ) )
     {
-        QMessageBox::critical(nullptr, "Error prepare", str_update_string, QMessageBox::Ok);
+        const QString str_msg_log = QString("can not prepare request [%1]. Error: [%2]").arg(str_update_string).arg(qry.lastError().text());
+        log(str_msg_log);
+        QMessageBox::critical(nullptr, "Error", str_msg_log , QMessageBox::Ok);
         return false;
     };
     //
     if ( !qry.exec() )
     {
-        QMessageBox::critical(nullptr, "Error exec", str_update_string + "\n" + qry.lastError().text(), QMessageBox::Ok);
+        const QString str_msg_log = QString("can not execute request [%1]. Error: [%2]").arg(str_update_string).arg(qry.lastError().text());
+        log(str_msg_log);
+        QMessageBox::critical(nullptr, "Error", str_msg_log , QMessageBox::Ok);
         return false;
     };
     //
@@ -252,13 +272,17 @@ bool OfferProcessor::updatePositionTitle(int i_offer_id, const QString& str_posi
     //
     if ( !qry.prepare( str_update_string  ) )
     {
-        QMessageBox::critical(nullptr, "Error prepare", str_update_string, QMessageBox::Ok);
+        const QString str_msg_log = QString("can not prepare request [%1]. Error: [%2]").arg(str_update_string).arg(qry.lastError().text());
+        log(str_msg_log);
+        QMessageBox::critical(nullptr, "Error", str_msg_log , QMessageBox::Ok);
         return false;
     };
     //
     if ( !qry.exec() )
     {
-        QMessageBox::critical(nullptr, "Error exec", str_update_string + "\n" + qry.lastError().text(), QMessageBox::Ok);
+        const QString str_msg_log = QString("can not execute request [%1]. Error: [%2]").arg(str_update_string).arg(qry.lastError().text());
+        log(str_msg_log);
+        QMessageBox::critical(nullptr, "Error", str_msg_log , QMessageBox::Ok);
         return false;
     };
     //
@@ -285,13 +309,17 @@ bool OfferProcessor::updateComment(int i_offer_id, const QString& str_comment){
     //
     if ( !qry.prepare( str_update_string  ) )
     {
-        QMessageBox::critical(nullptr, "Error prepare", str_update_string, QMessageBox::Ok);
+        const QString str_msg_log = QString("can not prepare request [%1]. Error: [%2]").arg(str_update_string).arg(qry.lastError().text());
+        log(str_msg_log);
+        QMessageBox::critical(nullptr, "Error", str_msg_log , QMessageBox::Ok);
         return false;
     };
     //
     if ( !qry.exec() )
     {
-        QMessageBox::critical(nullptr, "Error exec", str_update_string + "\n" + qry.lastError().text(), QMessageBox::Ok);
+        const QString str_msg_log = QString("can not execute request [%1]. Error: [%2]").arg(str_update_string).arg(qry.lastError().text());
+        log(str_msg_log);
+        QMessageBox::critical(nullptr, "Error", str_msg_log , QMessageBox::Ok);
         return false;
     };
     //
@@ -317,13 +345,17 @@ bool OfferProcessor::updateDescription(int i_offer_id, const QString& str_descri
     //
     if ( !qry.prepare( str_update_string  ) )
     {
-        QMessageBox::critical(nullptr, "Error prepare", str_update_string, QMessageBox::Ok);
+        const QString str_msg_log = QString("can not prepare request [%1]. Error: [%2]").arg(str_update_string).arg(qry.lastError().text());
+        log(str_msg_log);
+        QMessageBox::critical(nullptr, "Error", str_msg_log , QMessageBox::Ok);
         return false;
     };
     //
     if ( !qry.exec() )
     {
-        QMessageBox::critical(nullptr, "Error exec", str_update_string + "\n" + qry.lastError().text(), QMessageBox::Ok);
+        const QString str_msg_log = QString("can not execute request [%1]. Error: [%2]").arg(str_update_string).arg(qry.lastError().text());
+        log(str_msg_log);
+        QMessageBox::critical(nullptr, "Error", str_msg_log , QMessageBox::Ok);
         return false;
     };
     //
@@ -349,13 +381,17 @@ bool OfferProcessor::updateAttractivity(int i_offer_id, int i_offer_attractivity
     //
     if ( !qry.prepare( str_update_string  ) )
     {
-        QMessageBox::critical(nullptr, "Error prepare", str_update_string, QMessageBox::Ok);
+        const QString str_msg_log = QString("can not prepare request [%1]. Error: [%2]").arg(str_update_string).arg(qry.lastError().text());
+        log(str_msg_log);
+        QMessageBox::critical(nullptr, "Error", str_msg_log , QMessageBox::Ok);
         return false;
     };
     //
     if ( !qry.exec() )
     {
-        QMessageBox::critical(nullptr, "Error exec", str_update_string + "\n" + qry.lastError().text(), QMessageBox::Ok);
+        const QString str_msg_log = QString("can not execute request [%1]. Error: [%2]").arg(str_update_string).arg(qry.lastError().text());
+        log(str_msg_log);
+        QMessageBox::critical(nullptr, "Error", str_msg_log , QMessageBox::Ok);
         return false;
     };
     //
@@ -380,13 +416,17 @@ bool OfferProcessor::updateOfferStatus(int i_offer_id, int i_offer_status){
     //
     if ( !qry.prepare( str_update_string  ) )
     {
-        QMessageBox::critical(nullptr, "Error prepare", str_update_string, QMessageBox::Ok);
+        const QString str_msg_log = QString("can not prepare request [%1]. Error: [%2]").arg(str_update_string).arg(qry.lastError().text());
+        log(str_msg_log);
+        QMessageBox::critical(nullptr, "Error", str_msg_log , QMessageBox::Ok);
         return false;
     };
     //
     if ( !qry.exec() )
     {
-        QMessageBox::critical(nullptr, "Error exec", str_update_string + "\n" + qry.lastError().text(), QMessageBox::Ok);
+        const QString str_msg_log = QString("can not execute request [%1]. Error: [%2]").arg(str_update_string).arg(qry.lastError().text());
+        log(str_msg_log);
+        QMessageBox::critical(nullptr, "Error", str_msg_log , QMessageBox::Ok);
         return false;
     };
     //
@@ -411,13 +451,17 @@ bool OfferProcessor::updateRate(int i_offer_id, int i_rate){
     //
     if ( !qry.prepare( str_update_string  ) )
     {
-        QMessageBox::critical(nullptr, "Error prepare", str_update_string, QMessageBox::Ok);
+        const QString str_msg_log = QString("can not prepare request [%1]. Error: [%2]").arg(str_update_string).arg(qry.lastError().text());
+        log(str_msg_log);
+        QMessageBox::critical(nullptr, "Error", str_msg_log , QMessageBox::Ok);
         return false;
     };
     //
     if ( !qry.exec() )
     {
-        QMessageBox::critical(nullptr, "Error exec", str_update_string + "\n" + qry.lastError().text(), QMessageBox::Ok);
+        const QString str_msg_log = QString("can not execute request [%1]. Error: [%2]").arg(str_update_string).arg(qry.lastError().text());
+        log(str_msg_log);
+        QMessageBox::critical(nullptr, "Error", str_msg_log , QMessageBox::Ok);
         return false;
     };
     //
@@ -438,17 +482,21 @@ bool OfferProcessor::removeOffer(int i_offer_id){
     //
     QSqlQuery qry(*ptr_db);
     //
-    const QString str_update_string = QString("DELETE  FROM offers_tbl WHERE id = %1;").arg(i_offer_id);
+    const QString str_update_string = QString("DELETE FROM offers_tbl WHERE id = %1;").arg(i_offer_id);
     //
     if ( !qry.prepare( str_update_string  ) )
     {
-        QMessageBox::critical(nullptr, "Error prepare", str_update_string, QMessageBox::Ok);
+        const QString str_msg_log = QString("can not prepare request [%1]. Error: [%2]").arg(str_update_string).arg(qry.lastError().text());
+        log(str_msg_log);
+        QMessageBox::critical(nullptr, "Error", str_msg_log , QMessageBox::Ok);
         return false;
     };
     //
     if ( !qry.exec() )
     {
-        QMessageBox::critical(nullptr, "Error exec", str_update_string + "\n" + qry.lastError().text(), QMessageBox::Ok);
+        const QString str_msg_log = QString("can not execute request [%1]. Error: [%2]").arg(str_update_string).arg(qry.lastError().text());
+        log(str_msg_log);
+        QMessageBox::critical(nullptr, "Error", str_msg_log , QMessageBox::Ok);
         return false;
     };
     //
@@ -466,4 +514,10 @@ OfferBaseDTO*  OfferProcessor::getOfferById(int i_offer_id){
     };
     //
     return ptr_offer;
+}
+
+void OfferProcessor::log(const QString& str_message) const{
+    if (nullptr != m_ptrLog){
+        (*m_ptrLog)<<"OfferProcessor: "<<str_message<<"\n";
+    };
 }

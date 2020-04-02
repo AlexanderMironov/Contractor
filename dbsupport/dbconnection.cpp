@@ -1,7 +1,10 @@
-#include "dbconnection.h"
-//
 #include <QtSql>
 #include <QtDebug>
+//
+#include "dbconnection.h"
+#include "logger/logwriter.h"
+#include "logger/loggermanager.h"
+#include "config/configdef.h"
 //
 DBConnection::DBConnection(const QString &str_conn_name,
                            const QString& str_db_type,
@@ -13,6 +16,7 @@ DBConnection::DBConnection(const QString &str_conn_name,
 {
     setStatus(CONN_UNKNOWN);
     m_strConnName = str_conn_name;
+    m_ptrLog = LoggerManager::getInstance().getWriter(LOG_WRITER_NAME);
     init(str_db_type, str_host, str_db_name, str_db_user, str_db_pwd, i_port);
 
 }
@@ -50,6 +54,8 @@ DBConnection::ConnectionStatus DBConnection::init(const QString& str_db_type,
             str_msg += QString::number(i_port);
             str_msg += "\n";
             //
+            const QString str_msg_log = QString("Can not establish connection to database, reason: [%1]").arg(str_msg);
+            log(str_msg_log);
             setStatus (CONN_FAIL);
         }else //if opened
         {
@@ -59,10 +65,13 @@ DBConnection::ConnectionStatus DBConnection::init(const QString& str_db_type,
             {
                 b_res = adjustSqliteDB();
             };
-            if (b_res)
+            if (b_res){
                 setStatus (CONN_SUCCESS);
-            else
+            }else{
+                const QString str_msg_log = QString("Can not adjust connection to SQL Lite");
+                log(str_msg_log);
                 setStatus (CONN_FAIL);
+            };
         };
     //
     return getStatus();
@@ -106,4 +115,10 @@ void DBConnection::lock(){
 
 void DBConnection::release(){
     setStatus(CONN_SUCCESS);
+}
+
+void DBConnection::log(const QString& str_message) const{
+    if (nullptr != m_ptrLog){
+        (*m_ptrLog)<<str_message<<"\n";
+    };
 }

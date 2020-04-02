@@ -26,6 +26,8 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
+    logger/loggermanager.cpp \
+    logger/logwriter.cpp \
         main.cpp \
         mainwindow.cpp \
     graficcontainers/graficcontainerlistoffers.cpp \
@@ -63,6 +65,8 @@ SOURCES += \
     menucontainers/agentstablemenu.cpp
 
 HEADERS += \
+    logger/loggermanager.h \
+    logger/logwriter.h \
         mainwindow.h \
     graficcontainers/graficcontainerlistoffers.h \
     dialogs/dlgnewoffer.h \

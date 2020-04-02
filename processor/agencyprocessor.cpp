@@ -8,10 +8,15 @@
 #include "agencyprocessor.h"
 #include "dbsupport/dbacccesssafe.h"
 #include "dto/agencydto.h"
+//
+#include "logger/logwriter.h"
+#include "logger/loggermanager.h"
+#include "config/configdef.h"
+
 
 AgencyProcessor::AgencyProcessor(QObject *parent) : QObject(parent)
 {
-
+    m_ptrLog = nullptr;
 }
 
 AgencyProcessor& AgencyProcessor::getInstance(){
@@ -20,8 +25,8 @@ AgencyProcessor& AgencyProcessor::getInstance(){
 }
 
 bool AgencyProcessor::init(){
+    m_ptrLog = LoggerManager::getInstance().getWriter(LOG_WRITER_NAME);
     bool b_res = readAllFromDB();
-
     return b_res;
 }
 
@@ -55,7 +60,9 @@ int AgencyProcessor::insertIntoDB(const QString& str_agency_name){
     //
     if( !qry.prepare( str_insert_string ) )
     {
-        QMessageBox::critical(nullptr, "Error", str_insert_string, QMessageBox::Ok);
+        const QString str_msg_log = QString("can not prepare request [%1]. Error: [%2]").arg(str_insert_string).arg(qry.lastError().text());
+        log(str_msg_log);
+        QMessageBox::critical(nullptr, "Error", str_msg_log , QMessageBox::Ok);
         return VALUE_UNDEFINED;
     };
     //
@@ -63,7 +70,9 @@ int AgencyProcessor::insertIntoDB(const QString& str_agency_name){
     //
     if( !qry.exec() )
     {
-        QMessageBox::critical(nullptr, "Error", qry.lastError().text(), QMessageBox::Ok);
+        const QString str_msg_log = QString("can not execute request [%1]. Error: [%2]").arg(str_insert_string).arg(qry.lastError().text());
+        log(str_msg_log);
+        QMessageBox::critical(nullptr, "Error", str_msg_log , QMessageBox::Ok);
         return VALUE_UNDEFINED;
     };
     //
@@ -90,13 +99,17 @@ bool AgencyProcessor::readAllFromDB(){
     //
     if ( !qry.prepare( str_query ) )
     {
-        QMessageBox::critical(nullptr, "Error", str_query, QMessageBox::Ok);
+        const QString str_msg_log = QString("can not prepare request [%1]. Error: [%2]").arg(str_query).arg(qry.lastError().text());
+        log(str_msg_log);
+        QMessageBox::critical(nullptr, "Error", str_msg_log , QMessageBox::Ok);
         b_res = false;
     };
     //
     if( !qry.exec() )
     {
-        QMessageBox::critical(nullptr, "Error", "Unable to get exec the query\n" + str_query, QMessageBox::Ok);
+        const QString str_msg_log = QString("can not execute request [%1]. Error: [%2]").arg(str_query).arg(qry.lastError().text());
+        log(str_msg_log);
+        QMessageBox::critical(nullptr, "Error", str_msg_log , QMessageBox::Ok);
         //
         b_res = false;
     };
@@ -128,4 +141,10 @@ QString AgencyProcessor::getAgencyNameByID(int i_id){
 
 const AgencyStorage& AgencyProcessor::getStorage() const{
     return m_mapStorage;
+}
+
+void AgencyProcessor::log(const QString& str_message) const{
+    if (nullptr != m_ptrLog){
+        (*m_ptrLog)<<"AgencyProcessor: "<<str_message<<"\n";
+    };
 }

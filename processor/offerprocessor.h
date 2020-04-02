@@ -5,6 +5,7 @@
 #include <QMap>
 //
 class OfferBaseDTO;
+class LogWriter;
 /*
 id -> object
 */
@@ -36,6 +37,7 @@ public slots:
 private:
     explicit                OfferProcessor(QObject *parent = nullptr);
     bool                    readAllFromDB();
+    void                    log(const QString& str_message) const;
     int                     insertIntoDB(OfferBaseDTO* pos_description);
     void                    addNewValueToStorage(int i_id,
                                               const QDate& d_creation_date,
@@ -51,7 +53,7 @@ private:
 
 private:
     OfferStorage            m_mapStorage;
-
+    mutable LogWriter*      m_ptrLog;
 };
 
 #endif // OFFERPROCESSOR_H

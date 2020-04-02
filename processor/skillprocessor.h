@@ -10,7 +10,8 @@
 /*
 id -> name
 */
-
+class LogWriter;
+//
 typedef QMap<int, SkillDTO*> SkillStorage;
 
 class SkillProcessor : public QObject
@@ -30,13 +31,15 @@ public slots:
 
 
 private:
-    explicit        SkillProcessor(QObject *parent = nullptr);
-    bool            readAllFromDB();
-    int             insertIntoDB(const QString& str_skill_name);
-    void            addNewValueToStorage(int id, const QString& str_name);
+    explicit                SkillProcessor(QObject *parent = nullptr);
+    bool                    readAllFromDB();
+    int                     insertIntoDB(const QString& str_skill_name);
+    void                    addNewValueToStorage(int id, const QString& str_name);
+    void                    log(const QString& str_message) const;
 
 private:
-    SkillStorage    m_mapStorage;
+    SkillStorage            m_mapStorage;
+    mutable LogWriter*      m_ptrLog;
 };
 
 #endif // Skill

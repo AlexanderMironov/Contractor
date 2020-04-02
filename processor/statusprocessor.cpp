@@ -7,10 +7,14 @@
 #include "commondef.h"
 #include "statusprocessor.h"
 #include "dto/statusdto.h"
+//
+#include "logger/logwriter.h"
+#include "logger/loggermanager.h"
+#include "config/configdef.h"
 
 StatusProcessor::StatusProcessor(QObject *parent) : QObject(parent)
 {
-
+    m_ptrLog = nullptr;
 }
 
 StatusProcessor& StatusProcessor::getInstance(){
@@ -20,8 +24,8 @@ StatusProcessor& StatusProcessor::getInstance(){
 }
 
 bool StatusProcessor::init(){
+    m_ptrLog = LoggerManager::getInstance().getWriter(LOG_WRITER_NAME);
     bool b_res = readAllFromDB();
-
     return b_res;
 }
 
@@ -55,7 +59,10 @@ int StatusProcessor::insertIntoDB(const QString& str_status_name){
     //
     if( !qry.prepare( str_insert_string ) )
     {
-        QMessageBox::critical(nullptr, "Error", str_insert_string, QMessageBox::Ok);
+        const QString str_msg_log = QString("can not prepare request [%1]. Error: [%2]").arg(str_insert_string).arg(qry.lastError().text());
+        log(str_msg_log);
+        QMessageBox::critical(nullptr, "Error", str_msg_log , QMessageBox::Ok);
+
         return VALUE_UNDEFINED;
     };
     //
@@ -63,7 +70,9 @@ int StatusProcessor::insertIntoDB(const QString& str_status_name){
     //
     if( !qry.exec() )
     {
-        QMessageBox::critical(nullptr, "Error", qry.lastError().text(), QMessageBox::Ok);
+        const QString str_msg_log = QString("can not execute request [%1]. Error: [%2]").arg(str_insert_string).arg(qry.lastError().text());
+        log(str_msg_log);
+        QMessageBox::critical(nullptr, "Error", str_msg_log , QMessageBox::Ok);
         return -1;
     };
     //
@@ -90,13 +99,18 @@ bool StatusProcessor::readAllFromDB(){
     //
     if ( !qry.prepare( str_query ) )
     {
-        QMessageBox::critical(nullptr, "Error", str_query, QMessageBox::Ok);
+        const QString str_msg_log = QString("can not prepare request [%1]. Error: [%2]").arg(str_query).arg(qry.lastError().text());
+        log(str_msg_log);
+        QMessageBox::critical(nullptr, "Error", str_msg_log , QMessageBox::Ok);
+
         b_res = false;
     };
     //
     if( !qry.exec() )
     {
-        QMessageBox::critical(nullptr, "Error", "Unable to get exec the query\n" + str_query, QMessageBox::Ok);
+        const QString str_msg_log = QString("can not execute request [%1]. Error: [%2]").arg(str_query).arg(qry.lastError().text());
+        log(str_msg_log);
+        QMessageBox::critical(nullptr, "Error", str_msg_log , QMessageBox::Ok);
         //
         b_res = false;
     };
@@ -128,4 +142,10 @@ const QString StatusProcessor::getStatusNameByID(int i_id){
         str_res = i.value()->getName();
     };
     return str_res;
+}
+
+void StatusProcessor::log(const QString& str_message) const{
+    if (nullptr != m_ptrLog){
+        (*m_ptrLog)<<"StatusProcessor: "<<str_message<<"\n";
+    };
 }

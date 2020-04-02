@@ -7,6 +7,11 @@
 #include "dto/agentbasedto.h"
 #include "agentprocessor.h"
 #include "dbsupport/dbacccesssafe.h"
+//
+#include "logger/logwriter.h"
+#include "logger/loggermanager.h"
+#include "config/configdef.h"
+
 
 AgentProcessor::AgentProcessor(QObject *parent) : QObject(parent)
 {
@@ -48,7 +53,9 @@ int AgentProcessor::insertIntoDB(AgentBaseDTO* ptr_agent_base_info_dto){
     //
     if( !qry.prepare( str_insert_string ) )
     {
-        QMessageBox::critical(nullptr, "Error", str_insert_string, QMessageBox::Ok);
+        const QString str_msg_log = QString("can not prepare request [%1]. Error: [%2]").arg(str_insert_string).arg(qry.lastError().text());
+        log(str_msg_log);
+        QMessageBox::critical(nullptr, "Error", str_msg_log , QMessageBox::Ok);
         return VALUE_UNDEFINED;
     };
     //
@@ -63,7 +70,9 @@ int AgentProcessor::insertIntoDB(AgentBaseDTO* ptr_agent_base_info_dto){
     //
     if( !qry.exec() )
     {
-        QMessageBox::critical(nullptr, "Error", qry.lastError().text(), QMessageBox::Ok);
+        const QString str_msg_log = QString("can not execute request [%1]. Error: [%2]").arg(str_insert_string).arg(qry.lastError().text());
+        log(str_msg_log);
+        QMessageBox::critical(nullptr, "Error", str_msg_log , QMessageBox::Ok);
         return VALUE_UNDEFINED;
     };
     //
@@ -83,6 +92,7 @@ int AgentProcessor::insertIntoDB(AgentBaseDTO* ptr_agent_base_info_dto){
 }
 
 bool AgentProcessor::init(){
+    m_ptrLog = LoggerManager::getInstance().getWriter(LOG_WRITER_NAME);
     bool b_res = readAllFromDB();
 
     return b_res;
@@ -110,7 +120,9 @@ bool AgentProcessor::readAllFromDB(){
     //
     if( !qry.exec() )
     {
-        QMessageBox::critical(nullptr, "Error", "Unable to get exec the query\n" + str_query, QMessageBox::Ok);
+        const QString str_msg_log = QString("can not execute request [%1]. Error: [%2]").arg(str_query).arg(qry.lastError().text());
+        log(str_msg_log);
+        QMessageBox::critical(nullptr, "Error", str_msg_log , QMessageBox::Ok);
         //
         b_res = false;
     };
@@ -168,13 +180,17 @@ bool AgentProcessor::updateRank(int i_agent_id, int i_rank){
     //
     if ( !qry.prepare( str_update_string  ) )
     {
-        QMessageBox::critical(nullptr, "Error prepare", str_update_string, QMessageBox::Ok);
+        const QString str_msg_log = QString("can not prepare request [%1]. Error: [%2]").arg(str_update_string).arg(qry.lastError().text());
+        log(str_msg_log);
+        QMessageBox::critical(nullptr, "Error", str_msg_log , QMessageBox::Ok);
         return false;
     };
     //
     if ( !qry.exec() )
     {
-        QMessageBox::critical(nullptr, "Error exec", str_update_string + "\n" + qry.lastError().text(), QMessageBox::Ok);
+        const QString str_msg_log = QString("can not execute request [%1]. Error: [%2]").arg(str_update_string).arg(qry.lastError().text());
+        log(str_msg_log);
+        QMessageBox::critical(nullptr, "Error", str_msg_log , QMessageBox::Ok);
         return false;
     };
     //
@@ -199,13 +215,19 @@ bool AgentProcessor::updateName(int i_agent_id, const QString& str_name){
     //
     if ( !qry.prepare( str_update_string  ) )
     {
-        QMessageBox::critical(nullptr, "Error prepare", str_update_string, QMessageBox::Ok);
+        const QString str_msg_log = QString("can not prepare request [%1]. Error: [%2]").arg(str_update_string).arg(qry.lastError().text());
+        log(str_msg_log);
+        QMessageBox::critical(nullptr, "Error", str_msg_log , QMessageBox::Ok);
+
         return false;
     };
     //
     if ( !qry.exec() )
     {
-        QMessageBox::critical(nullptr, "Error exec", str_update_string + "\n" + qry.lastError().text(), QMessageBox::Ok);
+        const QString str_msg_log = QString("can not execute request [%1]. Error: [%2]").arg(str_update_string).arg(qry.lastError().text());
+        log(str_msg_log);
+        QMessageBox::critical(nullptr, "Error", str_msg_log , QMessageBox::Ok);
+
         return false;
     };
     //
@@ -230,13 +252,17 @@ bool AgentProcessor::updateDecription(int i_agent_id, const QString& str_descrip
     //
     if ( !qry.prepare( str_update_string  ) )
     {
-        QMessageBox::critical(nullptr, "Error prepare", str_update_string, QMessageBox::Ok);
+        const QString str_msg_log = QString("can not prepare request [%1]. Error: [%2]").arg(str_update_string).arg(qry.lastError().text());
+        log(str_msg_log);
+        QMessageBox::critical(nullptr, "Error", str_msg_log , QMessageBox::Ok);
         return false;
     };
     //
     if ( !qry.exec() )
     {
-        QMessageBox::critical(nullptr, "Error exec", str_update_string + "\n" + qry.lastError().text(), QMessageBox::Ok);
+        const QString str_msg_log = QString("can not execute request [%1]. Error: [%2]").arg(str_update_string).arg(qry.lastError().text());
+        log(str_msg_log);
+        QMessageBox::critical(nullptr, "Error", str_msg_log , QMessageBox::Ok);
         return false;
     };
     //
@@ -269,13 +295,17 @@ bool AgentProcessor::updatePhone(int i_agent_id, const QString& phone_number, PH
     //
     if ( !qry.prepare( str_update_string  ) )
     {
-        QMessageBox::critical(nullptr, "Error prepare", str_update_string, QMessageBox::Ok);
+        const QString str_msg_log = QString("can not prepare request [%1]. Error: [%2]").arg(str_update_string).arg(qry.lastError().text());
+        log(str_msg_log);
+        QMessageBox::critical(nullptr, "Error", str_msg_log , QMessageBox::Ok);
         return false;
     };
     //
     if ( !qry.exec() )
     {
-        QMessageBox::critical(nullptr, "Error exec", str_update_string + "\n" + qry.lastError().text(), QMessageBox::Ok);
+        const QString str_msg_log = QString("can not execute request [%1]. Error: [%2]").arg(str_update_string).arg(qry.lastError().text());
+        log(str_msg_log);
+        QMessageBox::critical(nullptr, "Error", str_msg_log , QMessageBox::Ok);
         return false;
     };
     //
@@ -307,13 +337,17 @@ bool AgentProcessor::updateEmail(int i_agent_id, const QString& str_email){
     //
     if ( !qry.prepare( str_update_string  ) )
     {
-        QMessageBox::critical(nullptr, "Error prepare", str_update_string, QMessageBox::Ok);
+        const QString str_msg_log = QString("can not prepare request [%1]. Error: [%2]").arg(str_update_string).arg(qry.lastError().text());
+        log(str_msg_log);
+        QMessageBox::critical(nullptr, "Error", str_msg_log , QMessageBox::Ok);
         return false;
     };
     //
     if ( !qry.exec() )
     {
-        QMessageBox::critical(nullptr, "Error exec", str_update_string + "\n" + qry.lastError().text(), QMessageBox::Ok);
+        const QString str_msg_log = QString("can not execute request [%1]. Error: [%2]").arg(str_update_string).arg(qry.lastError().text());
+        log(str_msg_log);
+        QMessageBox::critical(nullptr, "Error", str_msg_log , QMessageBox::Ok);
         return false;
     };
     //
@@ -326,7 +360,6 @@ bool AgentProcessor::updateEmail(int i_agent_id, const QString& str_email){
     //
     return true;
 }
-
 
 bool AgentProcessor::updateWebProfile(int i_agent_id, const QString& web_profile){
     DBAcccessSafe dbAccess;
@@ -341,13 +374,17 @@ bool AgentProcessor::updateWebProfile(int i_agent_id, const QString& web_profile
     //
     if ( !qry.prepare( str_update_string  ) )
     {
-        QMessageBox::critical(nullptr, "Error prepare", str_update_string, QMessageBox::Ok);
+        const QString str_msg_log = QString("can not prepare request [%1]. Error: [%2]").arg(str_update_string).arg(qry.lastError().text());
+        log(str_msg_log);
+        QMessageBox::critical(nullptr, "Error", str_msg_log , QMessageBox::Ok);
         return false;
     };
     //
     if ( !qry.exec() )
     {
-        QMessageBox::critical(nullptr, "Error exec", str_update_string + "\n" + qry.lastError().text(), QMessageBox::Ok);
+        const QString str_msg_log = QString("can not execute request [%1]. Error: [%2]").arg(str_update_string).arg(qry.lastError().text());
+        log(str_msg_log);
+        QMessageBox::critical(nullptr, "Error", str_msg_log , QMessageBox::Ok);
         return false;
     };
     //
@@ -389,4 +426,10 @@ AgentBaseDTO* AgentProcessor::getAgentByID(int i_id) const{
 
 const AgentStorage& AgentProcessor::getStorage() const{
     return m_mapStorage;
+}
+
+void AgentProcessor::log(const QString& str_message) const{
+    if (nullptr != m_ptrLog){
+        (*m_ptrLog)<<"AgentProcessor: "<<str_message<<"\n";
+    };
 }

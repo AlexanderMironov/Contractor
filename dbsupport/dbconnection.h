@@ -7,6 +7,7 @@
 //
 class DBAcccessSafe;
 class DbConnectionManager;
+class LogWriter;
 //
 
 class DBConnection
@@ -42,14 +43,16 @@ private:
                              int   i_port);
     void                setStatus(ConnectionStatus e_status);
     bool                adjustSqliteDB();
+    void                log(const QString& str_message) const;
     void                lock();
     void                release();
 private: //members
     //
     QSqlDatabase            m_DB;
     //
-    QString             m_strConnName;
-    ConnectionStatus    m_enStatus;
+    QString                 m_strConnName;
+    ConnectionStatus        m_enStatus;
+    mutable LogWriter*      m_ptrLog;
     //
     friend class DBAcccessSafe;
     friend class DbConnectionManager;

@@ -6,10 +6,15 @@
 #include "commondef.h"
 #include "offerskillprocesor.h"
 #include "dbsupport/dbacccesssafe.h"
+//
+#include "logger/logwriter.h"
+#include "logger/loggermanager.h"
+#include "config/configdef.h"
+
 
 OfferSkillProcesor::OfferSkillProcesor(QObject *parent) : QObject(parent)
 {
-
+    m_ptrLog = nullptr;
 }
 
 OfferSkillProcesor&  OfferSkillProcesor::getInstance(){
@@ -18,8 +23,8 @@ OfferSkillProcesor&  OfferSkillProcesor::getInstance(){
 }
 
 bool OfferSkillProcesor::init(){
+    m_ptrLog = LoggerManager::getInstance().getWriter(LOG_WRITER_NAME);
     bool b_res = readAllFromDB();
-
     return b_res;
 }
 
@@ -51,8 +56,6 @@ bool OfferSkillProcesor::isExist(int i_offer_id, int i_skill_id){
 
 
 bool OfferSkillProcesor::readAllFromDB(){
-    bool b_res = true;
-    //
     DBAcccessSafe dbAccess;
     QSqlDatabase* ptr_db =  dbAccess.getDB();
     if (nullptr == ptr_db){
@@ -65,15 +68,19 @@ bool OfferSkillProcesor::readAllFromDB(){
     //
     if ( !qry.prepare( str_query ) )
     {
-        QMessageBox::critical(nullptr, "Error", str_query, QMessageBox::Ok);
-        b_res = false;
+        const QString str_msg_log = QString("can not prepare request [%1]. Error: [%2]").arg(str_query).arg(qry.lastError().text());
+        log(str_msg_log);
+        QMessageBox::critical(nullptr, "Error", str_msg_log , QMessageBox::Ok);
+        return false;
     };
     //
     if( !qry.exec() )
     {
-        QMessageBox::critical(nullptr, "Error", "Unable to get exec the query\n" + str_query, QMessageBox::Ok);
+        const QString str_msg_log = QString("can not execute request [%1]. Error: [%2]").arg(str_query).arg(qry.lastError().text());
+        log(str_msg_log);
+        QMessageBox::critical(nullptr, "Error", str_msg_log , QMessageBox::Ok);
         //
-        b_res = false;
+        return false;
     };
     //
     while( qry.next() )
@@ -81,7 +88,7 @@ bool OfferSkillProcesor::readAllFromDB(){
         addNewValueToStorage(qry.value(0).toInt(), qry.value(1).toInt(), qry.value(2).toInt());
     };
     //
-    return b_res;
+    return true;
 }
 
 int OfferSkillProcesor::insertIntoDB(int i_offer_id, int i_skill_id){
@@ -97,7 +104,9 @@ int OfferSkillProcesor::insertIntoDB(int i_offer_id, int i_skill_id){
     //
     if( !qry.prepare( str_insert_string ) )
     {
-        QMessageBox::critical(nullptr, "Error", str_insert_string, QMessageBox::Ok);
+        const QString str_msg_log = QString("can not prepare request [%1]. Error: [%2]").arg(str_insert_string).arg(qry.lastError().text());
+        log(str_msg_log);
+        QMessageBox::critical(nullptr, "Error", str_msg_log , QMessageBox::Ok);
         return VALUE_UNDEFINED;
     };
     //
@@ -106,7 +115,10 @@ int OfferSkillProcesor::insertIntoDB(int i_offer_id, int i_skill_id){
     //
     if( !qry.exec() )
     {
-        QMessageBox::critical(nullptr, "Error", qry.lastError().text(), QMessageBox::Ok);
+        const QString str_msg_log = QString("can not execute request [%1]. Error: [%2]").arg(str_insert_string).arg(qry.lastError().text());
+        log(str_msg_log);
+        QMessageBox::critical(nullptr, "Error", str_msg_log , QMessageBox::Ok);
+
         return -1;
     };
     //
@@ -150,17 +162,20 @@ bool OfferSkillProcesor::removeOffer(int i_offer_id){
     //
     if ( !qry.prepare( str_update_string  ) )
     {
-        QMessageBox::critical(nullptr, "Error prepare", str_update_string, QMessageBox::Ok);
+        const QString str_msg_log = QString("can not prepare request [%1]. Error: [%2]").arg(str_update_string).arg(qry.lastError().text());
+        log(str_msg_log);
+        QMessageBox::critical(nullptr, "Error", str_msg_log , QMessageBox::Ok);
         return false;
     };
     //
     if ( !qry.exec() )
     {
-        QMessageBox::critical(nullptr, "Error exec", str_update_string + "\n" + qry.lastError().text(), QMessageBox::Ok);
+        const QString str_msg_log = QString("can not execute request [%1]. Error: [%2]").arg(str_update_string).arg(qry.lastError().text());
+        log(str_msg_log);
+        QMessageBox::critical(nullptr, "Error", str_msg_log , QMessageBox::Ok);
         return false;
     };
     //
-
     for (int i = 0; i < m_vStorage.size(); ++i){
         if(m_vStorage[i]->getOfferId() == i_offer_id){
             m_vStorage.remove(i);
@@ -174,4 +189,10 @@ bool OfferSkillProcesor::removeOffer(int i_offer_id){
 bool OfferSkillProcesor::replaceSkillsList(int i_offer_id, const SkillsList& skill_list){
     removeOffer(i_offer_id);
     add(i_offer_id,skill_list);
+}
+
+void OfferSkillProcesor::log(const QString& str_message) const{
+    if (nullptr != m_ptrLog){
+        (*m_ptrLog)<<"OfferSkillProcesor: "<<str_message<<"\n";
+    };
 }

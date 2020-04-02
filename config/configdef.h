@@ -27,6 +27,16 @@
     static const char PATHS_SECTION_NAME[]      = "PATHS";
     static const char DEFAULT_EXPORT_PATH[]     = "default_export_path";
     static const char DEFAULT_IMPORT_PATH[]     = "default_import_path";
+    //
+    static const char LOG_WRITER_NAME[] = "LOG";
+    //
+    static const char LOG_SECTION_NAME[]  = "LOG";
+    static const char LOG_FILE_LOCATION[] = "log_file_location";
+    static const char LOG_MODE[] = "log_mode";
+    //
+    static const int LOG_MODE_MIN = 0;
+    static const int LOG_MODE_NORMAL = 1;
+    static const int LOG_MODE_VERBOSE = 2;
 
 
 #endif // CONFIGDEF_H

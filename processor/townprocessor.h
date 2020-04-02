@@ -5,7 +5,9 @@
 #include <QMap>
 #include <QString>
 //
+class LogWriter;
 class TownDTO;
+
 /*
 id -> name
 */
@@ -27,13 +29,15 @@ public slots:
 
 
 private:
-    explicit        TownProcessor(QObject *parent = nullptr);
-    bool            readAllFromDB();
-    int             insertIntoDB(const QString& str_country_name);
-    void            addNewValueToStorage(int id, const QString& str_name);
+    explicit                TownProcessor(QObject *parent = nullptr);
+    bool                    readAllFromDB();
+    int                     insertIntoDB(const QString& str_country_name);
+    void                    addNewValueToStorage(int id, const QString& str_name);
+    void                    log(const QString& str_message) const;
 
 private:
-    TownStorage     m_mapStorage;
+    TownStorage             m_mapStorage;
+    mutable LogWriter*      m_ptrLog;
 };
 
 #endif // TownProcessor_H

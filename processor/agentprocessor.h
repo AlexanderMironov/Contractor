@@ -6,10 +6,12 @@
 #include <QString>
 //
 class AgentBaseDTO;
+class LogWriter;
 /*
 Email -> instance
 */
 typedef QMap<QString, AgentBaseDTO*> AgentStorage;
+
 
 class AgentProcessor : public QObject
 {
@@ -36,6 +38,7 @@ private:
     explicit                AgentProcessor(QObject *parent = nullptr);
     int                     insertIntoDB(AgentBaseDTO* ptr_agent_base_info_dto);
     bool                    readAllFromDB();
+    void                    log(const QString& str_message) const;
     void                    addNewValueToStorage(int id,
                                               const QString& str_name,
                                               const QString& str_email,
@@ -52,6 +55,7 @@ public slots:
 
 private:
     AgentStorage            m_mapStorage;
+    mutable LogWriter*      m_ptrLog;
 };
 
 #endif // AGENTPROCESSOR_H

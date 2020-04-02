@@ -6,6 +6,7 @@
 #include <QString>
 //
 class CountryDTO;
+class LogWriter;
 /*
 id -> name
 */
@@ -34,9 +35,11 @@ private:
     bool            readAllFromDB();
     int             insertIntoDB(const QString& str_country_name);
     void            addNewValueToStorage(int id, const QString& str_name);
+    void            log(const QString& str_message) const;
 
 private:
-    CountryStorage  m_mapStorage;
+    CountryStorage      m_mapStorage;
+    mutable LogWriter*  m_ptrLog;
 };
 
 #endif // COUNTRYPROCESSOR_H

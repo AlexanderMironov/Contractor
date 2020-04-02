@@ -51,7 +51,12 @@ bool Configuration::init(){
     //
     m_ptrSettings = new QSettings(config_file_name, QSettings::IniFormat);
     //
-    bool b_res = getDBSettings(m_ptrSettings);
+    bool b_res = getLogSettings(m_ptrSettings);
+    if (false == b_res){
+        (*m_ptrOut)<<"can not read log settings from config"<<endl;
+        return false;
+    };
+    b_res = getDBSettings(m_ptrSettings);
     if (false == b_res){
         (*m_ptrOut)<<"can not read database settings from config"<<endl;
         return false;
@@ -76,6 +81,29 @@ bool Configuration::init(){
     };
     //
     return b_res;
+}
+
+bool Configuration::getLogSettings(QSettings *ptr_settings)
+{
+    bool b_res = ConfigBaseFunctionality::assignValue(ptr_settings, m_str_LogFileName,LOG_SECTION_NAME, LOG_FILE_LOCATION, false);
+    if (false == b_res){
+        return false;
+    };
+    //
+    b_res = ConfigBaseFunctionality::assignValue(ptr_settings, m_iLogMode,LOG_SECTION_NAME, LOG_MODE, false);
+    if (false == b_res){
+        return false;
+    };
+    //
+    return true;
+}
+
+const QString& Configuration::getLogFileName() const{
+    return m_str_LogFileName;
+}
+
+int Configuration::getLogMode() const{
+    return m_iLogMode;
 }
 
 const QString& Configuration::getDefaultExportPath() const{
