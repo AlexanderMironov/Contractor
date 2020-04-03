@@ -32,7 +32,7 @@ public:
     const QString&  getDefaultExportPath() const;
     const QString&  getDefaultImportPath() const;
     const QString&  getLogFileName() const;
-    int             getLogMode() const;
+    //int             getLogMode() const;
 
 private:
                     Configuration();
@@ -71,7 +71,7 @@ private:
     QString         m_str_DefaultImportPath;
     //
     QString         m_str_LogFileName;
-    int             m_iLogMode;
+    //int             m_iLogMode;
     //
     QTextStream*    m_ptrOut;
 

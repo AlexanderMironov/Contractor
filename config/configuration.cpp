@@ -90,10 +90,12 @@ bool Configuration::getLogSettings(QSettings *ptr_settings)
         return false;
     };
     //
+    /*
     b_res = ConfigBaseFunctionality::assignValue(ptr_settings, m_iLogMode,LOG_SECTION_NAME, LOG_MODE, false);
     if (false == b_res){
         return false;
     };
+    */
     //
     return true;
 }
@@ -101,11 +103,11 @@ bool Configuration::getLogSettings(QSettings *ptr_settings)
 const QString& Configuration::getLogFileName() const{
     return m_str_LogFileName;
 }
-
+/*
 int Configuration::getLogMode() const{
     return m_iLogMode;
 }
-
+*/
 const QString& Configuration::getDefaultExportPath() const{
     return m_str_DefaultExportPath;
 }
