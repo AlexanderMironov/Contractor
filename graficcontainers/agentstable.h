@@ -26,6 +26,7 @@ public slots:
     void    onCurrentAgentChanged(int i_agent_id);
     void    onShowEditAgent();
     void    onCreateAgent();
+    void    onChangeSearchNameOrEmail(const QString& str_text);
 
 
 private slots:

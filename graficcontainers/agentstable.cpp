@@ -118,7 +118,7 @@ void AgentsTable::fillDataRow (int ui_row_num, AgentBaseDTO* ptr_dto){
 
 QTableWidgetItem* AgentsTable::makeCellName(AgentBaseDTO* ptr_dto){
     QTableWidgetItem*  ptr_item_title  = new  QTableWidgetItem( ptr_dto->getName());
-    ptr_item_title->setFlags( Qt::ItemIsEnabled /*|Qt::ItemIsSelectable */);
+    ptr_item_title->setFlags( Qt::ItemIsEnabled | Qt::ItemIsSelectable);
     QVariant id_object( ptr_dto->getId() );
     ptr_item_title->setData(Qt::UserRole, id_object);
     return ptr_item_title;
@@ -161,7 +161,7 @@ QTableWidgetItem* AgentsTable::makeCellEmail(AgentBaseDTO* ptr_dto){
     originalFont.setUnderline(true);
     ptr_item_title->setFont(originalFont);
     //
-    ptr_item_title->setFlags( Qt::ItemIsEnabled /* |Qt::ItemIsSelectable */);
+    ptr_item_title->setFlags( Qt::ItemIsEnabled | Qt::ItemIsSelectable );
     return ptr_item_title;
 }
 
@@ -411,6 +411,35 @@ void AgentsTable::refreshRow(int i_row_id, int i_agent_id){
     };
     //
     m_bFillTableModeOn = false;
+}
+
+void AgentsTable::onChangeSearchNameOrEmail(const QString& str_text){
+    if(str_text.length() == 0){
+        this->clearSelection();
+    };
+    //.
+    for (int i_row = 0; i_row < this->rowCount(); i_row++){
+        QTableWidgetItem* ptr_item_name = this->item(i_row,COL_NAME);
+        if (nullptr != ptr_item_name){
+            const QString str_name = ptr_item_name->text();
+            if (str_name.contains(str_text) == true){
+                this->selectRow(i_row);
+                return;
+            }
+        };
+        //
+        QTableWidgetItem* ptr_item_e_mail = this->item(i_row,COL_EMAIL);
+        if (nullptr != ptr_item_e_mail){
+            const QString str_email = ptr_item_e_mail->text();
+            if (str_email.contains(str_text) == true){
+                this->selectRow(i_row);
+                return;
+            };
+        };
+    };
+    //
+    this->clearSelection();
+
 }
 
 void AgentsTable::onRankChanged (int){

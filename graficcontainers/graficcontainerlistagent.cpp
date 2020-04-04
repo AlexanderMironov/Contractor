@@ -60,7 +60,6 @@ void GraficContainerListAgent::createGraficElements(){
     m_ptrSearchLabel = new QLabel("Search agent by name or e-mail");
     //
     m_ptrSearchEditField = new QLineEdit();
-    m_ptrSearchEditField->setText("search not implemented yet");
     //
     m_ptrClearButton = new QPushButton("Clear search");
     m_ptrClearButton->setMinimumWidth(100);
@@ -78,7 +77,8 @@ void GraficContainerListAgent::createLayouts(){
 
 void GraficContainerListAgent::bindSignalsAndSlots(){
     //
-    //todo: also update agents table here
+    //todo: also update agents table her
+    connect(m_ptrSearchEditField, SIGNAL(textChanged(const QString &)),m_ptrTblAgentsTable, SLOT(onChangeSearchNameOrEmail(const QString &)));
 }
 
 AgentsTable* GraficContainerListAgent::getAgentsTab(){
