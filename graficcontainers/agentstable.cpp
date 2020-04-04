@@ -423,6 +423,7 @@ void AgentsTable::onChangeSearchNameOrEmail(const QString& str_text){
         if (nullptr != ptr_item_name){
             const QString str_name = ptr_item_name->text();
             if (str_name.contains(str_text) == true){
+                this->scrollToItem(ptr_item_name);
                 this->selectRow(i_row);
                 return;
             }
@@ -432,6 +433,7 @@ void AgentsTable::onChangeSearchNameOrEmail(const QString& str_text){
         if (nullptr != ptr_item_e_mail){
             const QString str_email = ptr_item_e_mail->text();
             if (str_email.contains(str_text) == true){
+                this->scrollToItem(ptr_item_e_mail);
                 this->selectRow(i_row);
                 return;
             };
