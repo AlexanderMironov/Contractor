@@ -1,7 +1,10 @@
 #include <QWidget>
 #include <QTabWidget>
 #include <QVBoxLayout>
+#include <QHBoxLayout>
 #include <QPushButton>
+#include <QLabel>
+#include <QLineEdit>
 //
 #include "graficcontainers/graficcontainerlistagent.h"
 #include "graficcontainers/graficcontainerlistoffers.h"
@@ -11,7 +14,10 @@
 
 GraficContainerListAgent::GraficContainerListAgent(QObject *parent) : QObject(parent)
 {
-    m_ptrMainTab = nullptr;
+    m_ptrMainTab        = nullptr;
+    m_ptrFirtMainWidget = nullptr;
+    m_ptrFirtMainLayout = nullptr;
+    m_ptrClearButton    = nullptr;
 }
 
 GraficContainerListAgent::~GraficContainerListAgent(){
@@ -29,19 +35,45 @@ void GraficContainerListAgent::init(QTabWidget* ptr_tab){
     };
     //
     m_ptrMainTab = ptr_tab;
-    //create all for 2-nd page
-    QWidget* ptr_firt_main_widget = new QWidget ();
-    QVBoxLayout* ptr_firt_main_layout = new QVBoxLayout();
-    ptr_firt_main_widget->setLayout(ptr_firt_main_layout);
     //
-    m_ptrTblAgentsTable = new AgentsTable();
-    ptr_firt_main_layout->addWidget(m_ptrTblAgentsTable);
+    m_ptrFirtMainWidget = new QWidget ();
     //
-//    m_dlgNewOffer.init();
+    createGraficElements();
+    createLayouts();
+    addElementsToLayouts();
     //
     bindSignalsAndSlots();
     //
-    m_ptrMainTab->addTab(ptr_firt_main_widget,"Agents");
+    m_ptrMainTab->addTab(m_ptrFirtMainWidget,"Agents");
+}
+
+void GraficContainerListAgent::addElementsToLayouts(){
+    m_ptrSearchLayout->addWidget(m_ptrSearchLabel);
+    m_ptrSearchLayout->addWidget(m_ptrSearchEditField,Qt::AlignLeft);
+    m_ptrSearchLayout->addWidget(m_ptrClearButton);
+    //
+    m_ptrFirtMainLayout->addLayout(m_ptrSearchLayout);
+    m_ptrFirtMainLayout->addWidget(m_ptrTblAgentsTable);
+}
+
+void GraficContainerListAgent::createGraficElements(){
+    m_ptrSearchLabel = new QLabel("Search agent by name or e-mail");
+    //
+    m_ptrSearchEditField = new QLineEdit();
+    m_ptrSearchEditField->setText("search not implemented yet");
+    //
+    m_ptrClearButton = new QPushButton("Clear search");
+    m_ptrClearButton->setMinimumWidth(100);
+    m_ptrClearButton->setMaximumWidth(150);
+    //
+    m_ptrTblAgentsTable = new AgentsTable();
+}
+
+void GraficContainerListAgent::createLayouts(){
+    m_ptrFirtMainLayout = new QVBoxLayout();
+    m_ptrFirtMainWidget->setLayout(m_ptrFirtMainLayout);
+    //
+    m_ptrSearchLayout = new QHBoxLayout();
 }
 
 void GraficContainerListAgent::bindSignalsAndSlots(){
@@ -52,8 +84,3 @@ void GraficContainerListAgent::bindSignalsAndSlots(){
 AgentsTable* GraficContainerListAgent::getAgentsTab(){
     return m_ptrTblAgentsTable;
 }
-/*
-DlgNewOffer* GraficContainerListAgent::getDlgNewOffer(){
-    return &m_dlgNewOffer;
-}
-*/

@@ -3,9 +3,14 @@
 
 #include <QObject>
 //
+class QVBoxLayout;
+class QHBoxLayout;
 class QTabWidget;
 class AgentsTable;
-
+class QPushButton;
+class QLineEdit;
+class QLabel;
+//
 class GraficContainerListAgent : public QObject
 {
     Q_OBJECT
@@ -19,6 +24,9 @@ public:
 
 private:
     explicit            GraficContainerListAgent(QObject *parent = nullptr);
+    void                createGraficElements();
+    void                createLayouts();
+    void                addElementsToLayouts();
     void                bindSignalsAndSlots();
 
 signals:
@@ -27,9 +35,16 @@ public slots:
 
 
 private:
-    QTabWidget* m_ptrMainTab;
+    QWidget*        m_ptrFirtMainWidget;
+    QVBoxLayout*    m_ptrFirtMainLayout;
+    QHBoxLayout*    m_ptrSearchLayout;
+    QTabWidget*     m_ptrMainTab;
     //
-    AgentsTable* m_ptrTblAgentsTable;
+    QLabel*         m_ptrSearchLabel;
+    QPushButton*    m_ptrClearButton;
+    QLineEdit*      m_ptrSearchEditField;
+    //
+    AgentsTable*    m_ptrTblAgentsTable;
     //
     //DlgNewOffer m_dlgNewOffer;
 
