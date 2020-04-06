@@ -33,6 +33,8 @@ signals:
 
 public slots:
 
+private slots:
+    void                onClickClearSearchField();
 
 private:
     QWidget*        m_ptrFirtMainWidget;

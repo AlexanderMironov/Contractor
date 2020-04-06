@@ -64,10 +64,12 @@ void MainWindow::createTabPages(){
 void MainWindow::setWindowSize(){
     QDesktopWidget dw;
     this->setMinimumHeight(dw.height()*0.5);
-    this->setMaximumHeight(dw.height()*0.9);
+    this->setMinimumWidth(dw.width()*0.9);
+
     //
-    this->setMinimumWidth(dw.width()*0.8);
-    this->setMaximumWidth(dw.width()*0.9);
+    //this->setMaximumHeight(dw.height()*0.9);
+    //this->setMaximumWidth(dw.width());
+    //
 }
 
 DlgManageCountries* MainWindow::getDlgManageCountries(){

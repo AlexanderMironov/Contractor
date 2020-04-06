@@ -79,8 +79,15 @@ void GraficContainerListAgent::bindSignalsAndSlots(){
     //
     //todo: also update agents table her
     connect(m_ptrSearchEditField, SIGNAL(textChanged(const QString &)),m_ptrTblAgentsTable, SLOT(onChangeSearchNameOrEmail(const QString &)));
+    connect(m_ptrClearButton, SIGNAL(clicked()), this, SLOT(onClickClearSearchField()));
 }
 
 AgentsTable* GraficContainerListAgent::getAgentsTab(){
     return m_ptrTblAgentsTable;
+}
+
+void GraficContainerListAgent::onClickClearSearchField(){
+    if(nullptr != m_ptrSearchEditField){
+        m_ptrSearchEditField->setText("");
+    }
 }
