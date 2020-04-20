@@ -58,6 +58,7 @@ void MainWindow::createTabPages(){
     //create TabPages 1 by 1
     //offers
     GraficContainerListOffers::getInstance().init(m_ptrMainTab);
+    //agents
     GraficContainerListAgent::getInstance().init(m_ptrMainTab);
 }
 
